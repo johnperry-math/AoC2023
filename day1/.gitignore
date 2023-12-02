@@ -1,0 +1,9 @@
+/obj/
+/bin/
+/alire/
+/config/
+
+
+# Added by cargo
+
+/target
