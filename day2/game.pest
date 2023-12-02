@@ -1,0 +1,17 @@
+number = { ASCII_DIGIT+ }
+
+blue = {"blue"}
+green = {"green"}
+red = {"red"}
+
+thing = {
+   (number ~ " " ~ blue) |
+   (number ~ " " ~ green) |
+   (number ~ " " ~ red)
+}
+
+set = { (thing ~ ", ")* ~ (thing) }
+
+hand = { (set ~ "; ")* ~ (set) }
+
+game = { "Game " ~ number ~ ": " ~ hand+ }

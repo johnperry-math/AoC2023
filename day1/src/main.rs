@@ -1,12 +1,13 @@
-// Advent of Code 2018
+// Advent of Code 2023
 //
 // John Perry
 //
-// Day 1: Chronal Calibration
+// Day 1: Trebuchet?!
 //
-// part 1: determine the total frequency drift
+//  part 1: Find the first and last digits in each string
 //
-// part 2: determine the first repeated drift
+//  part 2: First the first and last numbers in each string
+//          (either a digit or the digit's spelling)
 
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
 
