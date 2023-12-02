@@ -8,7 +8,7 @@ in both Ada and Rust.
 
 * [Day 1](#day-1-trebuchet): Trebuchet?!
 
-### Day 1: Trebuchet?!
+## Day 1: Trebuchet?!
 
 The elves have decided you need to fix the lack of snow.
 Their solution is to catapult you into the sky via a trebuchet.
@@ -29,13 +29,13 @@ which are the first and last "digits" to appear in a string.
 1. Sum the calibration values, where "digit" now includes the spellings
    (`one`, `two`, ...)
 
-#### Unusual tools
+### Unusual tools
 
 * Ada: contracts on the `Digit` function
   (sure would be nice if Ada had a `To_Digit` function the way Rust does)
 * Rust: Aho-Corasick
 
-#### Experience
+### Experience
 
 This is the first time I use Aho-Corasick in Rust,
 and as with many things Rust, there was quite the learning curve.
@@ -48,3 +48,21 @@ Speedwise, the two are more or less the same.
 The Rust is a little faster, but (a) I'm running it in release mode,
 while I'm running Ada at whatever gnat's default optimization level is, and
 (b) Ada is checking the contracts for the `Digit` function.
+
+## Day 2: Cube Conundrum
+
+You're on an island in the clouds, walking along with an elf
+who plays games with cubes.
+
+1. Sum the indices of the games that satisfy bounds on the colored cubes.
+1. Sum the powers of the minimum bounds on each game to make it valid.
+
+### Unusual Tools
+
+* Rust: pest crate, for parsing the input
+
+### Experience
+
+The Rust took a lot longer to write because I had to figure out the pest crate,
+but I think it makes the top-level code easier to read, though
+I'm not so sure about `TryFrom<Pair> for Set`.
