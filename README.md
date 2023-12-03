@@ -110,3 +110,22 @@ who plays games with cubes.
 The Rust took a lot longer to write because I had to figure out the pest crate,
 but I think it makes the top-level code easier to read, though
 I'm not so sure about `TryFrom<Pair> for Set`.
+
+## Day 3: Gear Ratios
+
+You need to get your gondola going!
+
+1. Sum the values of the parts in the schematic.
+   Parts are the numbers that are adjacent to a non-period, non-decimal symbol.
+1. Sum the gear "ratios".
+   Gears are the numbers adjacent to `*` symbols
+   that have _only_ two numbers adjacent to them.
+
+### Unusual tools
+
+1. In Ada I was able to define a useful `Constrants` range type
+   which made life a little annoying at one point.
+
+### Experience
+
+Kind of surprised I got this one right pretty quickly.
