@@ -9,6 +9,7 @@ For fun, I thrown in some Modula-2 from time to time...
 well, at least once.
 
 * [Day 1](#day-1-trebuchet): Trebuchet?!
+* [Day 2](#day-2-cube-conundrum): Cube Conundrum
 
 ## Day 1: Trebuchet?!
 
