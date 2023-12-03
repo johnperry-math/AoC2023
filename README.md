@@ -90,6 +90,12 @@ and I just don't know about it.
    Modula-2 does not, or at least I couldn't find a way.
    I had to declare and fill in a temporary variable instead
    (`Candidate`).
+1. Incorrect handling of constants of variant records?
+
+   When I tried to initialize a constant of a variant record type,
+   the compiler absolutely refused to handle it, saying it was an unknown field.
+   I suspect it was a compiler bug.
+   I will try to look into this more and possibly report it.
 
 Somewhat surprisingly, the compiled code is several times slower
 than unoptimized Ada and Rust, even when optimized with `-Ofast` and `-flto`.

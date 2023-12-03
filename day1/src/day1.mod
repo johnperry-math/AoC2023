@@ -16,7 +16,10 @@ IMPORT CharClass, FIO, InOut, Strings;
 
 TYPE
 
-   CodeType = ARRAY [1 .. 100] OF CHAR;
+   CodeIndexRange = [1 .. 100];
+   CodeRange = [1 .. 1000];
+
+   CodeType = ARRAY CodeIndexRange OF CHAR;
 
    ParsedDigit = RECORD
       CASE Valid: BOOLEAN OF
@@ -26,11 +29,40 @@ TYPE
       END;
    END;
 
+   String5 = ARRAY [1 .. 5] OF CHAR;
+
+   NumberSpelling = RECORD
+      Value: CARDINAL;
+      Spelling: String5;
+   END;
+
+   NumberSpellings = ARRAY [1 .. 3] OF NumberSpelling;
+
+CONST
+
+   String3Map = NumberSpellings {
+      NumberSpelling { 1, "one  " },
+      NumberSpelling { 2, "two  " },
+      NumberSpelling { 6, "six  " }
+   };
+
+   String4Map = NumberSpellings {
+      NumberSpelling { 4, "four " },
+      NumberSpelling { 5, "five " },
+      NumberSpelling { 9, "nine " }
+   };
+
+   String5Map = NumberSpellings {
+      NumberSpelling { 3, "three" },
+      NumberSpelling { 7, "seven" },
+      NumberSpelling { 8, "eight" }
+   };
+
 VAR
 
    Input: FIO.File;
    Code: CodeType;
-   Codes: ARRAY [1 .. 1000] OF CodeType;
+   Codes: ARRAY CodeRange OF CodeType;
 
 PROCEDURE WriteCode(Code: ARRAY OF CHAR);
 BEGIN
@@ -42,7 +74,7 @@ VAR
    Idx: CARDINAL;
 BEGIN
    Input := FIO.OpenToRead("input.txt");
-   FOR Idx := 1 TO 1000 DO
+   FOR Idx := MIN(CodeRange) TO MAX(CodeRange) DO
       FIO.ReadString(Input, Codes[Idx]);
    END;
    FIO.Close(Input);
@@ -83,106 +115,56 @@ VAR
    Idx, Result: CARDINAL;
 BEGIN
    Result := 0;
-   FOR Idx := 1 TO 1000 DO
+   FOR Idx := MIN(CodeRange) TO MAX(CodeRange) DO
       INC(Result, NaiveParse(Codes[Idx]));
    END;
    RETURN Result;
 END Part1;
 
-PROCEDURE ParseThree(S: ARRAY OF CHAR; Idx: CARDINAL): ParsedDigit;
+PROCEDURE ParseNum(
+   S: ARRAY OF CHAR;
+   Idx: CARDINAL
+): ParsedDigit;
 VAR
-   Result: ParsedDigit;
-   Candidate: ARRAY [1 .. 3] OF CHAR;
-BEGIN
-   Result.Valid := FALSE;
-   Candidate[1] := S[Idx];
-   Candidate[2] := S[Idx + 1];
-   Candidate[3] := S[Idx + 2];
-   IF Strings.Compare(Candidate, "one") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 1;
-   ELSIF Strings.Compare(Candidate, "two") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 2;
-   ELSIF Strings.Compare(Candidate, "six") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 6;
-   END;
-   RETURN Result;
-END ParseThree;
-
-PROCEDURE ParseFour(S: ARRAY OF CHAR; Idx: CARDINAL): ParsedDigit;
-VAR
-   Result: ParsedDigit;
-   Candidate: ARRAY [1 .. 4] OF CHAR;
-BEGIN
-   Result.Valid := FALSE;
-   Candidate[1] := S[Idx];
-   Candidate[2] := S[Idx + 1];
-   Candidate[3] := S[Idx + 2];
-   Candidate[4] := S[Idx + 3];
-   IF Strings.Compare(Candidate, "four") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 4;
-   ELSIF Strings.Compare(Candidate, "five") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 5;
-   ELSIF Strings.Compare(Candidate, "nine") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 9;
-   END;
-   RETURN Result;
-END ParseFour;
-
-PROCEDURE ParseFive(S: ARRAY OF CHAR; Idx: CARDINAL): ParsedDigit;
-VAR
+   J, K: CARDINAL;
    Result: ParsedDigit;
    Candidate: ARRAY [1 .. 5] OF CHAR;
-BEGIN
+BEGIN;
    Result.Valid := FALSE;
-   Candidate[1] := S[Idx];
-   Candidate[2] := S[Idx + 1];
-   Candidate[3] := S[Idx + 2];
-   Candidate[4] := S[Idx + 3];
-   Candidate[5] := S[Idx + 4];
-   IF Strings.Compare(Candidate, "three") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 3;
-   ELSIF Strings.Compare(Candidate, "seven") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 7;
-   ELSIF Strings.Compare(Candidate, "eight") = Strings.equal THEN
-      Result.Valid := TRUE;
-      Result.Value := 8;
+   FOR J := 1 TO 3 DO
+      Candidate[1 + J - 1] := S[Idx + J - 1];
    END;
-   RETURN Result;
-END ParseFive;
-
-PROCEDURE ParseWord(S: ARRAY OF CHAR; Idx: CARDINAL): ParsedDigit;
-VAR
-   Result, MaybeResult: ParsedDigit;
-BEGIN
-   Result.Valid := FALSE;
-   IF Idx + 2 <= Strings.Length(S) THEN
-      MaybeResult := ParseThree(S, Idx);
-      IF MaybeResult.Valid THEN
-         Result := MaybeResult;
+   Candidate[4] := ' ';
+   Candidate[5] := ' ';
+   FOR K := 1 TO 3 DO
+      IF Strings.Compare(Candidate, String3Map[K].Spelling) = Strings.equal
+      THEN
+         Result.Valid := TRUE;
+         Result.Value := String3Map[K].Value;
       END;
    END;
-   IF Idx + 3 <= Strings.Length(S) THEN
-      MaybeResult := ParseFour(S, Idx);
-      IF MaybeResult.Valid THEN
-         Result := MaybeResult;
+   IF (NOT Result.Valid) & (Idx + 3 <= Strings.Length(S)) THEN
+      Candidate[4] := S[Idx + 3];
+      FOR K := 1 TO 3 DO
+         IF Strings.Compare(Candidate, String4Map[K].Spelling) = Strings.equal
+         THEN
+            Result.Valid := TRUE;
+            Result.Value := String4Map[K].Value;
+         END;
       END;
    END;
-   IF Idx + 4 <= Strings.Length(S) THEN
-      MaybeResult := ParseFive(S, Idx);
-      IF MaybeResult.Valid THEN
-         Result := MaybeResult;
+   IF (NOT Result.Valid) & (Idx + 4 <= Strings.Length(S)) THEN
+      Candidate[5] := S[Idx + 4];
+      FOR K := 1 TO 3 DO
+         IF Strings.Compare(Candidate, String5Map[K].Spelling) = Strings.equal
+         THEN
+            Result.Valid := TRUE;
+            Result.Value := String5Map[K].Value;
+         END;
       END;
    END;
    RETURN Result;
-END ParseWord;
+END ParseNum;
 
 PROCEDURE CorrectParse(S: ARRAY OF CHAR): CARDINAL;
 VAR
@@ -201,7 +183,7 @@ BEGIN
             LastDigit := Digit(S[Idx]);
          END;
       ELSE
-         MaybeParsed := ParseWord(S, Idx);
+         MaybeParsed := ParseNum(S, Idx);
          IF MaybeParsed.Valid THEN
             IF FirstDigit = 0 THEN
                FirstDigit := MaybeParsed.Value;
@@ -220,7 +202,7 @@ VAR
    Idx, Result: CARDINAL;
 BEGIN
    Result := 0;
-   FOR Idx := 1 TO 1000 DO
+   FOR Idx := MIN(CodeRange) TO MAX(CodeRange) DO
       INC(Result, CorrectParse(Codes[Idx]));
    END;
    RETURN Result;
