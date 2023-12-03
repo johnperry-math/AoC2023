@@ -10,6 +10,7 @@ well, at least once.
 
 * [Day 1](#day-1-trebuchet): Trebuchet?!
 * [Day 2](#day-2-cube-conundrum): Cube Conundrum
+* [Day 3](#day-3-gear-ratios): Gear Ratios
 
 ## Day 1: Trebuchet?!
 
