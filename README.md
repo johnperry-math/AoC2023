@@ -132,7 +132,49 @@ You need to get your gondola going!
 
 1. In Ada I was able to define a useful `Constrants` range type
    which made life a little annoying at one point.
+1. In Rust:
+   * I decided to go with an array, to mimic the Ada,
+     rather than to use vectors.
+   * Unlike Ada, this part 2 uses a state machine (`Locations`)
+     to move through the known states of a potential gear.
 
 ### Experience
 
-Kind of surprised I got this one right pretty quickly.
+* Ada
+
+  Kind of surprised I got this one right pretty quickly.
+* Rust
+
+  Man, this took a while.
+  I **really** missed having access to custom arrays,
+  and it's also a lot harder in Rust to check indices.
+  In Ada, I can do this:
+
+      for Row_Offset in -1 .. 1 when Row + Row_Offset in Constraints loop
+         -- ...
+         if CH.Is_Decimal_Digit
+                (Schematic (Row + Row_Offset) (Col + Col_Offset))
+  
+  ...but in Rust I have to do something like this:
+
+      (-1..2).filter(|offset| (0..MAX_IDX).contains(&(row + offset)))
+         // ...
+         self.schematic[(row + row_offset) as usize]
+                        [(col + offset) as usize]
+                  .is_ascii_digit()
+
+   ...unless my Rust is even worse than I thought.
+   Notice the conversions in Rust: in the first case,
+   I'm using `i32` because otherwise it will refuse to compile
+   the sum of a `usize` and the `-1` that begins the range;
+   then, I have to convert the sum to a `usize`
+   in order to index into the array.
+
+   There's also the annoyance
+   (which made me waste quite a bit of time debugging)
+   where `(-1..1)` indicates the numbers -1 and 0, **not** 1.
+   This is why I have `(-1..2)` above.
+
+   All in all, I wasn't expecting the Rust to be harder to write
+   and more annoying to look at and debug than the Ada.
+  
