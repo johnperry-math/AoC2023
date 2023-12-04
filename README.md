@@ -198,3 +198,28 @@ You need to get your gondola going!
    All in all, I wasn't expecting the Rust to be harder to write
    and more annoying to look at and debug than the Ada.
   
+## Day 4: Scratchcards
+
+An elf can help you, but (as usual) first he wants a favor.
+He has a bunch of scratchcards with numbers written on them,
+and he scratches off the values to see which numbers he has.
+
+1. If he receives 2^(n - 1) points on a card with n matches,
+   how many points does he win?
+1. Oops! (funny how often we say that in the Advent of Code...)
+   He _doesn't_ receive points; instead, he receives copies of cards.
+   If card i has m matches, then he receives a new copy of cards
+   i + 1, i + 2, ..., i + m. How many cards does he have at the end?
+
+### Unusual tools
+
+1. It still tickles me pink to use Ada 2022's `'Reduce`.
+
+### Experience
+
+Pretty pleased with how quickly I worked this out in Ada.
+A silly typo held me up on Part 2:
+
+    Copies (Ith + Offset) := (@ + 1) * Copies (Ith);
+
+That leads to a **lot** of cards, already by card 5 or 6! :astonished:
