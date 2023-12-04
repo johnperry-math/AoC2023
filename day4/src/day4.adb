@@ -142,10 +142,7 @@ procedure Day4 is
    begin
       for Ith in Card_Range loop
          Number := Matches (Cards (Ith));
-         IO.Put_Line (Ith'Image & " matches" & Number'Image);
-         IO.Put_Line ("There are" & Copies (Ith)'Image & " copies");
          for Offset in 1 .. Number loop
-            IO.Put_Line ("Card" & Natural'Image (Ith + Offset));
             Copies (Ith + Offset) := @ + Copies (Ith);
          end loop;
       end loop;
@@ -154,7 +151,7 @@ procedure Day4 is
 
 begin
    Read_Input;
-   Put_Games;
+   --  Put_Games;
    IO.Put_Line ("The cards are worth" & Part_1'Image & " points");
    IO.Put_Line ("You end up with" & Part_2'Image & " cards");
 end Day4;
