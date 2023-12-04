@@ -27,7 +27,7 @@ procedure Day3 is
    subtype Schematic_Row is String (Constraints);
    Schematic : array (Constraints) of Schematic_Row;
 
-   type Used_Location is record
+   type Location is record
       Row, Col : Constraints;
    end record;
 
@@ -42,19 +42,19 @@ procedure Day3 is
    --  SECTION
    --  I/O
 
-   procedure Read_IO is
+   procedure Read_Input is
       F : IO.File_Type;
    begin
       IO.Open (F, IO.In_File, "input.txt");
       for Row in Schematic'Range loop
          Schematic (Row) := IO.Get_Line (F);
       end loop;
-   end Read_IO;
+   end Read_Input;
 
    --  SECTION
    --  Part 1
 
-   Used_Locations : array (Constraints, Constraints) of Boolean :=
+   UsedLocations : array (Constraints, Constraints) of Boolean :=
      [others => [others => False]];
 
    function Expand_Unused (Row, Col : Constraints) return Natural is
@@ -67,24 +67,25 @@ procedure Day3 is
    begin
 
       --  expand number left
-      while Left > 1 and then CH.Is_Decimal_Digit (Schematic (Row) (Left - 1))
+      while Left > Constraints'First
+        and then CH.Is_Decimal_Digit (Schematic (Row) (Left - 1))
       loop
          Left := @ - 1;
       end loop;
 
       --  expand number right
-      while Right < 140
+      while Right < Constraints'Last
         and then CH.Is_Decimal_Digit (Schematic (Row) (Right + 1))
       loop
          Right := @ + 1;
       end loop;
 
       --  now compute it... if it hasn't been used yet
-      if not Used_Locations (Row, Left) then
+      if not UsedLocations (Row, Left) then
          for Idx in Left .. Right loop
             Result := Result * 10 + Digit (Schematic (Row) (Idx));
          end loop;
-         Used_Locations (Row, Left) := True;
+         UsedLocations (Row, Left) := True;
       end if;
 
       return Result;
@@ -150,13 +151,13 @@ procedure Day3 is
    type Two_Locations (Valid : Boolean) is record
       case Valid is
          when True =>
-            First, Second : Used_Location;
+            First, Second : Location;
          when False =>
             null;
       end case;
    end record;
 
-   function Expand (Row, Col : Constraints) return Used_Location is
+   function Expand (Row, Col : Constraints) return Location is
       --  returns the number located at the given Row and Col
 
       Left : Constraints := Col;
@@ -169,7 +170,7 @@ procedure Day3 is
          Left := @ - 1;
       end loop;
 
-      return Used_Location'(Row => Row, Col => Left);
+      return Location'(Row => Row, Col => Left);
 
    end Expand;
 
@@ -187,7 +188,7 @@ procedure Day3 is
       is
 
       Adjacencies                                   : Natural := 0;
-      First_Location, Second_Location, New_Location : Used_Location;
+      First_Location, Second_Location, New_Location : Location;
 
    begin
 
@@ -240,13 +241,12 @@ procedure Day3 is
 
    end Two_Adjacencies;
 
-   function Value_At (L : Used_Location) return Natural is
+   function Value_At (L : Location) return Natural is
       --  returns the value of the number stored at L
-      Left  : Constraints;
-      Value : Natural := 0;
+      Left  : Constraints := L.Col;
+      Value : Natural     := 0;
    begin
 
-      Left := L.Col;
       while CH.Is_Decimal_Digit (Schematic (L.Row) (Left)) loop
          Value := @ * 10 + Digit (Schematic (L.Row) (Left));
          if Left < Constraints'Last then
@@ -302,7 +302,7 @@ procedure Day3 is
    end Part_2;
 
 begin
-   Read_IO;
+   Read_Input;
    IO.Put_Line ("Sum of part numbers is" & Part_1'Image);
    IO.Put_Line ("Sum of gear ratios is" & Part_2'Image);
 end Day3;

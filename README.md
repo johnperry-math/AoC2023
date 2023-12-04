@@ -143,6 +143,26 @@ You need to get your gondola going!
 * Ada
 
   Kind of surprised I got this one right pretty quickly.
+* Modula-2
+
+  Translating from Ada was pretty straightfoward.
+  It's interesting to me that you can define a variable
+  to be of a certain range type,
+  but Modula-2 won't choke if it goes outside that range
+  the way Ada will (unless this is a bug in gm2).
+  I'm definitely appreciating some of Ada's safety features,
+  since the lack of them in Modula-2 hammered me a few times.
+  In particular:
+  * Can't seem to define a constant type of a variant record.
+    I'm not sure if that's a misunderstanding on my part,
+    or a bug in gm2.
+  * I'm pretty sure this is a bug:
+    if you neglect the parentheses on a function procedure
+    that takes no parameters, gm2 treats it as if you want the address(?).
+    Hence, the following line of the module repeatedly gave the wrong answer:
+
+        InOut.WriteInt(Part1, 0); (* needs to be Part1() *)
+    
 * Rust
 
   Man, this took a while.

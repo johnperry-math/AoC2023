@@ -60,7 +60,6 @@ CONST
 
 VAR
 
-   Input: FIO.File;
    Code: CodeType;
    Codes: ARRAY CodeRange OF CodeType;
 
@@ -71,7 +70,8 @@ END WriteCode;
 
 PROCEDURE ReadInput;
 VAR
-   Idx: CARDINAL;
+   Input: FIO.File;
+   Idx: CodeRange;
 BEGIN
    Input := FIO.OpenToRead("input.txt");
    FOR Idx := MIN(CodeRange) TO MAX(CodeRange) DO

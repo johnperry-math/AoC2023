@@ -3,3 +3,6 @@ bin/
 alire/
 config/
 target/
+
+Cargo.lock
+a.out
