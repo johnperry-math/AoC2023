@@ -217,9 +217,19 @@ and he scratches off the values to see which numbers he has.
 
 ### Experience
 
-Pretty pleased with how quickly I worked this out in Ada.
-A silly typo held me up on Part 2:
+* Pretty pleased with how quickly I worked this out in Ada.
+  A silly typo held me up on Part 2:
 
-    Copies (Ith + Offset) := (@ + 1) * Copies (Ith);
+      Copies (Ith + Offset) := (@ + 1) * Copies (Ith);
 
-That leads to a **lot** of cards, already by card 5 or 6! :astonished:
+  That leads to a **lot** of cards, already by card 5 or 6! :astonished:
+* The Rust was also pretty straightforward. I got hung up on three things:
+  * I first tried to `.split` the input strings on a ` `, but
+    somehow that led to empty strings in the input.
+    I never looked into what I was doing wrong because `.split_ascii_whitespace`
+    did the job.
+  * 0-based indexing meant I was off-by-one
+    when I used `.skip(card)` in part 2.
+    Fixed by using `.slip(card + 1)`.
+  * I botched the initial filter in `matches`,
+    forgetting what types I was looking at.
