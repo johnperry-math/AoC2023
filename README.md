@@ -233,3 +233,45 @@ and he scratches off the values to see which numbers he has.
     Fixed by using `.slip(card + 1)`.
   * I botched the initial filter in `matches`,
     forgetting what types I was looking at.
+
+## Day 5: If You Give A Seed A Fertilizer
+
+Yet another elf who's willing to help you,
+though of course he wants a favor first.
+He seems oddly unashamed of how long he's overlooked sending water.
+
+1. help an elf figure out which of 20 seeds to plant
+   by following an almanac's mapping of seed to soil,
+   soil to fertilizer, etc.
+2. whoops! **(this is getting to be a habit...)**
+   it's not 20 seeds, but 10 seeds and 10 intervals;
+   do it again with this understanding
+
+### Unusual tools
+
+* I hadn't used Ada's `Containers.Generic_Array_Sort` in a while.
+  In fact, I couldn't even find it when searching previous AoC's,
+  though I did search for `Sorter` instead of `Sort`.
+  Amazingly, I instantiated the generic correctly on the first try!
+* Interval operations, in particular intersections and/or partitions.
+* :warning: 64-bit integers (`Long_Long_Integer` in Ada) as for some reason
+  gnat _still_ thinks the default should be 32-bit integers.
+  (Who would ever need a value greater than 4 billion or so?)
+
+### Experience
+
+Despite the huge numbers, I was able to solve both parts via brute force.
+Part 2 will take a while! while I waited,
+I thought about how to tackle it efficiently, and hey, hey!
+I came up with the approach implemented here:
+splitting intervals when they overlap a mapping
+without containing or being contained.
+
+Before I could implement it, the brute force approach terminated
+_with the correct answer!_ :astonished:
+
+I pressed on out of a desire to have a _good_ solution, and
+once I wrung out the bugs, the correct answer popped up.
+This is much, _much_ faster, something like 9 milliseconds,
+as opposed to 9 minutes, or however long it took
+the inefficient solution to do its thing.
