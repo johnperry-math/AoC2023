@@ -315,9 +315,8 @@ procedure Day5 is
          for Map of Maps loop
 
             if Interval.Left in Map.Source .. Map.Source + Map.Length - 1 then
-               Interval.Left := (Map.Destination - Map.Source) + Interval.Left;
-               Interval.Right :=
-                 (Map.Destination - Map.Source) + Interval.Right;
+               Interval.Left  := @ + (Map.Destination - Map.Source);
+               Interval.Right := @ + (Map.Destination - Map.Source);
                exit;
             end if;
 

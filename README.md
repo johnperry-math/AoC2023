@@ -11,6 +11,8 @@ well, at least once.
 * [Day 1](#day-1-trebuchet): Trebuchet?!
 * [Day 2](#day-2-cube-conundrum): Cube Conundrum
 * [Day 3](#day-3-gear-ratios): Gear Ratios
+* [Day 4](#day-4-scratchcards): Scratchcards
+* [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
 
 ## Day 1: Trebuchet?!
 
@@ -260,18 +262,26 @@ He seems oddly unashamed of how long he's overlooked sending water.
 
 ### Experience
 
-Despite the huge numbers, I was able to solve both parts via brute force.
-Part 2 will take a while! while I waited,
-I thought about how to tackle it efficiently, and hey, hey!
-I came up with the approach implemented here:
-splitting intervals when they overlap a mapping
-without containing or being contained.
-
-Before I could implement it, the brute force approach terminated
-_with the correct answer!_ :astonished:
-
-I pressed on out of a desire to have a _good_ solution, and
-once I wrung out the bugs, the correct answer popped up.
-This is much, _much_ faster, something like 9 milliseconds,
-as opposed to 9 minutes, or however long it took
-the inefficient solution to do its thing.
+* Despite the huge numbers, I was able to solve both parts via brute force.
+  Part 2 will take a while! while I waited,
+  I thought about how to tackle it efficiently, and hey, hey!
+  I came up with the approach implemented here:
+  splitting intervals when they overlap a mapping
+  without containing or being contained.
+  
+  Before I could implement it, the brute force approach terminated
+  _with the correct answer!_ :astonished:
+  
+  I pressed on out of a desire to have a _good_ solution, and
+  once I wrung out the bugs, the correct answer popped up.
+  This is much, _much_ faster, something like 9 milliseconds,
+  as opposed to 9 minutes, or however long it took
+  the inefficient solution to do its thing.
+* The Rust implementation is about half as many as the Ada implementation.
+  I'm not sure why that is, but a non-trivial part of it is:
+  * formatting
+  * more detailed comments in the Ada
+  * the Rust lacks the brute-force implementation of Part 2
+  * it takes a few more lines to set up certain library structures in Ada;
+    compare, for instance, instantiation of Ada's `Interval_Vectors` package
+    as opposed to Rust's inline declaration of the `Vec<Interval>`.
