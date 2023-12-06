@@ -13,6 +13,7 @@ well, at least once.
 * [Day 3](#day-3-gear-ratios): Gear Ratios
 * [Day 4](#day-4-scratchcards): Scratchcards
 * [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
+* [Day 6](#day-6-wait-for-it)
 
 ## Day 1: Trebuchet?!
 
@@ -285,3 +286,39 @@ He seems oddly unashamed of how long he's overlooked sending water.
   * it takes a few more lines to set up certain library structures in Ada;
     compare, for instance, instantiation of Ada's `Interval_Vectors` package
     as opposed to Rust's inline declaration of the `Vec<Interval>`.
+
+## Day 6: Wait For It
+
+You need some sand, and Desert Island seems like a good place to find some.
+But how should you get there? Oddly, you can't just ask any of the elves
+hanging around, pointing out that you need to save Christmas, nooooo.
+You have to finagle your way onto a ferry. But you have no money, apparently.
+Fortunately, you can win an all-expenses-paid ferry ride there, if only
+you manage to win at the boat races.
+
+In these boat races, you press a button on top of the boat for x milliseconds,
+which increases the speed the boat travels, then you release it to travel
+the remaining time allotted to the race. You need to make a good distance.
+
+1. How many different options do you have to press it a whole number of seconds
+   and beat the current distance record in each race?
+2. whoops! (:roll_eyes:) those weren't the records in separate races;
+   they were the records in one race, but printed out with, **and I quote**,
+   "very bad kerning". :rofl: :rofl: :rofl: :rofl: Rinse, lather, repeat.
+
+### Unusual Tools
+
+1. I haven't used Ada's floating-point packages in so long,
+   I forgot everything there was to using them.
+
+### Experience
+
+Hey, it's the quadratic formula! :heart:
+It only took me an embarrassingly long time
+to line up the data and the coefficients! :blush:
+
+Satisfying the compiler in Part 2 was tedious, but not especially hard.
+
+This was surprisingly easy for a Day 6.
+I can see how it could easily go awry for someone who didn't check for
+the edge case, or who didn't recall how the decimal system works.
