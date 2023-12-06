@@ -13,7 +13,7 @@ well, at least once.
 * [Day 3](#day-3-gear-ratios): Gear Ratios
 * [Day 4](#day-4-scratchcards): Scratchcards
 * [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
-* [Day 6](#day-6-wait-for-it)
+* [Day 6](#day-6-wait-for-it): Wait For It
 
 ## Day 1: Trebuchet?!
 
