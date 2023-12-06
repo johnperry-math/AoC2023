@@ -302,7 +302,7 @@ the remaining time allotted to the race. You need to make a good distance.
 
 1. How many different options do you have to press it a whole number of seconds
    and beat the current distance record in each race?
-2. whoops! (:roll_eyes:) those weren't the records in separate races;
+2. whoops! ( :roll_eyes: ) those weren't the records in separate races;
    they were the records in one race, but printed out with, **and I quote**,
    "very bad kerning". :rofl: :rofl: :rofl: :rofl: Rinse, lather, repeat.
 
@@ -313,7 +313,7 @@ the remaining time allotted to the race. You need to make a good distance.
 
 ### Experience
 
-Hey, it's the quadratic formula! :heart:
+Hey, :heart: it's the quadratic formula!
 It only took me an embarrassingly long time
 to line up the data and the coefficients! :blush:
 
