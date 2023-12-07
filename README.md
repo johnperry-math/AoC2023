@@ -14,6 +14,7 @@ well, at least once.
 * [Day 4](#day-4-scratchcards): Scratchcards
 * [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
 * [Day 6](#day-6-wait-for-it): Wait For It
+* [Day 7](#day-7-camel-cards): Camel Cards
 
 ## Day 1: Trebuchet?!
 
@@ -322,3 +323,29 @@ Satisfying the compiler in Part 2 was tedious, but not especially hard.
 This was surprisingly easy for a Day 6.
 I can see how it could easily go awry for someone who didn't check for
 the edge case, or who didn't recall how the decimal system works.
+
+## Day 7: Camel Cards
+
+You're playing cards with an elf on a camel, whiling away the time
+as he transports you across Desert Island. It's a bit like poker.
+
+1. Determine the point values of the many, many hands you're dealt.
+   This requires ranking them.
+1. The elf introduces new rules. Determine the new point values.
+
+### Unusual tools
+
+#### Ada
+* Part 1 uses an enumeration's default ordering to break ties between hands.
+* Part 2 uses an array over an enumeration to re-order individual cards,
+   allowing us to reuse the same basic structure:
+   ```
+   New_Ranking : constant array (Face) of Natural :=
+      [Jack => 0, One => 1, Two => 2, Three => 3, Four => 4, Five => 5,
+      Six   => 6, Seven => 7, Eight => 8, Nine => 9, Ten => 10, Queen => 11,
+      King  => 12, Ace => 13];
+   ```
+
+### Experience
+
+This was straightforward to do in Ada, thanks to the arrays.

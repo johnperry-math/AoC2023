@@ -1,0 +1,22 @@
+with "config/day7_config.gpr";
+project Day7 is
+
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "obj/" & Day7_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use "bin";
+   for Main use ("day7.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use Day7_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Day7;
