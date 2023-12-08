@@ -319,11 +319,17 @@ Hey, :heart: it's the quadratic formula!
 It only took me an embarrassingly long time
 to line up the data and the coefficients! :blush:
 
-Satisfying the compiler in Part 2 was tedious, but not especially hard.
-
 This was surprisingly easy for a Day 6.
 I can see how it could easily go awry for someone who didn't check for
 the edge case, or who didn't recall how the decimal system works.
+
+#### Ada
+
+Satisfying the compiler in Part 2 was tedious, but not especially hard.
+
+#### Rust
+
+Translating the Ada to Rust was straightforward.
 
 ## Day 7: Camel Cards
 
