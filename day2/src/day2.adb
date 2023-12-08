@@ -8,7 +8,8 @@ pragma Ada_2022;
 --
 --  part 1: determine which cube games are valid
 --
---  part 2: determine the sum of power values of minimal bounds for all cube games
+--  part 2: determine the sum of power values of minimal bounds
+--          for all cube games
 
 with Ada.Text_IO;
 with Ada.Containers.Vectors;
@@ -47,16 +48,16 @@ procedure Day2 is
    --  I/O
 
    procedure Read_IO is
-      F : IO.File_Type;
+      Input : IO.File_Type;
       package Color_IO is new IO.Enumeration_IO (Enum => Colors);
    begin
 
-      IO.Open (F, IO.In_File, "input.txt");
+      IO.Open (Input, IO.In_File, "input.txt");
 
-      while not IO.End_Of_File (F) loop
+      while not IO.End_Of_File (Input) loop
 
          declare
-            S    : constant String := IO.Get_Line (F);
+            S    : constant String := IO.Get_Line (Input);
             Idx  : Positive        := 7;
             Game : Hand_Vectors.Vector;
          begin
@@ -106,6 +107,8 @@ procedure Day2 is
          end;
 
       end loop;
+
+      IO.Close (Input);
 
    end Read_IO;
 

@@ -130,8 +130,8 @@ procedure Day1 is
 
    function Correct_Parse (S : String) return Natural is
    --  returns the two-digit number
-   --  whose tens digit is the first digit, possibly spelled, to appear in S and
-   --  whose ones digit is the last digit, possibly spelled, in S
+   --  whose tens digit is the first digit, possibly spelled, to appear in S
+   --  and whose ones digit is the last digit, possibly spelled, in S
 
       First_Digit : Natural := 0;
       Last_Digit : Positive;
@@ -180,15 +180,15 @@ procedure Day1 is
    --  I/O and Parts 1, 2
 
    procedure Read_Input is
-      F : IO.File_Type;
+      Input : IO.File_Type;
    begin
 
-      IO.Open (F, IO.In_File, "input.txt");
+      IO.Open (Input, IO.In_File, "input.txt");
 
-      while not IO.End_Of_File (F) loop
+      while not IO.End_Of_File (Input) loop
 
          declare
-            S : constant String := IO.Get_Line (F);
+            S : constant String := IO.Get_Line (Input);
          begin
 
             Calibration_Values.Append (Naive_Parse (S));
@@ -199,6 +199,8 @@ procedure Day1 is
          end;
 
       end loop;
+
+      IO.Close (Input);
 
       IO.Put_Line ("Read" & Calibration_Values.Length'Image & " values");
 

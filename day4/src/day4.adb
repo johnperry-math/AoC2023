@@ -41,15 +41,15 @@ procedure Day4 is
    --  I/O
 
    procedure Read_Input is
-      F : IO.File_Type;
+      Input : IO.File_Type;
    begin
 
-      IO.Open (F, IO.In_File, "input.txt");
+      IO.Open (Input, IO.In_File, "input.txt");
 
       for Card in Cards'Range loop
 
          declare
-            S     : constant String := IO.Get_Line (F);
+            S     : constant String := IO.Get_Line (Input);
             Idx   : Positive        := 11;
             Value : Natural;
          begin
@@ -73,6 +73,8 @@ procedure Day4 is
          end;
 
       end loop;
+
+      IO.Close (Input);
 
    end Read_Input;
 

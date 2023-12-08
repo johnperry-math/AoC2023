@@ -56,20 +56,20 @@ procedure Day8 is
    --  I/O
 
    procedure Read_Input is
-      F : IO.File_Type;
+      Input : IO.File_Type;
    begin
-      IO.Open (F, IO.In_File, "input.txt");
+      IO.Open (Input, IO.In_File, "input.txt");
       declare
-         S : constant String := IO.Get_Line (F);
+         S : constant String := IO.Get_Line (Input);
       begin
          for C of S loop
             Directions.Append (if C = 'L' then Left else Right);
          end loop;
       end;
-      IO.Skip_Line (F, 1);
-      while not IO.End_Of_File (F) loop
+      IO.Skip_Line (Input, 1);
+      while not IO.End_Of_File (Input) loop
          declare
-            S                             : constant String := IO.Get_Line (F);
+            S : constant String := IO.Get_Line (Input);
             Source, Left_Node, Right_Node : Node;
          begin
             Source     := S (1 .. 3);
@@ -82,6 +82,7 @@ procedure Day8 is
             end if;
          end;
       end loop;
+      IO.Close (Input);
    end Read_Input;
 
    --  SECTION

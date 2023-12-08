@@ -47,14 +47,14 @@ procedure Day7 is
    Invalid_Card : exception;
 
    procedure Read_Input is
-      F : IO.File_Type;
+      Input : IO.File_Type;
    begin
 
-      IO.Open (F, IO.In_File, "input.txt");
+      IO.Open (Input, IO.In_File, "input.txt");
 
-      while not IO.End_Of_File (F) loop
+      while not IO.End_Of_File (Input) loop
          declare
-            S   : constant String := IO.Get_Line (F);
+            S   : constant String := IO.Get_Line (Input);
             H   : Hand;
             Pos : Positive;
          begin
@@ -75,6 +75,8 @@ procedure Day7 is
 
          end;
       end loop;
+
+      IO.Close (Input);
 
    end Read_Input;
 

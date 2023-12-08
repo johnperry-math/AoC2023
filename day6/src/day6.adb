@@ -36,15 +36,15 @@ procedure Day6 is
    --  I/O
 
    procedure Read_Input is
-      F : IO.File_Type;
+      Input : IO.File_Type;
    begin
 
-      IO.Open (F, IO.In_File, "input.txt");
+      IO.Open (Input, IO.In_File, "input.txt");
 
       declare
          Pos        : Positive;
-         Race_Times : constant String := IO.Get_Line (F);
-         Distances  : constant String := IO.Get_Line (F);
+         Race_Times : constant String := IO.Get_Line (Input);
+         Distances  : constant String := IO.Get_Line (Input);
       begin
 
          --  get the race times
@@ -68,6 +68,8 @@ procedure Day6 is
            (Distances (Pos + 1 .. Distances'Last), Races (4).Distance, Pos);
 
       end;
+
+      IO.Close (Input);
 
    end Read_Input;
 

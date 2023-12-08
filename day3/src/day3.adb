@@ -43,11 +43,11 @@ procedure Day3 is
    --  I/O
 
    procedure Read_Input is
-      F : IO.File_Type;
+      Input : IO.File_Type;
    begin
-      IO.Open (F, IO.In_File, "input.txt");
+      IO.Open (Input, IO.In_File, "input.txt");
       for Row in Schematic'Range loop
-         Schematic (Row) := IO.Get_Line (F);
+         Schematic (Row) := IO.Get_Line (Input);
       end loop;
    end Read_Input;
 

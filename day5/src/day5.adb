@@ -73,14 +73,14 @@ procedure Day5 is
 
    --  SECTION I/O
 
-   procedure Read_Map (F : IO.File_Type; M : out Map_Array) is
+   procedure Read_Map (Input : IO.File_Type; M : out Map_Array) is
    --  reads all mappings for M from F
    begin
 
       for Ith in M'Range loop
 
          declare
-            S   : constant String := IO.Get_Line (F);
+            S   : constant String := IO.Get_Line (Input);
             Pos : Positive        := 1;
          begin
 
