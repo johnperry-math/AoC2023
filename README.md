@@ -15,6 +15,7 @@ well, at least once.
 * [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
 * [Day 6](#day-6-wait-for-it): Wait For It
 * [Day 7](#day-7-camel-cards): Camel Cards
+* [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
 
 ## Day 1: Trebuchet?!
 
@@ -349,3 +350,37 @@ as he transports you across Desert Island. It's a bit like poker.
 ### Experience
 
 This was straightforward to do in Ada, thanks to the arrays.
+
+## Day 8: Haunted Wasteland
+
+Your elf companion disappears -- in a somewhat melancholic twist,
+it turns out she was a ghost!
+
+Meanwhile, a sandstorm is approaching.
+You need to find your way to the destination.
+The ghost seems to have left you some maps.
+
+1. How many steps does it take to get from `AAA` to `ZZZ`?
+1. How many steps does it take to get from any node ending in `A`
+   to any node ending in `Z`?
+
+### Unusual tools
+
+In Ada, nothing special.
+
+### Experience
+
+If I hadn't incremented `Step` in the wrong place,
+both parts would have been fun and easy, but
+in Part 2 I incremented `Step` after moving _each_ ghost,
+rather than after moving _all_ ghosts.
+That left me unable to confirm my suspicion that
+they were moving in regular cycles, and we needed an `Lcm`
+(which I duly copied from AoC 2019 Day 12).
+
+Otherwise, it was fun and easy.
+
+Out of curiosity, while it makes sense that
+ghosts can move in many places simultaneously...
+how am _I_ supposed to do so?
+Tune in tomorrow to find out! (I guess)
