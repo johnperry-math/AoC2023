@@ -354,9 +354,38 @@ as he transports you across Desert Island. It's a bit like poker.
       King  => 12, Ace => 13];
    ```
 
+#### Rust
+
+Man! was this a chore.
+
+* Rust gives you nothing for free, which I don't necessarily mind,
+  but having to derive
+
+      Clone, Copy, PartialEq, Eq, Hash, PartialOrd
+  
+  on the `Face` type seemed a bit much.
+  This is one drawback to Rust's conflating ordinary enumerations
+  with algebraic types.
+* I wasted time trying to `impl PartialOrd for Hand`,
+  then getting confused and trying to `impl Ord for Hand`,
+  then getting more confused because `Ord` wants a `clamp`
+  and the code completion filled it in with something even _it_ didn't like,
+  all the time wondering what I would do in Part when I had to change ordering,
+  before I realized that I could simply `.sort_by()` and supply the desired ordering.
+  Granted, that stupidity is on _me_; I knew there was a `.sort_by()` and simply forgot about it.
+  Still, it was a chore, and implementing `Ord::clamp()` still scares me.
+* In part 1 I was nailed by the fact that counting always starts from 0,
+  and you have no way to change it,
+  so you _must_ remember to add 1 to `ith` (my default indexing variable)
+  when you multiply it to the bid.
+
 ### Experience
 
-This was straightforward to do in Ada, thanks to the arrays.
+* This was straightforward to do in Ada, thanks to arrays,
+  sensible defaults for things like orderings,
+  and the ability to index in a manner appropriate to the problem.
+* It was not quite so straightforward in Rust,
+  for the reasons mentioned above.
 
 ## Day 8: Haunted Wasteland
 
