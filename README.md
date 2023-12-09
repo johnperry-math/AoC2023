@@ -360,8 +360,14 @@ This was straightforward to do in Ada, thanks to the arrays.
 
 ## Day 8: Haunted Wasteland
 
-Your elf companion disappears -- in a somewhat melancholic twist,
-it turns out she was a ghost!
+Today's introduction manages to be both melancholy and spooky.
+
+    You're still riding a camel across Desert Island
+    when you spot a sandstorm quickly approaching.
+    When you turn to warn the Elf, she disappears before your eyes!
+    To be fair, she had just finished warning you about ghosts a few minutes ago.
+
+As we will see, the simultaneity of these emotions is appropriate to the puzzle.
 
 Meanwhile, a sandstorm is approaching.
 You need to find your way to the destination.
