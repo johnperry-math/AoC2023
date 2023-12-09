@@ -94,6 +94,10 @@ and I just don't know about it.
 
    Ada and Rust allow easy string comparison and substrings.
    Modula-2 does not, or at least I couldn't find a way.
+   _[update:
+   [Confirmed on gm2 mailing list](https://lists.nongnu.org/archive/html/gm2/2023-12/msg00003.html)
+   by the lead compiler developer, though he did point me
+   to the compiler-supplied `DynamicStrings` module.]_
    I had to declare and fill in a temporary variable instead
    (`Candidate`).
 1. Incorrect handling of constants of variant records?
@@ -102,6 +106,9 @@ and I just don't know about it.
    the compiler absolutely refused to handle it, saying it was an unknown field.
    I suspect it was a compiler bug.
    I will try to look into this more and possibly report it.
+   _[update:
+   [Confirmed on gm2 mailing list](https://lists.nongnu.org/archive/html/gm2/2023-12/msg00012.html)
+   that this is a bug.]_
 
 Somewhat surprisingly, the compiled code is several times slower
 than unoptimized Ada and Rust, even when optimized with `-Ofast` and `-flto`.
@@ -168,6 +175,9 @@ You need to get your gondola going!
     Hence, the following line of the module repeatedly gave the wrong answer:
 
         InOut.WriteInt(Part1, 0); (* needs to be Part1() *)
+   
+   _[update: [Confirmed by lead compiler developer](https://lists.nongnu.org/archive/html/gm2/2023-12/msg00012.html)
+   that this is a bug.]_
     
 * Rust
 
@@ -361,11 +371,13 @@ Man! was this a chore.
 * Rust gives you nothing for free, which I don't necessarily mind,
   but having to derive
 
-      Clone, Copy, PartialEq, Eq, Hash, PartialOrd
+      Clone, Copy, PartialEq, Eq, Hash, PartialOrd, Ord
   
   on the `Face` type seemed a bit much.
   This is one drawback to Rust's conflating ordinary enumerations
   with algebraic types.
+* On the other hand (no pun intended), at least Rust _lets_ me derive `Hash`.
+  Ada doesn't even offer that.
 * I wasted time trying to `impl PartialOrd for Hand`,
   then getting confused and trying to `impl Ord for Hand`,
   then getting more confused because `Ord` wants a `clamp`
@@ -378,6 +390,7 @@ Man! was this a chore.
   and you have no way to change it,
   so you _must_ remember to add 1 to `ith` (my default indexing variable)
   when you multiply it to the bid.
+* Rust does have a nice 
 
 ### Experience
 
