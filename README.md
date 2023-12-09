@@ -16,6 +16,7 @@ well, at least once.
 * [Day 6](#day-6-wait-for-it): Wait For It
 * [Day 7](#day-7-camel-cards): Camel Cards
 * [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
+* [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
 
 ## Day 1: Trebuchet?!
 
@@ -390,3 +391,28 @@ Out of curiosity, while it makes sense that
 ghosts can move in many places simultaneously...
 how am _I_ supposed to do so?
 Tune in tomorrow to find out! (I guess)
+
+## Day 9: Mirage Maintenance
+
+We never found out "how".
+
+After the sandstorm, you come upon an oasis.
+Above you is a metal island, probably named Metal Island.
+While awaiting the sunrise, you take some ecological readings
+which produce sequences of values.
+
+1. Predict the future of the oasis by extending the sequences
+   one value to the right. Return the new values' sum.
+1. Infer the history of the oasis by extending the sequences
+   one value to the left. Return the new values' sum.
+
+### Unusual Tools
+
+* In Ada, I finally took Jeffrey Carter's advice and defaulted to using
+  a custom Integer range: `type Value is range -2**32 .. 2**32 - 1;`
+
+### Experience
+
+Oddly fun and easy for a day 9. Initially I goofed on Part 2
+by adding the wrong numbers, but that was because
+I was modifying the former `Extend_Sequence` to be more general.
