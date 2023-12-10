@@ -17,6 +17,7 @@ well, at least once.
 * [Day 7](#day-7-camel-cards): Camel Cards
 * [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
 * [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
+* [Day 10](#day-10-pipe-maze): Pipe Maze
 
 ## Day 1: Trebuchet?!
 
@@ -490,3 +491,50 @@ which produce sequences of values.
 Oddly fun and easy for a day 9. Initially I goofed on Part 2
 by adding the wrong numbers, but that was because
 I was modifying the former `Extend_Sequence` to be more general.
+
+## Day 10: Pipe Maze
+
+As you make your way around metal island, you spot a (metal) animal
+who ducks into a pipe.
+But you need his help!
+
+1. Trace the closed-loop pipe. Determine how many steps it takes
+   to get to its furthest point.
+1. Determine the size of a potential nest within the closed loop.
+
+### Unusual Tools
+
+#### Ada
+* Ada 2022's `declare` expressions, in `Can_Move`.
+  Unfortunately, the language plugin for VSCode doesn't recognize these yet,
+  so formatting was a hassle.
+* Exception handling, at least during debugging.
+
+### Experience
+
+This is much more complex than the previous puzzles.
+* Some sort of search in Part 2.
+* _That_ needs to detect points outside the loop but accessing to the animal
+  by squeezing between pipes.
+* The pipe shapes are a little hard to work out..
+* If you get something wrong, debugging can be a hassle.
+
+Still, I made it harder than it needed to be.
+* In my first attempt at Part 1, searching terminated by testing whether
+  the two copies of the animal that follow the pipe in opposite directions
+  are the same.
+
+  **That was dumb.**
+  I needed only to check whether their _locations_ were the same.
+* In my first attempt at Part 2, I forgot the puzzle master's note that
+  "[a]ny tile that isn't part of the main loop
+   can count as being enclosed by the loop."
+
+All that aside, it's a very good puzzle.
+I just hope we get some easier ones the next couple of days. :grin:
+
+### Visualization
+
+Finally! our first visualization of the year.
+
+![visualization.png](day10/visualization.png)
