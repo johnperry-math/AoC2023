@@ -425,6 +425,7 @@ In Ada, nothing special.
 
 ### Experience
 
+#### Ada
 If I hadn't incremented `Step` in the wrong place,
 both parts would have been fun and easy, but
 in Part 2 I incremented `Step` after moving _each_ ghost,
@@ -439,6 +440,31 @@ Out of curiosity, while it makes sense that
 ghosts can move in many places simultaneously...
 how am _I_ supposed to do so?
 Tune in tomorrow to find out! (I guess)
+
+#### Rust
+* `read_input()`is nearly 80 lines of Rust.
+* `Read_Input` is less than 30 lines of Ada.
+
+**On the other hand!**
+* The Rust is fewer lines overall, in part because...
+* ...I used the `num` crate to compute `lcm`'s, where in Ada
+  I simply copy-and-pasted my `lcm` code from a previous year's puzzle,
+  as noted above.
+
+**On the other other hand!**
+Compare this Rust...
+
+    n = if direction == Direction::Left {
+       map[&n].left
+    } else {
+       map[&n].right
+    };
+
+...to this Ada.
+
+    N := Map (N) (D);
+
+**We report, you decide.**
 
 ## Day 9: Mirage Maintenance
 

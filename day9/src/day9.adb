@@ -67,6 +67,7 @@ procedure Day9 is
             All_Sequences.Append (List);
          end;
       end loop;
+      IO.Close (Input);
    end Read_Input;
 
    --  SECTION

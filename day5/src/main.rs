@@ -2,14 +2,14 @@
 //
 // John Perry
 //
-// Day 4: Day 5: If You Give A Seed A Fertilizer
+// Day 4: If You Give A Seed A Fertilizer
 //
 // part 1: help an elf figure out which of 20 seeds to plant
-//          by following an almanac's mapping of seed to soil,
-//          soil to fertilizer, etc.
+//         by following an almanac's mapping of seed to soil,
+//         soil to fertilizer, etc.
 //
 // part 2: whoops! it's not 20 seeds, but 10 seeds and 10 intervals;
-//          do it again with this understanding
+//         do it again with this understanding
 
 use std::{
     fs::File,

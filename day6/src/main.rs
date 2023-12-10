@@ -1,3 +1,16 @@
+// Advent of Code 2023
+//
+// John Perry
+//
+// Day 6: Wait For It
+//
+// part 1: For how many times can you press the button on each boat
+//         to guarantee a record-breaking win in the boat race?
+//
+// part 2: whoops! it's just 1 race with extraordinarily bad kerning
+//
+// this basically translates the Ada code; see that for details
+
 use std::io::{BufRead, BufReader};
 
 fn main() {

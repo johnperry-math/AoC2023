@@ -1,3 +1,15 @@
+// Advent of Code 2023
+//
+// John Perry
+//
+// Day 7: Camel Cards
+//
+// part 1: rank the hands of cards to determine their total winnings
+//
+// part 2: repeat, under slightly new rules
+//
+// this basically translates the Ada code; see that for details
+
 use std::{
     cmp::Ordering,
     collections::HashMap,
