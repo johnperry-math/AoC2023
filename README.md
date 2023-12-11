@@ -18,6 +18,7 @@ well, at least once.
 * [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
 * [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
 * [Day 10](#day-10-pipe-maze): Pipe Maze
+* [Day 11](#day-11-cosmic-expansion): Cosmic Expansion
 
 ## Day 1: Trebuchet?!
 
@@ -538,3 +539,36 @@ I just hope we get some easier ones the next couple of days. :grin:
 Finally! our first visualization of the year.
 
 ![visualization.png](day10/visualization.png)
+
+## Day 11: Cosmic Expansion
+
+You come upon an observatory, where
+a researcher offers to help you as soon as he finishes his research project.
+He has an image of part of the universe,
+and wants to sum the distances between the observed galaxies.
+
+1. Do this after doubling each row or column of empty space.
+1. The universe is older than that.
+   Instead of replacing each row or column by two,
+   replace by one million.
+
+### Tools
+
+Just a bit of cleverness.
+
+### Experience
+
+Fun and, after yesterday, gratifyingly easy.
+
+#### That aside, what happened to the animal?
+
+We spent yesterday trying to find its nest, and
+today there's not so much as a word breathed about it.
+I still miss the ghost from Days 7 and 8,
+and now I lose the animal, too?
+
+Completing the Advent of Code is sometimes like reading a Neil Gaiman story:
+one day you meet intriguing, sympathetic characters,
+and the next day they're forgotten, as if they never really matter.
+
+:cry:
