@@ -493,6 +493,27 @@ Oddly fun and easy for a day 9. Initially I goofed on Part 2
 by adding the wrong numbers, but that was because
 I was modifying the former `Extend_Sequence` to be more general.
 
+#### Rust
+
+* The only mistake I made with the Rust was to forget
+  that the data could be negative, so I stupidly used `u64` instead of `i64`.
+* This is one of those occasions where the Rust is much shorter than the Ada,
+  in no small part thanks to
+  * **less boilerplate**
+    The Ada code spends at least 10 lines defining
+    `Value_IO`, `Sequence_Vectors`, `Sequence_Sequences`.
+    Those basically don't exist in the Rust code.
+    There are other examples of this.
+  * **easier iteration**
+    Rust's functional-style iteration played a huge role in
+    `extend`, `part_1`, and `part_2`.
+    I could arguably do something similar in Ada's
+    `Part_1` and `Part_2` by employing `Reduce` with a custom reducer,
+    but I don't believe it's possible to do so with `Extend` --
+    or whether it's desirable even if it is.
+* The Rust is also significantly faster than the Ada: 6ms vs. 36ms.
+  I will try to come back to this at some point.
+
 ## Day 10: Pipe Maze
 
 As you make your way around metal island, you spot a (metal) animal
