@@ -584,7 +584,9 @@ procedure Day12 is
          begin
             Result := @ + This_Score;
          end;
-         IO.Put_Line ("Finished" & Ith'Image);
+         if Debugging then
+            IO.Put_Line ("Finished" & Ith'Image);
+         end if;
       end loop;
 
       return Result;
