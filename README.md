@@ -19,6 +19,7 @@ well, at least once.
 * [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
 * [Day 10](#day-10-pipe-maze): Pipe Maze
 * [Day 11](#day-11-cosmic-expansion): Cosmic Expansion
+* [Day 12](#day-12-hot-springs): Hot Springs
 
 ## Day 1: Trebuchet?!
 
@@ -593,3 +594,26 @@ one day you meet intriguing, sympathetic characters,
 and the next day they're forgotten, as if they never really matter.
 
 :cry:
+
+## Day 12: Hot Springs
+
+Someone didn't keep track of damaged bedsprings very well.
+You have to help an elf fix 'em.
+
+1. How many ways can the records of conditions for each spring be reconciled
+   with the records of sequences of damaged springs?
+1. Whoops! (**not that again...**) The records spring free, quintupling!
+   Repeat Part 1 with the quintupled records.
+
+### Tools
+
+1. Sleeping after finishing Part 1.
+1. Reading other people's approaches.
+1. Recalling Dynamic Programming.
+1. A sliding window of damaged springs.
+
+### Experience
+
+I had forgotten about dynamic programming, so this took me a long while,
+even after visiting the Reddit solutions page gave me some insight.
+I rather like the solution I eventually came up with.
