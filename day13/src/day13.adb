@@ -108,6 +108,8 @@ procedure Day13 is
          Finalize (Map_Input);
       end if;
 
+      IO.Close (Input);
+
    end Read_Input;
 
    --  SECTION
