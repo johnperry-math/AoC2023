@@ -8,18 +8,20 @@ in both Ada and Rust.
 For fun, I thrown in some Modula-2 from time to time...
 well, at least once.
 
-* [Day 1](#day-1-trebuchet): Trebuchet?!
-* [Day 2](#day-2-cube-conundrum): Cube Conundrum
-* [Day 3](#day-3-gear-ratios): Gear Ratios
-* [Day 4](#day-4-scratchcards): Scratchcards
-* [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
-* [Day 6](#day-6-wait-for-it): Wait For It
-* [Day 7](#day-7-camel-cards): Camel Cards
-* [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
-* [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
-* [Day 10](#day-10-pipe-maze): Pipe Maze
-* [Day 11](#day-11-cosmic-expansion): Cosmic Expansion
-* [Day 12](#day-12-hot-springs): Hot Springs
+* :rocket: [Day 1](#day-1-trebuchet): Trebuchet?!
+* :package: [Day 2](#day-2-cube-conundrum): Cube Conundrum
+* :gear: [Day 3](#day-3-gear-ratios): Gear Ratios
+* :ticket: [Day 4](#day-4-scratchcards): Scratchcards
+* :seedling: [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
+* :stopwatch: [Day 6](#day-6-wait-for-it): Wait For It
+* :camel: [Day 7](#day-7-camel-cards): Camel Cards
+* :cactus: [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
+* :palm_tree: [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
+* :loop: [Day 10](#day-10-pipe-maze): Pipe Maze
+* :stars: [Day 11](#day-11-cosmic-expansion): Cosmic Expansion
+* :bath: [Day 12](#day-12-hot-springs): Hot Springs
+* :mirror: [Day 13](#day-13-point-of-incidence): Point of Incidence
+* 📡 [Day 14](#day-14-parabolic-reflector-dish): Parabolic Reflector Dish
 
 ## Day 1: Trebuchet?!
 
@@ -643,3 +645,22 @@ I made it more conventional.
 This was a bit tricky to implement. I made some dumb mistakes along the way,
 especially as regards loop termination and retention of values.
 Despite that, I enjoyed it.
+
+## Day 14: Parabolic Reflector Dish
+
+The reason lava isn't working right is that a reflector dish is off kilter.
+We need to figure out how to reposition its platform.
+However, the north beam is damaged...
+
+1. Determine the load on the north beam when you tilt the reflector north.
+1. Hey, there's a "spin cycle" button! Determine the load on the north beam
+   after 1 billion spin cycles.
+
+### Unusual Tools
+
+Just a bit of math -- detecting the period of a regular sequence -- but
+not even the arithmetic sum formula, my first suspicion when I read Part 1.
+
+### Experience
+
+Fun and relatively easy.
