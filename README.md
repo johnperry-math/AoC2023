@@ -617,3 +617,29 @@ You have to help an elf fix 'em.
 I had forgotten about dynamic programming, so this took me a long while,
 even after visiting the Reddit solutions page gave me some insight.
 I rather like the solution I eventually came up with.
+
+## Day 13: Point of Incidence
+
+You are walking thruogh a landscape of rocks and ash!
+Mirrors are strewn about the landscape!
+Since the rocks and ash are the same color,
+the mirrors make it hard to navigate around the rocks!
+
+1. For each mirror, find the single row or column of symmetry,
+   as it corresponds to a mirror.
+2. Whoops! (:face_with_monocle:) The mirrors are smudged!
+   Amazingly enough, they each have exactly one smudge!
+   For each mirror, find the single position that, when changed,
+   gives you a _new_ mirror; i.e., a _new_ row or column of symmetry.
+
+### Unusual tools
+
+Originally I did this in Ada with the `Finalize` subprogram declared within
+the `Read_Input` subprogram. However, that looked ugly, so after cleaning up
+I made it more conventional.
+
+### Experience
+
+This was a bit tricky to implement. I made some dumb mistakes along the way,
+especially as regards loop termination and retention of values.
+Despite that, I enjoyed it.
