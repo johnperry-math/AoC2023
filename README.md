@@ -22,6 +22,7 @@ well, at least once.
 * :bath: [Day 12](#day-12-hot-springs): Hot Springs
 * :mirror: [Day 13](#day-13-point-of-incidence): Point of Incidence
 * 📡 [Day 14](#day-14-parabolic-reflector-dish): Parabolic Reflector Dish
+* 🔎 [Day 15](#day-15-lens-library): Lens Library
 
 ## Day 1: Trebuchet?!
 
@@ -670,3 +671,35 @@ not even the arithmetic sum formula, my first suspicion when I read Part 1.
 ### Experience
 
 Fun and relatively easy.
+
+## Day 15: Lens Library
+
+The dish is pointing light to the right place, but things still aren't right.
+You need to adjust some lenses so that the focal power is correct.
+The instructions to do that require you to work with the
+**Holiday ASCII String Helper algorithm**, or HASH for short. :grin:
+
+1. HASH the instructions to make sure you know what you're doing.
+   Report the sum of HASH values.
+1. Use the instructions to adjust the lenses. Report the focal power.
+
+### Unusual Tools
+
+#### Ada
+
+I finally come to gripswith the Ada 2022 construction
+
+    Some_Array := [
+      Some_Range => (
+         for Ith of Some_Range => Do_Something_With (Ith)
+      ),
+      others => Default
+   ]
+
+I realized later that the issue that required me to use this was bad design,
+so I fixed that, and this disappaered.
+
+### Experience
+
+The bad design on Part 2 was badly implemented, so that held me up a while.
+Otherwise, fun and easy.
