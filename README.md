@@ -558,6 +558,12 @@ Still, I made it harder than it needed to be.
 All that aside, it's a very good puzzle.
 I just hope we get some easier ones the next couple of days. :grin:
 
+#### Rust
+
+Translating this was _not_ as straightforward as I would have liked.
+One big problem was, again, the enforcement of 0-based indexing.
+I also overlooked minor details when it came to the flood fill.
+
 ### Visualization
 
 Finally! our first visualization of the year.

@@ -540,10 +540,24 @@ procedure Day10 is
 
    end Write_Visualization;
 
+   procedure Put_Doubled_Map (Doubled_Map : Doubled_Map_Type) is
+   begin
+      for Row in Doubled_Map'Range (1) loop
+         for Col in Doubled_Map'Range (2) loop
+            IO.Put ((if Doubled_Map (Row, Col) then '#' else ' '));
+         end loop;
+         IO.New_Line;
+      end loop;
+   end Put_Doubled_Map;
+
    function Part_2 return Natural is
       Doubled_Map : Doubled_Map_Type := Double_Map;
    begin
+      --  Put_Doubled_Map (Doubled_Map);
+      --  IO.New_Line;
       Flood_Fill (Doubled_Map);
+      --  Put_Doubled_Map (Doubled_Map);
+      --  IO.New_Line;
       Write_Visualization (Doubled_Map);
       return Size_Of_Interior (Doubled_Map);
    end Part_2;
