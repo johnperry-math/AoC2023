@@ -23,6 +23,7 @@ well, at least once.
 * :mirror: [Day 13](#day-13-point-of-incidence): Point of Incidence
 * 📡 [Day 14](#day-14-parabolic-reflector-dish): Parabolic Reflector Dish
 * 🔎 [Day 15](#day-15-lens-library): Lens Library
+* :mirror: [Day 16](#day-16-the-floor-will-be-lava): The Floor Will Be Lava
 
 ## Day 1: Trebuchet?!
 
@@ -703,3 +704,32 @@ so I fixed that, and this disappaered.
 
 The bad design on Part 2 was badly implemented, so that held me up a while.
 Otherwise, fun and easy.
+
+## Day 16: The Floor Will Be Lava
+
+We need to find where to direct the beam of light into the facility
+that will maximize the number of tiles energized by light.
+
+1. Try this when the beam enters from the top left and travels right.
+1. Try it for all potential entrances (top/bottom rows, left/right columns)
+   and report the maxmimum number of energized tiles.
+
+### Unusual Tools
+
+#### Ada
+
+Finally tried a record delta aggregate:
+
+    (P with delta Col => P.Col - 1, Dir => West)
+
+`P` is a `Photon` that has only two fields, so in this case the delta aggregate
+isn't so useful; initializing all three fields wouldn't have killed me.
+When I first used it, though, I'd forgotten to change the direction, so
+it made more sense at the time.
+
+### Experience
+
+Fun and easy -- **but** -- I think that says more about
+how experienced AoC has made me with breadth-first search, the tool I used
+to track and prune beams.
+In previous years I suspect I would have struggled mightily with this one.
