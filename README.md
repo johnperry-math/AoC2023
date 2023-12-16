@@ -740,3 +740,7 @@ Fun and easy -- **but** -- I think that says more about
 how experienced AoC has made me with breadth-first search, the tool I used
 to track and prune beams.
 In previous years I suspect I would have struggled mightily with this one.
+
+### Visualization
+
+![all_frames_optimized_quicker.gif](day16/frames/all_frames_optimized_quicker.gif)
