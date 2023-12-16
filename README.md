@@ -586,11 +586,18 @@ and wants to sum the distances between the observed galaxies.
 
 ### Tools
 
+#### The puzzle itself
+
 Just a bit of cleverness.
+
+#### Rust
+
+
 
 ### Experience
 
 Fun and, after yesterday, gratifyingly easy.
+While writing the Rust, I noticed a way to improve the Ada.
 
 #### That aside, what happened to the animal?
 

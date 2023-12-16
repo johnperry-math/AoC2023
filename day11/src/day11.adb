@@ -116,15 +116,15 @@ procedure Day11 is
                L1 : constant Location := Galaxies (First);
                L2 : constant Location := Galaxies (Second);
 
-               --  observed Manhattan distance
-               Pair_Distance : Distance :=
-                 Distance (abs (L1.Row - L2.Row) + abs (L1.Col - L2.Col));
-
                --  rows and cols involved from first to second galaxy
                Min_Row : constant Positive := Positive'Min (L1.Row, L2.Row);
                Min_Col : constant Positive := Positive'Min (L1.Col, L2.Col);
                Max_Row : constant Positive := Positive'Max (L1.Row, L2.Row);
                Max_Col : constant Positive := Positive'Max (L1.Col, L2.Col);
+
+               --  observed Manhattan distance
+               Pair_Distance : Distance :=
+                 Distance ((Max_Row - Min_Row) + (Max_Col - Min_Col));
 
             begin
 
