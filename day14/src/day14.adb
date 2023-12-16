@@ -17,7 +17,7 @@ procedure Day14 is
 
    package IO renames Ada.Text_IO;
 
-   Doing_Example : Boolean := False;
+   Doing_Example : constant Boolean := False;
 
    --  SECTION
    --  global types and variables
@@ -77,6 +77,69 @@ procedure Day14 is
          IO.New_Line;
       end loop;
    end Put_System;
+
+   procedure Write_Visualization (Frame : in out Natural) is
+      --  who doesn't like a pretty picture? or even an animation?
+
+      Output : IO.File_Type;
+
+      Ground : constant Natural := 128;
+      Roller : constant Natural := 196;
+      Still  : constant Natural := 0;
+
+      Suffix       : String (1 .. 4) := [others => '0'];
+      Naive_Suffix : constant String := Frame'Image;
+
+   begin
+
+      Suffix (4) := Naive_Suffix (Naive_Suffix'Last);
+      if Frame >= 10 then
+         Suffix (3) := Naive_Suffix (Naive_Suffix'Last - 1);
+      end if;
+      if Frame >= 100 then
+         Suffix (2) := Naive_Suffix (Naive_Suffix'Last - 2);
+      end if;
+      if Frame >= 1_000 then
+         Suffix (3) := Naive_Suffix (2);
+      end if;
+
+      IO.Create (Output, IO.Out_File, "frames/frame_" & Suffix & ".pgm");
+
+      --  header
+      IO.Put_Line (Output, "P2");
+      IO.Put_Line (Output, Positive'Image (System'Length (2) * 2));
+      IO.Put_Line (Output, Positive'Image (System'Length (1) * 2));
+      IO.Put_Line (Output, "255"); -- max color
+      IO.New_Line (Output);
+
+      --  data
+      for Row in System'Range (1) loop
+         --  double each row for visibility
+         for Each in 1 .. 2 loop
+            for Col in System'Range (2) loop
+
+               --  double each column for visibility
+               IO.Put
+                 (Output,
+                  (case System (Row, Col) is when Ash => Ground'Image,
+                     when Movable => Roller'Image,
+                     when Immovable => Still'Image));
+               IO.Put
+                 (Output,
+                  (case System (Row, Col) is when Ash => Ground'Image,
+                     when Movable => Roller'Image,
+                     when Immovable => Still'Image));
+
+            end loop;
+            IO.New_Line (Output);
+         end loop;
+      end loop;
+
+      IO.Close (Output);
+
+      Frame := @ + 1;
+
+   end Write_Visualization;
 
    --  SECTION
    --  Part 1
@@ -249,21 +312,27 @@ procedure Day14 is
       Result, Final_Load : Load;
       Results            : Load_Vectors.Vector;
 
-      Iterations       : constant Positive := 1_000;
+      Iterations       : constant Positive := 200;
       --  hopefully 1_000 is enough to see the pattern
       Potential_Period : constant Positive := 100;
       Insufficient_Iterations : exception;
       --  when the number of spins isn't sufficient
       --  to determine the period
 
+      Frame : Natural := 0;
+
    begin
 
       for Each in 1 .. Iterations loop
 
          Tilt_North;
+         Write_Visualization (Frame);
          Tilt_West;
+         Write_Visualization (Frame);
          Tilt_South;
+         Write_Visualization (Frame);
          Tilt_East;
+         Write_Visualization (Frame);
 
          --  record the current load
 
@@ -283,7 +352,7 @@ procedure Day14 is
 
       end loop;
 
-      -- determine the period from the recorded data
+      --  determine the period from the recorded data
 
       Final_Load := 0;
 

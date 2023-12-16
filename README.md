@@ -687,14 +687,14 @@ The instructions to do that require you to work with the
 
 #### Ada
 
-I finally come to gripswith the Ada 2022 construction
+I finally (?) come to grips with the Ada 2022 construction
 
     Some_Array := [
       Some_Range => (
          for Ith of Some_Range => Do_Something_With (Ith)
       ),
       others => Default
-   ]
+    ]
 
 I realized later that the issue that required me to use this was bad design,
 so I fixed that, and this disappaered.
