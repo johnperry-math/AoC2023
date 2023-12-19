@@ -24,6 +24,9 @@ well, at least once.
 * 📡 [Day 14](#day-14-parabolic-reflector-dish): Parabolic Reflector Dish
 * 🔎 [Day 15](#day-15-lens-library): Lens Library
 * :mirror: [Day 16](#day-16-the-floor-will-be-lava): The Floor Will Be Lava
+* :teapot: [Day 17](#day-17-clumsy-crucible): Clumsy Crucible
+* :volcano: [Day 18](#day-18-lavaduct-lagoon): Lavaduct Lagoon
+* :gear: [Day 19](#day-19-aplenty): Aplenty
 
 ## Day 1: Trebuchet?!
 
@@ -744,3 +747,58 @@ In previous years I suspect I would have struggled mightily with this one.
 ### Visualization
 
 ![all_frames_optimized_quicker.gif](day16/frames/all_frames_optimized_quicker.gif)
+
+## Day 17: Clumsy Crucible
+
+Time to carry hot lava through city streets! (:astonished:)
+But the crucible is top-heavy, so it wobbles and can move
+no more than 3 blocks in any direction, and of course it can't backtrack.
+(But why would you want to?!?)
+Each city block incurs a certain amount of heat loss (input).
+
+1. Find the length of the path through the city that minimizes heat loss.
+1. That won't do. Repeat part 1 with an **ultra** crucible: it carries more,
+   but has to travel at least 4 blocks and at most 10 blocks in any direction.
+
+### Unusual tools
+
+Nothing I can recall.
+
+### Experience
+
+This should have been easier, but I prematurely returned
+when finding _any_ path from start to finish, without queuing it up first,
+so I cut off some shorter paths.
+
+### Visualizations
+
+#### Part 1
+
+![part 1](day17/visualization_1.png)
+
+#### Part 2
+
+![part 2](day17/visualization_2.png)
+
+## Day 18: Lavaduct Lagoon
+
+Coming soon!
+
+## Day 19: Aplenty
+
+The elves need help sorting parts!
+They give you a list of filtering rules and a list of parts.
+
+1. Sum the "rating numbers" of the parts that survive your rules.
+1. It's taking too long! How many parts could survive your filtering rules?
+
+### Unusual tools
+
+#### Ada
+* `Ludicrous_size` :grinning:
+
+### Experience
+
+The hardest part of this problem for me was the parsing;
+otherwise, I used interval splitting,
+much like [Day 5](#day-5-if-you-give-a-seed-a-fertilizer).
