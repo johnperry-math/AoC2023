@@ -1,0 +1,5 @@
+broadcaster -> aa
+%aa -> in, co
+&in -> bb
+%bb -> co
+&co -> rx

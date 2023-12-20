@@ -26,7 +26,8 @@ well, at least once.
 * :mirror: [Day 16](#day-16-the-floor-will-be-lava): The Floor Will Be Lava
 * :teapot: [Day 17](#day-17-clumsy-crucible): Clumsy Crucible
 * :volcano: [Day 18](#day-18-lavaduct-lagoon): Lavaduct Lagoon
-* :gear: [Day 19](#day-19-aplenty): Aplenty
+* :stuffed_flatbread: [Day 19](#day-19-aplenty): Aplenty
+* :radio_button: [Day 20](#day-20-pulse-propagation): Pulse Propagation
 
 ## Day 1: Trebuchet?!
 
@@ -782,7 +783,94 @@ so I cut off some shorter paths.
 
 ## Day 18: Lavaduct Lagoon
 
-Coming soon!
+The elves need to dig a trench to store lava.
+
+1. Find the dimension of the trench once it's completely dug.
+1. Whoah, that's not enough. What's this, though?
+   Those aren't colors, but correct directions? :roll_eyes:
+   Re-compute.
+
+### Unusual tools
+
+* Sheer, pigheaded stubbornness.
+
+#### Ada
+
+* I finally got to use Ada's built-in ability to read numbers of different bases!
+  And it was _easy_!
+
+### Experience
+
+Part 2 of this one beat me down pretty hard, even though I had a very good idea
+(diagrammed below) which is now implemented!
+I first had trouble even getting it to work on the example!
+After fighting it too long and concluding, incorrectly,
+that it would become unwieldy, I thought about trying a scanline approach...
+but quickly determined, probably incorrectly, that that, too,
+would become unwieldy.
+
+So I visited the Reddit page, read the various solutions,
+_almost all of which used Pick's Theorem with the Shoelace Formula_,
+and implemented that.
+The code is still in the source, but I no longer use it.
+
+After reading that someone _had_ used my original idea
+and thinking about it some more, I tried again, and...
+well, it worked on the example!
+
+Large numbers are pretty difficult to deal with, to check, etc.,
+so I thought of giving up again, but a moment's reflection made me realize that
+I was probably counting the areas of at least a few "notches"
+in addition to the desired "tables".
+That turned out to be a very quick fix.
+
+### Visualization
+
+Consider the following diagram (gee, where did it come from):
+    +--------+    +---+
+    |        |    |   |
+    |        |    |   |
+    |        |    |   |
+    |        +----+   |
+    |                 |
+    |                 |
+    |                 |
+    |   +-----+       |
+    |   |     |       |
+    |   |     |   +---+
+    |   |     |   |
+    +---+     +---+
+
+The idea is to find a "table" that "sticks out", then "munch" it, like so.
+(Numbers indicate interior labeling of vertices.)
+
+    2--------3    +---+
+    |XXXXXXXX|    |   |
+    |XXXXXXXX|    |   |
+    |XXXXXXXX|    |   |
+    1--------4----+   |
+    |                 |
+    |                 |
+    |                 |
+    |   +-----+       |
+    |   |     |       |
+    |   |     |   +---+
+    |   |     |   |
+    +---+     +---+
+
+The area of the entire "meal", is the sum of all the munches.
+
+We have to be a little careful, since we don't want to add the notches,
+and we also have to watch out for situations where we try to munch this:
+    +-----------------+
+    |XXXXXXXXXXXXXXXXX|
+    |XXXXXXXXXXXXXXXXX|
+    |XXXXXXXXXXXXXXXXX|
+    |XXX+-----+XXXXXXX|
+    |XXX|XXXXX|XXXXXXX|
+    |   |  |  |   +---+
+    |   |oops!|   |
+    +---+     +---+
 
 ## Day 19: Aplenty
 
@@ -802,3 +890,26 @@ They give you a list of filtering rules and a list of parts.
 The hardest part of this problem for me was the parsing;
 otherwise, I used interval splitting,
 much like [Day 5](#day-5-if-you-give-a-seed-a-fertilizer).
+
+## Day 20: Pulse Propagation
+
+You need to start a sand machine.
+As usual, the elves have a Rube-Goldbergesque contraption to activate it,
+made up of modules which broadcast low and high pulses to each other.
+
+1. Find the product of the numbers of low and high pulses
+   after 1_000 presses of the button.
+1. The machine is activated when `rx` receives _exactly one_ low pulse.
+   Find how many presses it will take to get there.
+
+### Unusual tools
+
+* `Ludicrous_Size` with lcm! :grinning:
+
+### Experience
+
+A glance at the leaderboard filled me with :fearful:,
+as this seems to have taken the longest (so far) for the top 100 participants.
+In all honestly, I'm not sure why; I didn't have much trouble with it at all.
+I guess it took people a while to work out how to activate `rx`,
+since it isn't terribly straightforward, but neither is it very difficult.
