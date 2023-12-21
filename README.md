@@ -639,6 +639,21 @@ I had forgotten about dynamic programming, so this took me a long while,
 even after visiting the Reddit solutions page gave me some insight.
 I rather like the solution I eventually came up with.
 
+#### Ada
+
+As I commented in the source code at one point,
+
+    --  note that indexing is done relative to First'First and First'Last,
+    --  only one of many reasons why Ada is Awesome.
+    --  leave the zero-based indexing insanity to the compiler!
+
+#### Rust
+
+Geez, could Rust use non-0-indexed arrays.
+I spent more than an hour trying to debug the thing,
+not because I didn't know what the problem was -- bad indexing --
+but because I was looking in the wrong place.
+
 ## Day 13: Point of Incidence
 
 You are walking thruogh a landscape of rocks and ash!
