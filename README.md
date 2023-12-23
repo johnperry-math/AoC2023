@@ -28,8 +28,9 @@ well, at least once.
 * :volcano: [Day 18](#day-18-lavaduct-lagoon): Lavaduct Lagoon
 * :stuffed_flatbread: [Day 19](#day-19-aplenty): Aplenty
 * :radio_button: [Day 20](#day-20-pulse-propagation): Pulse Propagation
+* :foot: [Day 21](#day-21-step-counter): Step Counter
 
-## Day 1: Trebuchet?!
+## :rocket: Day 1: Trebuchet?!
 
 The elves have decided you need to fix the lack of snow.
 Their solution is to catapult you into the sky via a trebuchet.
@@ -124,7 +125,7 @@ and I just don't know about it.
 Somewhat surprisingly, the compiled code is several times slower
 than unoptimized Ada and Rust, even when optimized with `-Ofast` and `-flto`.
 
-## Day 2: Cube Conundrum
+## :package: Day 2: Cube Conundrum
 
 You're on an island in the clouds, walking along with an elf
 who plays games with cubes.
@@ -142,7 +143,7 @@ The Rust took a lot longer to write because I had to figure out the pest crate,
 but I think it makes the top-level code easier to read, though
 I'm not so sure about `TryFrom<Pair> for Set`.
 
-## Day 3: Gear Ratios
+## :gear: Day 3: Gear Ratios
 
 You need to get your gondola going!
 
@@ -225,7 +226,7 @@ You need to get your gondola going!
    All in all, I wasn't expecting the Rust to be harder to write
    and more annoying to look at and debug than the Ada.
   
-## Day 4: Scratchcards
+## :ticket: Day 4: Scratchcards
 
 An elf can help you, but (as usual) first he wants a favor.
 He has a bunch of scratchcards with numbers written on them,
@@ -261,7 +262,7 @@ and he scratches off the values to see which numbers he has.
   * I botched the initial filter in `matches`,
     forgetting what types I was looking at.
 
-## Day 5: If You Give A Seed A Fertilizer
+## :seedling: Day 5: If You Give A Seed A Fertilizer
 
 Yet another elf who's willing to help you,
 though of course he wants a favor first.
@@ -311,7 +312,7 @@ He seems oddly unashamed of how long he's overlooked sending water.
     compare, for instance, instantiation of Ada's `Interval_Vectors` package
     as opposed to Rust's inline declaration of the `Vec<Interval>`.
 
-## Day 6: Wait For It
+## :stopwatch: Day 6: Wait For It
 
 You need some sand, and Desert Island seems like a good place to find some.
 But how should you get there? Oddly, you can't just ask any of the elves
@@ -353,7 +354,7 @@ Satisfying the compiler in Part 2 was tedious, but not especially hard.
 
 Translating the Ada to Rust was straightforward.
 
-## Day 7: Camel Cards
+## :camel: Day 7: Camel Cards
 
 You're playing cards with an elf on a camel, whiling away the time
 as he transports you across Desert Island. It's a bit like poker.
@@ -411,7 +412,7 @@ Man! was this a chore.
 * It was not quite so straightforward in Rust,
   for the reasons mentioned above.
 
-## Day 8: Haunted Wasteland
+## :cactus: Day 8: Haunted Wasteland
 
 Today's introduction manages to be both melancholy and spooky.
 
@@ -477,7 +478,7 @@ Compare this Rust...
 
 **We report, you decide.**
 
-## Day 9: Mirage Maintenance
+## :palm_tree: Day 9: Mirage Maintenance
 
 We never found out "how".
 
@@ -523,7 +524,7 @@ I was modifying the former `Extend_Sequence` to be more general.
 * The Rust is also significantly faster than the Ada: 6ms vs. 36ms.
   I will try to come back to this at some point.
 
-## Day 10: Pipe Maze
+## :loop: Day 10: Pipe Maze
 
 As you make your way around metal island, you spot a (metal) animal
 who ducks into a pipe.
@@ -576,7 +577,7 @@ Finally! our first visualization of the year.
 
 ![visualization.png](day10/visualization.png)
 
-## Day 11: Cosmic Expansion
+## :stars: Day 11: Cosmic Expansion
 
 You come upon an observatory, where
 a researcher offers to help you as soon as he finishes his research project.
@@ -616,7 +617,7 @@ and the next day they're forgotten, as if they never really matter.
 
 :cry:
 
-## Day 12: Hot Springs
+## :bath: Day 12: Hot Springs
 
 Someone didn't keep track of damaged bedsprings very well.
 You have to help an elf fix 'em.
@@ -654,7 +655,7 @@ I spent more than an hour trying to debug the thing,
 not because I didn't know what the problem was -- bad indexing --
 but because I was looking in the wrong place.
 
-## Day 13: Point of Incidence
+## :mirror: Day 13: Point of Incidence
 
 You are walking thruogh a landscape of rocks and ash!
 Mirrors are strewn about the landscape!
@@ -680,7 +681,7 @@ This was a bit tricky to implement. I made some dumb mistakes along the way,
 especially as regards loop termination and retention of values.
 Despite that, I enjoyed it.
 
-## Day 14: Parabolic Reflector Dish
+## 📡 Day 14: Parabolic Reflector Dish
 
 The reason lava isn't working right is that a reflector dish is off kilter.
 We need to figure out how to reposition its platform.
@@ -699,7 +700,7 @@ not even the arithmetic sum formula, my first suspicion when I read Part 1.
 
 Fun and relatively easy.
 
-## Day 15: Lens Library
+## 🔎 Day 15: Lens Library
 
 The dish is pointing light to the right place, but things still aren't right.
 You need to adjust some lenses so that the focal power is correct.
@@ -731,7 +732,7 @@ so I fixed that, and this disappaered.
 The bad design on Part 2 was badly implemented, so that held me up a while.
 Otherwise, fun and easy.
 
-## Day 16: The Floor Will Be Lava
+## :mirror: Day 16: The Floor Will Be Lava
 
 We need to find where to direct the beam of light into the facility
 that will maximize the number of tiles energized by light.
@@ -764,7 +765,7 @@ In previous years I suspect I would have struggled mightily with this one.
 
 ![all_frames_optimized_quicker.gif](day16/frames/all_frames_optimized_quicker.gif)
 
-## Day 17: Clumsy Crucible
+## :teapot: Day 17: Clumsy Crucible
 
 Time to carry hot lava through city streets! (:astonished:)
 But the crucible is top-heavy, so it wobbles and can move
@@ -796,7 +797,7 @@ so I cut off some shorter paths.
 
 ![part 2](day17/visualization_2.png)
 
-## Day 18: Lavaduct Lagoon
+## :volcano: Day 18: Lavaduct Lagoon
 
 The elves need to dig a trench to store lava.
 
@@ -887,7 +888,7 @@ and we also have to watch out for situations where we try to munch this:
     |   |oops!|   |
     +---+     +---+
 
-## Day 19: Aplenty
+## :stuffed_flatbread: Day 19: Aplenty
 
 The elves need help sorting parts!
 They give you a list of filtering rules and a list of parts.
@@ -906,7 +907,7 @@ The hardest part of this problem for me was the parsing;
 otherwise, I used interval splitting,
 much like [Day 5](#day-5-if-you-give-a-seed-a-fertilizer).
 
-## Day 20: Pulse Propagation
+## :radio_button: Day 20: Pulse Propagation
 
 You need to start a sand machine.
 As usual, the elves have a Rube-Goldbergesque contraption to activate it,
@@ -928,3 +929,35 @@ as this seems to have taken the longest (so far) for the top 100 participants.
 In all honestly, I'm not sure why; I didn't have much trouble with it at all.
 I guess it took people a while to work out how to activate `rx`,
 since it isn't terribly straightforward, but neither is it very difficult.
+
+## :foot: Day 21: Step Counter
+
+An elf wants to visit a number of garden plots while walking around.
+
+1. How many plots is it possible he would visit on Day 64?
+1. Ah, he misspoke:
+
+      [H]e was reading from a list of his favorite numbers
+      that are both perfect squares and perfect cubes,
+      not his step counter.
+
+   That's... kind of amusing, much to my surprise.
+   Anyway, "repeat" part 1, but for 26,501,365 steps.
+
+### Unusual tools
+
+* Determination
+* Diligence
+* Hard work
+* Patience
+
+### Experience
+
+This was **not** easy **at all**, but it was fun!
+I spent nearly the entire time for Part 2
+either working things out on pen and paper
+or writing programs to confirm and correct conjectures.
+I put so much preparation into it that I was not all that surprised
+when my first submitted answer for Part 2 was correct.
+
+(But I was still a little surprised.)
