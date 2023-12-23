@@ -15,11 +15,11 @@ well, at least once.
 * :seedling: [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
 * :stopwatch: [Day 6](#day-6-wait-for-it): Wait For It
 * :camel: [Day 7](#day-7-camel-cards): Camel Cards
-* :cactus: [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
+* :desert: [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
 * :palm_tree: [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
 * :loop: [Day 10](#day-10-pipe-maze): Pipe Maze
 * :stars: [Day 11](#day-11-cosmic-expansion): Cosmic Expansion
-* :bath: [Day 12](#day-12-hot-springs): Hot Springs
+* :hotsprings: [Day 12](#day-12-hot-springs): Hot Springs
 * :mirror: [Day 13](#day-13-point-of-incidence): Point of Incidence
 * 📡 [Day 14](#day-14-parabolic-reflector-dish): Parabolic Reflector Dish
 * 🔎 [Day 15](#day-15-lens-library): Lens Library
@@ -29,8 +29,10 @@ well, at least once.
 * :stuffed_flatbread: [Day 19](#day-19-aplenty): Aplenty
 * :radio_button: [Day 20](#day-20-pulse-propagation): Pulse Propagation
 * :foot: [Day 21](#day-21-step-counter): Step Counter
+* :bricks: [Day 22](#day-22-sand-slabs): Sand Slabs
 
-## :rocket: Day 1: Trebuchet?!
+## Day 1: Trebuchet?!
+:rocket:
 
 The elves have decided you need to fix the lack of snow.
 Their solution is to catapult you into the sky via a trebuchet.
@@ -125,7 +127,8 @@ and I just don't know about it.
 Somewhat surprisingly, the compiled code is several times slower
 than unoptimized Ada and Rust, even when optimized with `-Ofast` and `-flto`.
 
-## :package: Day 2: Cube Conundrum
+## Day 2: Cube Conundrum
+:package:
 
 You're on an island in the clouds, walking along with an elf
 who plays games with cubes.
@@ -143,7 +146,8 @@ The Rust took a lot longer to write because I had to figure out the pest crate,
 but I think it makes the top-level code easier to read, though
 I'm not so sure about `TryFrom<Pair> for Set`.
 
-## :gear: Day 3: Gear Ratios
+## Day 3: Gear Ratios
+:gear:
 
 You need to get your gondola going!
 
@@ -226,7 +230,8 @@ You need to get your gondola going!
    All in all, I wasn't expecting the Rust to be harder to write
    and more annoying to look at and debug than the Ada.
   
-## :ticket: Day 4: Scratchcards
+## Day 4: Scratchcards
+:ticket:
 
 An elf can help you, but (as usual) first he wants a favor.
 He has a bunch of scratchcards with numbers written on them,
@@ -262,7 +267,8 @@ and he scratches off the values to see which numbers he has.
   * I botched the initial filter in `matches`,
     forgetting what types I was looking at.
 
-## :seedling: Day 5: If You Give A Seed A Fertilizer
+## Day 5: If You Give A Seed A Fertilizer
+:seedling:
 
 Yet another elf who's willing to help you,
 though of course he wants a favor first.
@@ -312,7 +318,8 @@ He seems oddly unashamed of how long he's overlooked sending water.
     compare, for instance, instantiation of Ada's `Interval_Vectors` package
     as opposed to Rust's inline declaration of the `Vec<Interval>`.
 
-## :stopwatch: Day 6: Wait For It
+## Day 6: Wait For It
+:stopwatch:
 
 You need some sand, and Desert Island seems like a good place to find some.
 But how should you get there? Oddly, you can't just ask any of the elves
@@ -354,7 +361,8 @@ Satisfying the compiler in Part 2 was tedious, but not especially hard.
 
 Translating the Ada to Rust was straightforward.
 
-## :camel: Day 7: Camel Cards
+## Day 7: Camel Cards
+:camel:
 
 You're playing cards with an elf on a camel, whiling away the time
 as he transports you across Desert Island. It's a bit like poker.
@@ -412,7 +420,8 @@ Man! was this a chore.
 * It was not quite so straightforward in Rust,
   for the reasons mentioned above.
 
-## :cactus: Day 8: Haunted Wasteland
+## Day 8: Haunted Wasteland
+:desert:
 
 Today's introduction manages to be both melancholy and spooky.
 
@@ -478,7 +487,8 @@ Compare this Rust...
 
 **We report, you decide.**
 
-## :palm_tree: Day 9: Mirage Maintenance
+## Day 9: Mirage Maintenance
+:palm_tree:
 
 We never found out "how".
 
@@ -524,7 +534,8 @@ I was modifying the former `Extend_Sequence` to be more general.
 * The Rust is also significantly faster than the Ada: 6ms vs. 36ms.
   I will try to come back to this at some point.
 
-## :loop: Day 10: Pipe Maze
+## Day 10: Pipe Maze
+:loop:
 
 As you make your way around metal island, you spot a (metal) animal
 who ducks into a pipe.
@@ -577,7 +588,8 @@ Finally! our first visualization of the year.
 
 ![visualization.png](day10/visualization.png)
 
-## :stars: Day 11: Cosmic Expansion
+## Day 11: Cosmic Expansion
+:stars:
 
 You come upon an observatory, where
 a researcher offers to help you as soon as he finishes his research project.
@@ -617,7 +629,8 @@ and the next day they're forgotten, as if they never really matter.
 
 :cry:
 
-## :bath: Day 12: Hot Springs
+## Day 12: Hot Springs
+:hotsprings:
 
 Someone didn't keep track of damaged bedsprings very well.
 You have to help an elf fix 'em.
@@ -655,7 +668,8 @@ I spent more than an hour trying to debug the thing,
 not because I didn't know what the problem was -- bad indexing --
 but because I was looking in the wrong place.
 
-## :mirror: Day 13: Point of Incidence
+## Day 13: Point of Incidence
+:mirror:
 
 You are walking thruogh a landscape of rocks and ash!
 Mirrors are strewn about the landscape!
@@ -732,7 +746,8 @@ so I fixed that, and this disappaered.
 The bad design on Part 2 was badly implemented, so that held me up a while.
 Otherwise, fun and easy.
 
-## :mirror: Day 16: The Floor Will Be Lava
+## Day 16: The Floor Will Be Lava
+:mirror:
 
 We need to find where to direct the beam of light into the facility
 that will maximize the number of tiles energized by light.
@@ -765,7 +780,8 @@ In previous years I suspect I would have struggled mightily with this one.
 
 ![all_frames_optimized_quicker.gif](day16/frames/all_frames_optimized_quicker.gif)
 
-## :teapot: Day 17: Clumsy Crucible
+## Day 17: Clumsy Crucible
+:teapot:
 
 Time to carry hot lava through city streets! (:astonished:)
 But the crucible is top-heavy, so it wobbles and can move
@@ -797,7 +813,8 @@ so I cut off some shorter paths.
 
 ![part 2](day17/visualization_2.png)
 
-## :volcano: Day 18: Lavaduct Lagoon
+## Day 18: Lavaduct Lagoon
+:volcano:
 
 The elves need to dig a trench to store lava.
 
@@ -888,7 +905,8 @@ and we also have to watch out for situations where we try to munch this:
     |   |oops!|   |
     +---+     +---+
 
-## :stuffed_flatbread: Day 19: Aplenty
+## Day 19: Aplenty
+:stuffed_flatbread:
 
 The elves need help sorting parts!
 They give you a list of filtering rules and a list of parts.
@@ -907,7 +925,8 @@ The hardest part of this problem for me was the parsing;
 otherwise, I used interval splitting,
 much like [Day 5](#day-5-if-you-give-a-seed-a-fertilizer).
 
-## :radio_button: Day 20: Pulse Propagation
+## Day 20: Pulse Propagation
+:radio_button:
 
 You need to start a sand machine.
 As usual, the elves have a Rube-Goldbergesque contraption to activate it,
@@ -930,7 +949,8 @@ In all honestly, I'm not sure why; I didn't have much trouble with it at all.
 I guess it took people a while to work out how to activate `rx`,
 since it isn't terribly straightforward, but neither is it very difficult.
 
-## :foot: Day 21: Step Counter
+## Day 21: Step Counter
+:foot:
 
 An elf wants to visit a number of garden plots while walking around.
 
@@ -961,3 +981,25 @@ I put so much preparation into it that I was not all that surprised
 when my first submitted answer for Part 2 was correct.
 
 (But I was still a little surprised.)
+
+## Day 22: Sand Slabs
+:bricks:
+
+The sand is falling in ~~bricks~~ slabs, but we need to demolish some.
+
+1. How many ~~bricks~~ slabs can be destroyed without making any others fall?
+1. That's not enough. Compute the sum of the number of ~~bricks~~ slabs
+   that will fall when you delete each brick.
+
+### Unusual tools
+
+#### Ada 
+* Still enjoying Ada 2022's `when` condition on `for` loops.
+
+### Experience
+
+Fun and relatively easy.
+The approach I use is not perhaps the most efficient, but I like it.
+The one caveat is that I didn't realize I need to
+re-sort the bricks after they fall the first time.
+That set me back on Part 1 a while.
