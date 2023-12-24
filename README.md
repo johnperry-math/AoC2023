@@ -30,6 +30,7 @@ well, at least once.
 * :radio_button: [Day 20](#day-20-pulse-propagation): Pulse Propagation
 * :foot: [Day 21](#day-21-step-counter): Step Counter
 * :bricks: [Day 22](#day-22-sand-slabs): Sand Slabs
+* :evergreen_tree: [Day 23](#day-23-a-long-walk): A Long Walk
 
 ## Day 1: Trebuchet?!
 :rocket:
@@ -1003,3 +1004,24 @@ The approach I use is not perhaps the most efficient, but I like it.
 The one caveat is that I didn't realize I need to
 re-sort the bricks after they fall the first time.
 That set me back on Part 1 a while.
+
+## Day 23: A Long Walk
+:evergreen_tree:
+
+You have some spare time, so you decide to take a hike.
+In the woods, that is.
+
+1. What's the most scenic path you can take without crossing your path or
+   climbing slopes? ("Scenic" means you take the longest possible path.)
+2. Hey, it's not that cold; the slopes should be safe.
+   What's the most scenic path if you _can_ climb slopes?
+
+### Unusual tools
+
+I almost used Ada 2022's pattern matching in a `case` statement,
+but then realized I didn't need it.
+
+### Experience
+
+Aside from making the mistake of using breadth-first search
+instead of depth-first, this was fun and relatively easy.
