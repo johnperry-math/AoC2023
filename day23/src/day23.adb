@@ -14,6 +14,7 @@ pragma Ada_2022;
 with Ada.Text_IO;
 
 with Ada.Containers.Ordered_Maps;
+with Ada.Containers.Ordered_Sets;
 with Ada.Containers.Synchronized_Queue_Interfaces;
 with Ada.Containers.Unbounded_Synchronized_Queues;
 with Ada.Containers.Vectors;
@@ -388,16 +389,16 @@ procedure Day23 is
 
          Queue.Dequeue (Curr);
 
-         --  if Curr.Length > Last_Length then
-         --     IO.Put_Line ("path length is now" & Curr.Length'Image);
-         --     Last_Length := Curr.Length;
-         --     IO.Put_Line ("paths in queue:" & Queue.Current_Use'Image);
-         --     --  IO.Put ("   Dequeued ");
-         --     --  for L of Curr loop
-         --     --     IO.Put ("(" & L.Row'Image & "," & L.Col'Image & ")  ");
-         --     --  end loop;
-         --     --  IO.New_Line;
-         --  end if;
+         if Curr.Length > Last_Length then
+            IO.Put_Line ("path length is now" & Curr.Length'Image);
+            Last_Length := Curr.Length;
+            IO.Put_Line ("paths in queue:" & Queue.Current_Use'Image);
+            --  IO.Put ("   Dequeued ");
+            --  for L of Curr loop
+            --     IO.Put ("(" & L.Row'Image & "," & L.Col'Image & ")  ");
+            --  end loop;
+            --  IO.New_Line;
+         end if;
 
          if Curr.Last_Element = Goal
            and then Path_Length (Curr) > Path_Length (Best)
@@ -426,11 +427,59 @@ procedure Day23 is
 
    end Part_2;
 
+   --  function "<" (Left, Right : Location) return Boolean is
+   --    (Left.Row < Right.Row
+   --     or else (Left.Row = Right.Row and then Left.Col < Right.Col));
+
+   --  package Location_Sets is new Ada.Containers.Ordered_Sets
+   --    (Element_Type => Location);
+
+   --  type Discovered_Array is array (Positive range <>) of Boolean with
+   --    Pack;
+
+   --  function Explore_From
+   --    (Ith : Positive; Discovered : in out Discovered_Array) return Natural
+   --  is
+   --     Result : Natural := 0;
+   --     Here   : Location renames All_Forks (Ith);
+   --  begin
+   --     if Here /= Goal then
+   --        Discovered (Ith) := True;
+   --        for Jth in
+   --          All_Forks.First_Index ..
+   --            All_Forks.Last_Index when not Discovered (Jth)
+   --        loop
+   --           if Fork_Path_Lengths.Contains
+   --               ((Start => Here, Stop => All_Forks (Jth)))
+   --           then
+   --              Result :=
+   --                Natural'Max
+   --                  (Result,
+   --                   Fork_Path_Lengths ((Here, All_Forks (Jth))) +
+   --                   Explore_From (Jth, Discovered));
+   --           end if;
+   --        end loop;
+   --        Discovered (Ith) := False;
+   --     end if;
+   --     return Result;
+   --  end Explore_From;
+
+   --  function Part_2_DFS return Natural is
+   --     Discovered :
+   --       Discovered_Array (All_Forks.First_Index .. All_Forks.Last_Index);
+   --  begin
+   --     Put_Location (All_Forks (1));
+   --     IO.New_Line;
+   --     return Explore_From (1, Discovered);
+   --  end Part_2_DFS;
+
 begin
    Read_Input;
    IO.Put_Line ("the most scenic route's length is" & Part_1'Image & " steps");
    Find_Forks;
    Map_Forks;
+   --  IO.Put_Line
+   --    ("well, if i can climb slopes, then it's" & Part_2_DFS'Image & " steps");
    IO.Put_Line
      ("well, if i can climb slopes, then it's" & Part_2'Image & " steps");
 end Day23;

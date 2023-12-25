@@ -1025,3 +1025,86 @@ but then realized I didn't need it.
 
 Aside from making the mistake of using breadth-first search
 instead of depth-first, this was fun and relatively easy.
+
+## Day 24: Never Tell Me The Odds
+
+The water is falling, but instead of turning into snow, it's turning into hail!
+We need to pulverize the hailstones!
+
+(Would that actually result in snow in real life? or just smaller hailstones?)
+
+1. Count the number of stones that intersect in a certain region,
+   without paying attention to their movement in the z direction.
+1. _It turns out_ that if you throw _one_ stone from _one_ location,
+   it will strike all the hailstones!
+   Determine the sum of that location's coordinates.
+
+### Tools
+
+#### Mathematics
+
+* I had wondered somewhere whether one of the puzzles might use my former
+  research. This one does! I used Groebner basis theory to develop a solution,
+  albeit without computing the Groebner basis.
+  (That would have been a bit burdensome.)
+
+### Experience
+
+Sheesh.
+
+I reckon the one consolation is that _quite a few_ people posting solutions
+are complaining that
+it's the hardest, least rewarding problem they've ever done.
+
+I dickered with it a few minutes before deciding to look
+at what others were saying.
+(I'm :sick:, I've been traveling, and previous days have left me :sleeping:.)
+To my chagrin, most were saying they used Z3, or Mathematica,
+or something similar.
+
+There were a few who didn't, so I read through their explanations.
+One of them gave me an idea for the approach I used (see below).
+But even when I understood their ideas, I usually couldn't see how to do them.
+(Again: I'm :sick:, I've been traveling, and previous days have left me :sleeping:.)
+I looked a some posted solutions, and even then I struggled to make sense of them.
+
+Finally, I translated [TheZigerionScammer's](https://www.reddit.com/r/adventofcode/comments/18pnycy/comment/keqf8uq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
+posted solution from Python to Ada, and thought I'd call it a day.
+
+...except...
+
+As noted, I had had the idea to use a different approach, based on Groebner bases.
+Someone had pointed out that if you can find 3 hailstones that intersect,
+you basically have 9 equations in 9 variables.
+Given
+* `x`, `dx`, etc. are the desired position and velocity in the indicated directions
+* `t1`, `t2`, `t3` are when the rock needs to hit the first, second, and third stones
+* `first.x`, `first.dx` are the known position and velocity of our first hailstone
+  * similarly for `second` and `third`
+
+I worked them out to be something like this:
+
+      x + dx t1 = first.x + first.dx t1
+      y + dy t1 = first.y + first.dy t1
+      z + dz t1 = first.z + first.dz t1
+      x + dx t2 = second.x + second.dx t2
+      y + dy t2 = second.y + second.dy t2
+      z + dz t2 = second.z + second.dz t2
+      x + dx t3 = third.x + third.dx t3
+      y + dy t3 = third.y + third.dy t3
+      z + dz t3 = third.z + third.dz t3
+
+Now, the person who suggested this on reddit further said these equations were linear
+and easily solved -- but they're _not_, and his code used `sympy`.
+
+It turns out my former research field will solve these easily: Groebner bases.
+Without getting into the gritty details -- I worked it out "by hand", with some help
+from the CoCalc computer algebra system to check myself -- we can reduce this system
+to six linear equations in six variables:
+
+      (First.Y - Second.Y) dx + (Second.X - First.X) dy + (Second.Dy - First.Dy) x + (First.Dx - Second.Dx) y = -(First.X * First.Dy - First.Y * First.Dx - Second.X * Second.Dy + Second.Y * Second.Dx)
+
+      (First.Z - Second.Z) dx + (Second.X - First.X) dz + (Second.Dz - First.Dz) x + (First.Dx - Second.Dx) z = -(First.X * First.Dz - First.Z * First.Dx - Second.X * Second.Dz + Second.Z * Second.Dx)
+
+...and a bunch more. This really _is_ linear, and is "easy" to solve in code.
+So I did.
