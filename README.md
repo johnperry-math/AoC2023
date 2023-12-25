@@ -31,6 +31,7 @@ well, at least once.
 * :foot: [Day 21](#day-21-step-counter): Step Counter
 * :bricks: [Day 22](#day-22-sand-slabs): Sand Slabs
 * :evergreen_tree: [Day 23](#day-23-a-long-walk): A Long Walk
+* :thunder_cloud_rain: [Day 24](#day-24-never-tell-me-the-odds): Never Tell Me The Odds
 
 ## Day 1: Trebuchet?!
 :rocket:
@@ -1027,6 +1028,7 @@ Aside from making the mistake of using breadth-first search
 instead of depth-first, this was fun and relatively easy.
 
 ## Day 24: Never Tell Me The Odds
+:thunder_cloud_rain:
 
 The water is falling, but instead of turning into snow, it's turning into hail!
 We need to pulverize the hailstones!
