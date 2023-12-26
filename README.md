@@ -31,7 +31,8 @@ well, at least once.
 * :foot: [Day 21](#day-21-step-counter): Step Counter
 * :bricks: [Day 22](#day-22-sand-slabs): Sand Slabs
 * :evergreen_tree: [Day 23](#day-23-a-long-walk): A Long Walk
-* :thunder_cloud_rain: [Day 24](#day-24-never-tell-me-the-odds): Never Tell Me The Odds
+* ⛈️ [Day 24](#day-24-never-tell-me-the-odds): Never Tell Me The Odds
+* :snowflake: [Day 25](#day-25-snowverload): Snowverload
 
 ## Day 1: Trebuchet?!
 :rocket:
@@ -1028,7 +1029,7 @@ Aside from making the mistake of using breadth-first search
 instead of depth-first, this was fun and relatively easy.
 
 ## Day 24: Never Tell Me The Odds
-:thunder_cloud_rain:
+⛈️
 
 The water is falling, but instead of turning into snow, it's turning into hail!
 We need to pulverize the hailstones!
@@ -1110,3 +1111,49 @@ to six linear equations in six variables:
 
 ...and a bunch more. This really _is_ linear, and is "easy" to solve in code.
 So I did.
+
+## Day 25: Snowverload
+:snowflake:
+
+**Still no snow!!!** The machine seems to be suffering a power overload.
+
+1. Find the three wires you need to disconnect to divide the components into
+   two separate groups.
+1. The usual for 25 Dec.
+
+### Unusual tools
+
+* First time generating random numbers in this year's Advent of Code!
+* ...and it was in order to implement my first-ever self-devised
+  Monte Carlo algorithm!
+  (I _think_.)
+* ...in order to solve a graph theory problem!
+* I also tried to implement
+  [Karger's algorithm](https://en.wikipedia.org/wiki/Karger's_algorithm),
+  but at the present time the implementation remains buggy.
+
+### Experience
+
+This was a much harder problem for me than I expected on Christmas Day.
+In my experience, the Christmas puzzles are not perhaps the easiest,
+but by no means the hardest, either.
+Yet this one was arguably the hardest of the year: I could see how Part 1 alone
+could by itself be broken into two and swapped with an earlier, easier day.
+
+This isn't a complaint about the puzzle itself, by the way,
+which I think is excellent.
+I certainly learned a lot of graph theory in the process.
+
+In fact, I am very pleased to have worked out,
+despite struggling mightly to implement correctly two different algorithms:
+one, Karger's Algorithm, found online; the other, a Monte Carlo algorothm I
+devised myself after Christmas lunch.
+And it's precisely the struggle, and the unlikelihood
+of most people's even knowing how to _start_, let alone how to finish,
+that makes me wonder (in the "Experience" section, mind!) whether
+it might have been better served on a different day.
+After all, Day 9 was a bit insulting in how
+we were tutored to solve the problem.
+
+But I still love the problem! And while the last week of this year's puzzles
+were a true, grinding burden, I'm glad I did them.
