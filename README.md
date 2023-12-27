@@ -1,41 +1,136 @@
-# Advent of Code 2023 in Ada and Rust! :new: :crab: and even some :new: Modula-2!
+# Advent of Code 2023 in Ada and :new: Rust! :crab: and even some :new: Modula-2!
 
 [<img src="ada_logo.svg" width="200">](ada_logo.svg)
 
 Because 5 years of pain and suffering aren't enough. :grin:
 This year features an attempt to implement the same algorithm
 in both Ada and Rust.
-For fun, I thrown in some Modula-2 from time to time...
+For fun, I throw in some Modula-2 from time to time...
 well, at least once.
+
+* [Mathematics and Computer Science](#mathematics-and-computer-science): Some interesting mathematical topics in this year's puzzles
+* [Ranking of problems by difficulty](#ranking-of-problems-by-difficulty)
+* Problems in order of appearance
+   * :rocket: [Day 1](#day-1-trebuchet): Trebuchet?!
+   * :package: [Day 2](#day-2-cube-conundrum): Cube Conundrum
+   * :gear: [Day 3](#day-3-gear-ratios): Gear Ratios
+   * :ticket: [Day 4](#day-4-scratchcards): Scratchcards
+   * :seedling: [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
+   * :stopwatch: [Day 6](#day-6-wait-for-it): Wait For It
+   * :camel: [Day 7](#day-7-camel-cards): Camel Cards
+   * :desert: [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
+   * :palm_tree: [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
+   * :loop: [Day 10](#day-10-pipe-maze): Pipe Maze
+   * :stars: [Day 11](#day-11-cosmic-expansion): Cosmic Expansion
+   * :hotsprings: [Day 12](#day-12-hot-springs): Hot Springs
+   * :mirror: [Day 13](#day-13-point-of-incidence): Point of Incidence
+   * 📡 [Day 14](#day-14-parabolic-reflector-dish): Parabolic Reflector Dish
+   * 🔎 [Day 15](#day-15-lens-library): Lens Library
+   * :mirror: [Day 16](#day-16-the-floor-will-be-lava): The Floor Will Be Lava
+   * :shopping_cart: [Day 17](#day-17-clumsy-crucible): Clumsy Crucible
+   * :volcano: [Day 18](#day-18-lavaduct-lagoon): Lavaduct Lagoon
+   * :stuffed_flatbread: [Day 19](#day-19-aplenty): Aplenty
+   * :radio_button: [Day 20](#day-20-pulse-propagation): Pulse Propagation
+   * :walking: [Day 21](#day-21-step-counter): Step Counter
+   * :bricks: [Day 22](#day-22-sand-slabs): Sand Slabs
+   * :evergreen_tree: [Day 23](#day-23-a-long-walk): A Long Walk
+   * ⛈️ [Day 24](#day-24-never-tell-me-the-odds): Never Tell Me The Odds
+   * :snowflake: [Day 25](#day-25-snowverload): Snowverload
+
+## Mathematics and Computer Science
+
+The following advanced concepts of mathematics and computer science
+showed up either in the puzzles or in my solutions to them:
+
+1. [Programming by contracts](https://en.wikipedia.org/wiki/Design_by_contract)
+   (not as much as I'd have liked)
+1. Subtypes and ranges (Ada and Modula-2 only; Rust doesn't offer this feature)
+1. [Functional-style programming](https://en.wikipedia.org/wiki/Rust_(programming_language)#Iterators)
+   (mostly Rust, but Ada has some offerings; e.g., `'Reduce`)
+1. Interval arithmetic (mostly set operations)
+1. Mathematical modeling
+1. Quadratic formula
+1. Integer sequences that reduce to arithmetic sequences
+   (there's a term for this, but I can't recall it offhand;
+   see the [Day 9](#day-9-mirage-maintenance) puzzle)
+1. [Search algorithms](https://en.wikipedia.org/wiki/Search_algorithm)
+1. [Dynamic programming](https://en.wikipedia.org/wiki/Dynamic_programming)
+1. Detecting patterns of numerical sequences
+1. [Euclid's algorithm](https://en.wikipedia.org/wiki/Euclidean_algorithm)
+   for greatest common divisors and using them to compute least common multiples
+1. [Pick's Theorem](https://en.wikipedia.org/wiki/Pick's_theorem) and the
+   [Shoelace Formula](https://en.wikipedia.org/wiki/Shoelace_formula)
+1. Gröbner bases [(yes, really)](#day-24-never-tell-me-the-odds)
+1. [Monte Carlo methods](https://en.wikipedia.org/wiki/Monte_Carlo_method)
+1. [Karger's Theorem](https://en.wikipedia.org/wiki/Karger's_algorithm)
+
+## Ranking of problems by difficulty
+
+This is inherently subjective,
+and I may even misremember how difficult I found a problem,
+so if you disagree, at least check out the justification I give
+in the relevant day's **Experience** section.
+
+### :star_struck: Quick 'n easy puzzles
+
+C'mon, you can do these.
 
 * :rocket: [Day 1](#day-1-trebuchet): Trebuchet?!
 * :package: [Day 2](#day-2-cube-conundrum): Cube Conundrum
 * :gear: [Day 3](#day-3-gear-ratios): Gear Ratios
 * :ticket: [Day 4](#day-4-scratchcards): Scratchcards
-* :seedling: [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
 * :stopwatch: [Day 6](#day-6-wait-for-it): Wait For It
 * :camel: [Day 7](#day-7-camel-cards): Camel Cards
-* :desert: [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
 * :palm_tree: [Day 9](#day-9-mirage-maintenance): Mirage Maintenance
-* :loop: [Day 10](#day-10-pipe-maze): Pipe Maze
 * :stars: [Day 11](#day-11-cosmic-expansion): Cosmic Expansion
-* :hotsprings: [Day 12](#day-12-hot-springs): Hot Springs
+* 🔎 [Day 15](#day-15-lens-library): Lens Library
+
+### :thinking: Puzzles needing more than a little thought
+
+* :seedling: [Day 5](#day-5-if-you-give-a-seed-a-fertilizer): If You Give A Seed A Fertilizer
+* :desert: [Day 8](#day-8-haunted-wasteland): Haunted Wasteland
 * :mirror: [Day 13](#day-13-point-of-incidence): Point of Incidence
 * 📡 [Day 14](#day-14-parabolic-reflector-dish): Parabolic Reflector Dish
-* 🔎 [Day 15](#day-15-lens-library): Lens Library
 * :mirror: [Day 16](#day-16-the-floor-will-be-lava): The Floor Will Be Lava
-* :teapot: [Day 17](#day-17-clumsy-crucible): Clumsy Crucible
-* :volcano: [Day 18](#day-18-lavaduct-lagoon): Lavaduct Lagoon
+* :shopping_cart: [Day 17](#day-17-clumsy-crucible): Clumsy Crucible
 * :stuffed_flatbread: [Day 19](#day-19-aplenty): Aplenty
 * :radio_button: [Day 20](#day-20-pulse-propagation): Pulse Propagation
-* :foot: [Day 21](#day-21-step-counter): Step Counter
 * :bricks: [Day 22](#day-22-sand-slabs): Sand Slabs
+
+### :fearful: Problems requiring a lot of thought, or trickier ideas
+
+A reputable mathematics or computer science program
+will teach you how to solve these problems,
+but you've probably used it often enough to forget the technique.
+Or, it's not something they teach in school,
+but a little imagination will get you to the solution.
+
+* :loop: [Day 10](#day-10-pipe-maze): Pipe Maze
+* :hotsprings: [Day 12](#day-12-hot-springs): Hot Springs
+* :walking: [Day 21](#day-21-step-counter): Step Counter
 * :evergreen_tree: [Day 23](#day-23-a-long-walk): A Long Walk
-* ⛈️ [Day 24](#day-24-never-tell-me-the-odds): Never Tell Me The Odds
+
+### :scream: Great puzzles that are jes' plain ornery
+
+If you know the trick, the solution is easy.
+But knowing the trick is unusual,
+and while I was able to come up with a solution,
+implementing it was tricky and frustrating.
+
+* :volcano: [Day 18](#day-18-lavaduct-lagoon): Lavaduct Lagoon
 * :snowflake: [Day 25](#day-25-snowverload): Snowverload
 
+### :sob: What was the puzzle master thinking?!?
+
+This question left a lot of the pros baffled, and not a few of them miffed!
+Most solutions I saw relied on asking a theorem prover to solve it.
+(Or Mathematica... but I repeat myself.)
+
+* ⛈️ [Day 24](#day-24-never-tell-me-the-odds): Never Tell Me The Odds
+
+
 ## Day 1: Trebuchet?!
-:rocket:
+<span style="font-size: 8ex;">:rocket:</font>
 
 The elves have decided you need to fix the lack of snow.
 Their solution is to catapult you into the sky via a trebuchet.
@@ -74,7 +169,7 @@ Since I'm using Aho-Corasick in Rust, the algorithms aren't quite the same.
 The Ada uses a sequence of `if`-`then` statements
 and converts each character or string to a digit.
 
-Speedwise, the two are more or less the same.
+Speed-wise, the two are more or less the same.
 The Rust is a little faster, but (a) I'm running it in release mode,
 while I'm running Ada at whatever gnat's default optimization level is, and
 (b) Ada is checking the contracts for the `Digit` function.
@@ -131,7 +226,7 @@ Somewhat surprisingly, the compiled code is several times slower
 than unoptimized Ada and Rust, even when optimized with `-Ofast` and `-flto`.
 
 ## Day 2: Cube Conundrum
-:package:
+<span style="font-size: 8ex;">:package:</span>
 
 You're on an island in the clouds, walking along with an elf
 who plays games with cubes.
@@ -150,7 +245,7 @@ but I think it makes the top-level code easier to read, though
 I'm not so sure about `TryFrom<Pair> for Set`.
 
 ## Day 3: Gear Ratios
-:gear:
+<span style="font-size: 8ex;">:gear:</span>
 
 You need to get your gondola going!
 
@@ -162,8 +257,8 @@ You need to get your gondola going!
 
 ### Unusual tools
 
-1. In Ada I was able to define a useful `Constrants` range type
-   which made life a little annoying at one point.
+1. In Ada I was able to define a useful `Constraints` range type,
+   though it made life a little annoying at one point.
 1. In Rust:
    * I decided to go with an array, to mimic the Ada,
      rather than to use vectors.
@@ -172,69 +267,64 @@ You need to get your gondola going!
 
 ### Experience
 
-* Ada
+#### Ada
 
-  Kind of surprised I got this one right pretty quickly.
-* Modula-2
+Kind of surprised I got this one right pretty quickly.
 
-  Translating from Ada was pretty straightfoward.
-  It's interesting to me that you can define a variable
-  to be of a certain range type,
-  but Modula-2 won't choke if it goes outside that range
-  the way Ada will (unless this is a bug in gm2).
-  I'm definitely appreciating some of Ada's safety features,
-  since the lack of them in Modula-2 hammered me a few times.
-  In particular:
-  * Can't seem to define a constant type of a variant record.
-    I'm not sure if that's a misunderstanding on my part,
-    or a bug in gm2.
-  * I'm pretty sure this is a bug:
-    if you neglect the parentheses on a function procedure
-    that takes no parameters, gm2 treats it as if you want the address(?).
-    Hence, the following line of the module repeatedly gave the wrong answer:
+#### Modula-2
 
-        InOut.WriteInt(Part1, 0); (* needs to be Part1() *)
-   
-   _[update: [Confirmed by lead compiler developer](https://lists.nongnu.org/archive/html/gm2/2023-12/msg00012.html)
-   that this is a bug.]_
+Translating from Ada was pretty straightforward.
+It's interesting to me that you can define a variable
+to be of a certain range type,
+but Modula-2 won't choke if it goes outside that range
+the way Ada will (unless this is a bug in gm2).
+I'm definitely appreciating some of Ada's safety features,
+since the lack of them in Modula-2 hammered me a few times.
+In particular:
+* Can't seem to define a constant type of a variant record.
+  I'm not sure if that's a misunderstanding on my part,
+  or a bug in gm2.
+* I'm pretty sure this is a bug:
+  if you neglect the parentheses on a function procedure
+  that takes no parameters, gm2 treats it as if you want the address(?).
+  Hence, the following line of the module repeatedly gave the wrong answer:
+      InOut.WriteInt(Part1, 0); (* needs to be Part1() *)
+ 
+_[update: [Confirmed by lead compiler developer](https://lists.nongnu.org/archive/html/gm2/2023-12/msg00012.html)
+that this is a bug.]_
     
-* Rust
+#### Rust
 
-  Man, this took a while.
-  I **really** missed having access to custom arrays,
-  and it's also a lot harder in Rust to check indices.
-  In Ada, I can do this:
+Man, this took a while.
+I **really** missed having access to Ada's custom array indices,
+and it's also a lot harder in Rust to check indices.
+In Ada, I can do this:
+    for Row_Offset in -1 .. 1 when Row + Row_Offset in Constraints loop
+       -- ...
+       if CH.Is_Decimal_Digit
+              (Schematic (Row + Row_Offset) (Col + Col_Offset))
 
-      for Row_Offset in -1 .. 1 when Row + Row_Offset in Constraints loop
-         -- ...
-         if CH.Is_Decimal_Digit
-                (Schematic (Row + Row_Offset) (Col + Col_Offset))
-  
-  ...but in Rust I have to do something like this:
-
-      (-1..2).filter(|offset| (0..MAX_IDX).contains(&(row + offset)))
-         // ...
-         self.schematic[(row + row_offset) as usize]
-                        [(col + offset) as usize]
-                  .is_ascii_digit()
-
-   ...unless my Rust is even worse than I thought.
-   Notice the conversions in Rust: in the first case,
-   I'm using `i32` because otherwise it will refuse to compile
-   the sum of a `usize` and the `-1` that begins the range;
-   then, I have to convert the sum to a `usize`
-   in order to index into the array.
-
-   There's also the annoyance
-   (which made me waste quite a bit of time debugging)
-   where `(-1..1)` indicates the numbers -1 and 0, **not** 1.
-   This is why I have `(-1..2)` above.
-
-   All in all, I wasn't expecting the Rust to be harder to write
-   and more annoying to look at and debug than the Ada.
+...but in Rust I have to do something like this:
+    (-1..2).filter(|offset| (0..MAX_IDX).contains(&(row + offset)))
+       // ...
+       self.schematic[(row + row_offset) as usize]
+                      [(col + offset) as usize]
+                .is_ascii_digit()
+...unless my Rust is even worse than I thought.
+Notice the conversions in Rust: in the first case,
+I'm using `i32` because otherwise it will refuse to compile
+the sum of a `usize` and the `-1` that begins the range;
+then, I have to convert the sum to a `usize`
+in order to index into the array.
+There's also the annoyance
+(which made me waste quite a bit of time debugging)
+where `(-1..1)` indicates the numbers -1 and 0, **not** 1.
+This is why I have `(-1..2)` above.
+All in all, I wasn't expecting the Rust to be harder to write
+and more annoying to look at and debug than the Ada.
   
 ## Day 4: Scratchcards
-:ticket:
+<span style="font-size: 8ex;">:ticket:</span>
 
 An elf can help you, but (as usual) first he wants a favor.
 He has a bunch of scratchcards with numbers written on them,
@@ -253,25 +343,31 @@ and he scratches off the values to see which numbers he has.
 
 ### Experience
 
-* Pretty pleased with how quickly I worked this out in Ada.
-  A silly typo held me up on Part 2:
+#### Ada
+
+Pretty pleased with how quickly I worked this out in Ada.
+A silly typo held me up on Part 2:
 
       Copies (Ith + Offset) := (@ + 1) * Copies (Ith);
 
-  That leads to a **lot** of cards, already by card 5 or 6! :astonished:
-* The Rust was also pretty straightforward. I got hung up on three things:
-  * I first tried to `.split` the input strings on a ` `, but
-    somehow that led to empty strings in the input.
-    I never looked into what I was doing wrong because `.split_ascii_whitespace`
-    did the job.
-  * 0-based indexing meant I was off-by-one
-    when I used `.skip(card)` in part 2.
-    Fixed by using `.slip(card + 1)`.
-  * I botched the initial filter in `matches`,
-    forgetting what types I was looking at.
+That leads to a **lot** of cards, already by card 5 or 6!
+
+<span style="font-size: 8ex;">:astonished:</span>
+
+#### Rust
+The Rust was also pretty straightforward. I got hung up on three things:
+* I first tried to `.split` the input strings on a ` `, but
+  somehow that led to empty strings in the input.
+  I never looked into what I was doing wrong because `.split_ascii_whitespace`
+  did the job.
+* 0-based indexing meant I was off-by-one
+  when I used `.skip(card)` in part 2.
+  Fixed by using `.skip(card + 1)`.
+* I botched the initial filter in `matches`,
+  forgetting what types I was looking at.
 
 ## Day 5: If You Give A Seed A Fertilizer
-:seedling:
+<span style="font-size: 8ex;">:seedling:</span>
 
 Yet another elf who's willing to help you,
 though of course he wants a favor first.
@@ -291,9 +387,12 @@ He seems oddly unashamed of how long he's overlooked sending water.
   though I did search for `Sorter` instead of `Sort`.
   Amazingly, I instantiated the generic correctly on the first try!
 * Interval operations, in particular intersections and/or partitions.
-* :warning: 64-bit integers (`Long_Long_Integer` in Ada) as for some reason
-  gnat _still_ thinks the default should be 32-bit integers.
-  (Who would ever need a value greater than 4 billion or so?)
+* :warning: 128-bit integers (`Long_Long_Integer` in Ada) as the Ada standard
+  sets 32-bit integers as the default ( `-2\*\*15 + 1 .. 2\*\*15 - 1`).
+  My initial reaction was amazement
+  ("Who would ever need a value greater than 4 billion or so?")
+  but [Jeffrey Carter set me straight](https://forum.ada-lang.io/t/2023-day-5-if-you-give-a-seed-a-fertilizer/574/11?u=cantanima).
+  Some future solutions will have custom types.
 
 ### Experience
 
@@ -305,14 +404,16 @@ He seems oddly unashamed of how long he's overlooked sending water.
   without containing or being contained.
   
   Before I could implement it, the brute force approach terminated
-  _with the correct answer!_ :astonished:
+  _with the correct answer!_
+  
+  <span style="font-size: 8ex;">:astonished:</span>
   
   I pressed on out of a desire to have a _good_ solution, and
   once I wrung out the bugs, the correct answer popped up.
   This is much, _much_ faster, something like 9 milliseconds,
   as opposed to 9 minutes, or however long it took
   the inefficient solution to do its thing.
-* The Rust implementation is about half as many as the Ada implementation.
+* The Rust implementation is about half as many lines as the Ada implementation.
   I'm not sure why that is, but a non-trivial part of it is:
   * formatting
   * more detailed comments in the Ada
@@ -322,7 +423,7 @@ He seems oddly unashamed of how long he's overlooked sending water.
     as opposed to Rust's inline declaration of the `Vec<Interval>`.
 
 ## Day 6: Wait For It
-:stopwatch:
+<span style="font-size: 8ex;">:stopwatch:</span>
 
 You need some sand, and Desert Island seems like a good place to find some.
 But how should you get there? Oddly, you can't just ask any of the elves
@@ -348,9 +449,9 @@ the remaining time allotted to the race. You need to make a good distance.
 
 ### Experience
 
-Hey, :heart: it's the quadratic formula!
+Hey, it's the quadratic formula! :heart:
 It only took me an embarrassingly long time
-to line up the data and the coefficients! :blush:
+to line up the data and the coefficients!
 
 This was surprisingly easy for a Day 6.
 I can see how it could easily go awry for someone who didn't check for
@@ -365,10 +466,10 @@ Satisfying the compiler in Part 2 was tedious, but not especially hard.
 Translating the Ada to Rust was straightforward.
 
 ## Day 7: Camel Cards
-:camel:
+<span style="font-size: 8ex;">:camel:</span>
 
 You're playing cards with an elf on a camel, whiling away the time
-as he transports you across Desert Island. It's a bit like poker.
+as it transports you across Desert Island. It's a bit like poker.
 
 1. Determine the point values of the many, many hands you're dealt.
    This requires ranking them.
@@ -400,12 +501,14 @@ Man! was this a chore.
   This is one drawback to Rust's conflating ordinary enumerations
   with algebraic types.
 * On the other hand (no pun intended), at least Rust _lets_ me derive `Hash`.
-  Ada doesn't even offer that.
+  Ada doesn't offer a way to derive hash functions recursively for records
+  whose fields are of types that already have known hash functions.
+  Not as far as I know, anyway.
 * I wasted time trying to `impl PartialOrd for Hand`,
   then getting confused and trying to `impl Ord for Hand`,
   then getting more confused because `Ord` wants a `clamp`
   and the code completion filled it in with something even _it_ didn't like,
-  all the time wondering what I would do in Part when I had to change ordering,
+  all the time wondering what I would do in Part 2 when I had to change ordering,
   before I realized that I could simply `.sort_by()` and supply the desired ordering.
   Granted, that stupidity is on _me_; I knew there was a `.sort_by()` and simply forgot about it.
   Still, it was a chore, and implementing `Ord::clamp()` still scares me.
@@ -413,7 +516,7 @@ Man! was this a chore.
   and you have no way to change it,
   so you _must_ remember to add 1 to `ith` (my default indexing variable)
   when you multiply it to the bid.
-* Rust does have a nice 
+* Rust does have a nice _[...eep. I seem to have forgotten whatever I wanted to write here!]_
 
 ### Experience
 
@@ -424,7 +527,7 @@ Man! was this a chore.
   for the reasons mentioned above.
 
 ## Day 8: Haunted Wasteland
-:desert:
+<span style="font-size: 8ex;">:desert:</span>
 
 Today's introduction manages to be both melancholy and spooky.
 
@@ -435,7 +538,7 @@ Today's introduction manages to be both melancholy and spooky.
 
 As we will see, the simultaneity of these emotions is appropriate to the puzzle.
 
-Meanwhile, a sandstorm is approaching.
+Meanwhile, there's that sandstorm.
 You need to find your way to the destination.
 The ghost seems to have left you some maps.
 
@@ -445,7 +548,7 @@ The ghost seems to have left you some maps.
 
 ### Unusual tools
 
-In Ada, nothing special.
+Nothing special.
 
 ### Experience
 
@@ -491,9 +594,16 @@ Compare this Rust...
 **We report, you decide.**
 
 ## Day 9: Mirage Maintenance
-:palm_tree:
+<span style="font-size: 8ex;">:palm_tree:</span>
 
-We never found out "how".
+For yesterday's puzzle I commented
+
+> Out of curiosity, while it makes sense that
+ghosts can move in many places simultaneously...
+how am _I_ supposed to do so?
+Tune in tomorrow to find out! (I guess)
+
+Nope. We never found out "how".
 
 After the sandstorm, you come upon an oasis.
 Above you is a metal island, probably named Metal Island.
@@ -521,13 +631,15 @@ I was modifying the former `Extend_Sequence` to be more general.
 * The only mistake I made with the Rust was to forget
   that the data could be negative, so I stupidly used `u64` instead of `i64`.
 * This is one of those occasions where the Rust is much shorter than the Ada,
-  in no small part thanks to
+  thanks in no small part to
   * **less boilerplate**
+    
     The Ada code spends at least 10 lines defining
     `Value_IO`, `Sequence_Vectors`, `Sequence_Sequences`.
     Those basically don't exist in the Rust code.
     There are other examples of this.
   * **easier iteration**
+    
     Rust's functional-style iteration played a huge role in
     `extend`, `part_1`, and `part_2`.
     I could arguably do something similar in Ada's
@@ -535,10 +647,11 @@ I was modifying the former `Extend_Sequence` to be more general.
     but I don't believe it's possible to do so with `Extend` --
     or whether it's desirable even if it is.
 * The Rust is also significantly faster than the Ada: 6ms vs. 36ms.
-  I will try to come back to this at some point.
+  I will try to investigate this at some point.
+  (As of 26 Dec 2023 I have not.)
 
 ## Day 10: Pipe Maze
-:loop:
+<span style="font-size: 8ex;">:loop:</span>
 
 As you make your way around metal island, you spot a (metal) animal
 who ducks into a pipe.
@@ -560,16 +673,15 @@ But you need his help!
 
 This is much more complex than the previous puzzles.
 * Some sort of search in Part 2.
-* _That_ needs to detect points outside the loop but accessing to the animal
+* _That_ needs to detect points outside the loop but accessible to the animal
   by squeezing between pipes.
-* The pipe shapes are a little hard to work out..
+* The pipe shapes are a little hard to work out.
 * If you get something wrong, debugging can be a hassle.
 
 Still, I made it harder than it needed to be.
 * In my first attempt at Part 1, searching terminated by testing whether
   the two copies of the animal that follow the pipe in opposite directions
   are the same.
-
   **That was dumb.**
   I needed only to check whether their _locations_ were the same.
 * In my first attempt at Part 2, I forgot the puzzle master's note that
@@ -592,7 +704,7 @@ Finally! our first visualization of the year.
 ![visualization.png](day10/visualization.png)
 
 ## Day 11: Cosmic Expansion
-:stars:
+<span style="font-size: 8ex;">:stars:</span>
 
 You come upon an observatory, where
 a researcher offers to help you as soon as he finishes his research project.
@@ -628,12 +740,13 @@ and now I lose the animal, too?
 
 Completing the Advent of Code is sometimes like reading a Neil Gaiman story:
 one day you meet intriguing, sympathetic characters,
-and the next day they're forgotten, as if they never really matter.
+and the next day they're forgotten, dropped from the story and unremembered,
+as if they never really mattered.
 
 :cry:
 
 ## Day 12: Hot Springs
-:hotsprings:
+<span style="font-size: 8ex;">:hotsprings:</span>
 
 Someone didn't keep track of damaged bedsprings very well.
 You have to help an elf fix 'em.
@@ -672,16 +785,16 @@ not because I didn't know what the problem was -- bad indexing --
 but because I was looking in the wrong place.
 
 ## Day 13: Point of Incidence
-:mirror:
+<span style="font-size: 8ex;">:mirror:</span>
 
-You are walking thruogh a landscape of rocks and ash!
+You are walking through a landscape of rocks and ash!
 Mirrors are strewn about the landscape!
 Since the rocks and ash are the same color,
 the mirrors make it hard to navigate around the rocks!
 
 1. For each mirror, find the single row or column of symmetry,
    as it corresponds to a mirror.
-2. Whoops! (:face_with_monocle:) The mirrors are smudged!
+2. Whoops! (:thinking:) The mirrors are smudged!
    Amazingly enough, they each have exactly one smudge!
    For each mirror, find the single position that, when changed,
    gives you a _new_ mirror; i.e., a _new_ row or column of symmetry.
@@ -698,7 +811,8 @@ This was a bit tricky to implement. I made some dumb mistakes along the way,
 especially as regards loop termination and retention of values.
 Despite that, I enjoyed it.
 
-## 📡 Day 14: Parabolic Reflector Dish
+## Day 14: Parabolic Reflector Dish
+<span style="font-size: 8ex;">📡</span>
 
 The reason lava isn't working right is that a reflector dish is off kilter.
 We need to figure out how to reposition its platform.
@@ -717,7 +831,8 @@ not even the arithmetic sum formula, my first suspicion when I read Part 1.
 
 Fun and relatively easy.
 
-## 🔎 Day 15: Lens Library
+## Day 15: Lens Library
+<span style="font-size: 8ex;">🔎</span>
 
 The dish is pointing light to the right place, but things still aren't right.
 You need to adjust some lenses so that the focal power is correct.
@@ -742,7 +857,8 @@ I finally (?) come to grips with the Ada 2022 construction
     ]
 
 I realized later that the issue that required me to use this was bad design,
-so I fixed that, and this disappaered.
+so I fixed that, and this is no longer in the code.
+But I did have it working!
 
 ### Experience
 
@@ -750,14 +866,14 @@ The bad design on Part 2 was badly implemented, so that held me up a while.
 Otherwise, fun and easy.
 
 ## Day 16: The Floor Will Be Lava
-:mirror:
+<span style="font-size: 8ex;">:mirror:</span>
 
 We need to find where to direct the beam of light into the facility
 that will maximize the number of tiles energized by light.
 
 1. Try this when the beam enters from the top left and travels right.
 1. Try it for all potential entrances (top/bottom rows, left/right columns)
-   and report the maxmimum number of energized tiles.
+   and report the maximum number of energized tiles.
 
 ### Unusual Tools
 
@@ -784,9 +900,9 @@ In previous years I suspect I would have struggled mightily with this one.
 ![all_frames_optimized_quicker.gif](day16/frames/all_frames_optimized_quicker.gif)
 
 ## Day 17: Clumsy Crucible
-:teapot:
+<span style="font-size: 8ex;">:shopping_cart:</span>
 
-Time to carry hot lava through city streets! (:astonished:)
+Time to cart hot lava through city streets! (:astonished:)
 But the crucible is top-heavy, so it wobbles and can move
 no more than 3 blocks in any direction, and of course it can't backtrack.
 (But why would you want to?!?)
@@ -817,12 +933,12 @@ so I cut off some shorter paths.
 ![part 2](day17/visualization_2.png)
 
 ## Day 18: Lavaduct Lagoon
-:volcano:
+<span style="font-size: 8ex;">:volcano:</span>
 
 The elves need to dig a trench to store lava.
 
 1. Find the dimension of the trench once it's completely dug.
-1. Whoah, that's not enough. What's this, though?
+1. Whoa, that's not enough. What's this, though?
    Those aren't colors, but correct directions? :roll_eyes:
    Re-compute.
 
@@ -852,17 +968,21 @@ The code is still in the source, but I no longer use it.
 
 After reading that someone _had_ used my original idea
 and thinking about it some more, I tried again, and...
-well, it worked on the example!
+well, it worked on part 1 of the example, but not part 2,
+nor on part 1 of the puzzle input!
 
 Large numbers are pretty difficult to deal with, to check, etc.,
 so I thought of giving up again, but a moment's reflection made me realize that
 I was probably counting the areas of at least a few "notches"
 in addition to the desired "tables".
-That turned out to be a very quick fix.
+That turned out to be a very quick fix:
+it was now working with part 2 of the example...
+and also on both parts of the input!
 
 ### Visualization
 
 Consider the following diagram (gee, where did it come from):
+
     +--------+    +---+
     |        |    |   |
     |        |    |   |
@@ -898,6 +1018,7 @@ The area of the entire "meal", is the sum of all the munches.
 
 We have to be a little careful, since we don't want to add the notches,
 and we also have to watch out for situations where we try to munch this:
+
     +-----------------+
     |XXXXXXXXXXXXXXXXX|
     |XXXXXXXXXXXXXXXXX|
@@ -909,7 +1030,7 @@ and we also have to watch out for situations where we try to munch this:
     +---+     +---+
 
 ## Day 19: Aplenty
-:stuffed_flatbread:
+<span style="font-size: 8ex;">:stuffed_flatbread:</span>
 
 The elves need help sorting parts!
 They give you a list of filtering rules and a list of parts.
@@ -920,7 +1041,8 @@ They give you a list of filtering rules and a list of parts.
 ### Unusual tools
 
 #### Ada
-* `Ludicrous_size` :grinning:
+
+* this was the debut of `Ludicrous_size` :grinning:
 
 ### Experience
 
@@ -929,10 +1051,10 @@ otherwise, I used interval splitting,
 much like [Day 5](#day-5-if-you-give-a-seed-a-fertilizer).
 
 ## Day 20: Pulse Propagation
-:radio_button:
+<span style="font-size: 8ex;">:radio_button:</span>
 
 You need to start a sand machine.
-As usual, the elves have a Rube-Goldbergesque contraption to activate it,
+As usual, the elves have a Rube-Goldberg-esque contraption to activate it,
 made up of modules which broadcast low and high pulses to each other.
 
 1. Find the product of the numbers of low and high pulses
@@ -953,11 +1075,11 @@ I guess it took people a while to work out how to activate `rx`,
 since it isn't terribly straightforward, but neither is it very difficult.
 
 ## Day 21: Step Counter
-:foot:
+<span style="font-size: 8ex;">:walking:</span>
 
 An elf wants to visit a number of garden plots while walking around.
 
-1. How many plots is it possible he would visit on Day 64?
+1. How many plots is it possible he would visit on Step 64?
 1. Ah, he misspoke:
 
       [H]e was reading from a list of his favorite numbers
@@ -986,7 +1108,7 @@ when my first submitted answer for Part 2 was correct.
 (But I was still a little surprised.)
 
 ## Day 22: Sand Slabs
-:bricks:
+<span style="font-size: 8ex;">:bricks:</span>
 
 The sand is falling in ~~bricks~~ slabs, but we need to demolish some.
 
@@ -1008,7 +1130,7 @@ re-sort the bricks after they fall the first time.
 That set me back on Part 1 a while.
 
 ## Day 23: A Long Walk
-:evergreen_tree:
+<span style="font-size: 8ex;">:evergreen_tree:</span>
 
 You have some spare time, so you decide to take a hike.
 In the woods, that is.
@@ -1028,8 +1150,12 @@ but then realized I didn't need it.
 Aside from making the mistake of using breadth-first search
 instead of depth-first, this was fun and relatively easy.
 
+_[added later:] I'm not sure the problem was BFS as opposed to DFS,
+as DFS also takes a while. I want to return to this problem later
+to figure out what I'm doing wrong._
+
 ## Day 24: Never Tell Me The Odds
-⛈️
+<span style="font-size: 8ex;">⛈️</span>
 
 The water is falling, but instead of turning into snow, it's turning into hail!
 We need to pulverize the hailstones!
@@ -1047,8 +1173,8 @@ We need to pulverize the hailstones!
 #### Mathematics
 
 * I had wondered somewhere whether one of the puzzles might use my former
-  research. This one does! I used Groebner basis theory to develop a solution,
-  albeit without computing the Groebner basis.
+  research. This one does! I used Gröbner basis theory to develop a solution,
+  albeit without computing the Gröbner basis.
   (That would have been a bit burdensome.)
 
 ### Experience
@@ -1057,26 +1183,31 @@ Sheesh.
 
 I reckon the one consolation is that _quite a few_ people posting solutions
 are complaining that
-it's the hardest, least rewarding problem they've ever done.
+it's the hardest, least rewarding problem
+they've ever encountered in Advent of Code, and that includes some
+who claim to have completed every competition.
 
 I dickered with it a few minutes before deciding to look
 at what others were saying.
-(I'm :sick:, I've been traveling, and previous days have left me :sleeping:.)
-To my chagrin, most were saying they used Z3, or Mathematica,
+(I'm :face_with_thermometer: , I've been :car:,
+and previous days' puzzles have left me :sleeping:.)
+
+**To my chagrin,** most were saying they used Z3, or Mathematica,
 or something similar.
 
 There were a few who didn't, so I read through their explanations.
 One of them gave me an idea for the approach I used (see below).
 But even when I understood their ideas, I usually couldn't see how to do them.
-(Again: I'm :sick:, I've been traveling, and previous days have left me :sleeping:.)
+(Again: I'm :face_with_thermometer: , I've been :car:,
+and previous days' puzzles have left me :sleeping:.)
 I looked a some posted solutions, and even then I struggled to make sense of them.
 
 Finally, I translated [TheZigerionScammer's](https://www.reddit.com/r/adventofcode/comments/18pnycy/comment/keqf8uq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button)
 posted solution from Python to Ada, and thought I'd call it a day.
 
-...except...
+_...except..._
 
-As noted, I had had the idea to use a different approach, based on Groebner bases.
+As noted, I had had the idea to use a different approach, based on Gröbner bases.
 Someone had pointed out that if you can find 3 hailstones that intersect,
 you basically have 9 equations in 9 variables.
 Given
@@ -1098,22 +1229,27 @@ I worked them out to be something like this:
       z + dz t3 = third.z + third.dz t3
 
 Now, the person who suggested this on reddit further said these equations were linear
-and easily solved -- but they're _not_, and his code used `sympy`.
+and easily solved -- but they're _not_ linear, his code used `sympy`,
+and the comments to his code admit that he doesn't know how this works "under the hood".
+😮‍💨
 
-It turns out my former research field will solve these easily: Groebner bases.
-Without getting into the gritty details -- I worked it out "by hand", with some help
-from the CoCalc computer algebra system to check myself -- we can reduce this system
-to six linear equations in six variables:
+It turns out that my former research field will solve these easily: namely,
+techniques to compute [Gröbner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis).
+Without getting into the nitty gritty, I worked out "by hand", with some help
+from the [CoCalc computer algebra system](https://cocalc.com/) to check myself,
+that the system reduces to six linear equations in six variables:
 
-      (First.Y - Second.Y) dx + (Second.X - First.X) dy + (Second.Dy - First.Dy) x + (First.Dx - Second.Dx) y = -(First.X * First.Dy - First.Y * First.Dx - Second.X * Second.Dy + Second.Y * Second.Dx)
+      (First.Y - Second.Y) dx + (Second.X - First.X) dy + (Second.Dy - First.Dy) x + (First.Dx - Second.Dx) y
+         = First.Y * First.Dx - First.X * First.Dy + Second.X * Second.Dy - Second.Y * Second.Dx
 
-      (First.Z - Second.Z) dx + (Second.X - First.X) dz + (Second.Dz - First.Dz) x + (First.Dx - Second.Dx) z = -(First.X * First.Dz - First.Z * First.Dx - Second.X * Second.Dz + Second.Z * Second.Dx)
+      (First.Z - Second.Z) dx + (Second.X - First.X) dz + (Second.Dz - First.Dz) x + (First.Dx - Second.Dx) z
+         = First.Z * First.Dx - First.X * First.Dz + Second.X * Second.Dz - Second.Z * Second.Dx
 
 ...and a bunch more. This really _is_ linear, and is "easy" to solve in code.
 So I did.
 
 ## Day 25: Snowverload
-:snowflake:
+<span style="font-size: 8ex;">:snowflake:</span>
 
 **Still no snow!!!** The machine seems to be suffering a power overload.
 
@@ -1137,23 +1273,25 @@ So I did.
 This was a much harder problem for me than I expected on Christmas Day.
 In my experience, the Christmas puzzles are not perhaps the easiest,
 but by no means the hardest, either.
-Yet this one was arguably the hardest of the year: I could see how Part 1 alone
-could by itself be broken into two and swapped with an earlier, easier day.
+Yet this one was arguably the hardest of the year: I would argue that
+one could break Part 1 into at least two parts and swap it in place of
+an earlier, easier day.
 
 This isn't a complaint about the puzzle itself, by the way,
 which I think is excellent.
 I certainly learned a lot of graph theory in the process.
 
-In fact, I am very pleased to have worked out,
-despite struggling mightly to implement correctly two different algorithms:
-one, Karger's Algorithm, found online; the other, a Monte Carlo algorothm I
+In fact, I am very pleased to have worked it out,
+as I struggled mightily to implement correctly two different algorithms:
+one, Karger's Algorithm, found online; the other, a Monte Carlo algorithm I
 devised myself after Christmas lunch.
 And it's precisely the struggle, and the unlikelihood
 of most people's even knowing how to _start_, let alone how to finish,
 that makes me wonder (in the "Experience" section, mind!) whether
-it might have been better served on a different day.
-After all, Day 9 was a bit insulting in how
-we were tutored to solve the problem.
+it was more appropriate for a different day.
+For example, Day 9 straight up told us how to solve the problem,
+which I found a bit insulting.
+Likewise, days 19 and 22 were a bit easy, so why was day 23 so hard?
 
 But I still love the problem! And while the last week of this year's puzzles
 were a true, grinding burden, I'm glad I did them.
