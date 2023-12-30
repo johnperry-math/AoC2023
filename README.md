@@ -42,6 +42,11 @@ well, at least once.
 The following advanced concepts of mathematics and computer science
 showed up either in the puzzles or in my solutions to them:
 
+1. Modularity -- OK, maybe this isn't "advanced", but after completing the puzzles:
+   * In Ada, I went back and created a `Common` package that contains code
+     that I kept re-using; in particular, `Location_Record` and `Map_Array`
+     and `Read_Input` for two-dimensional maps. I'm rather pleased with the result.
+     Unfortunately, `gnatdoc` isn't the greatest system for documenting it.
 1. [Programming by contracts](https://en.wikipedia.org/wiki/Design_by_contract)
    (not as much as I'd have liked)
 1. Subtypes and ranges (Ada and Modula-2 only; Rust doesn't offer this feature)

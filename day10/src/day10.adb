@@ -11,13 +11,16 @@ pragma Ada_2022;
 --  part 2: count the locations within the closed loop
 
 with Ada.Text_IO;
-with Ada.Containers.Ordered_Sets;
 with Ada.Containers.Synchronized_Queue_Interfaces;
 with Ada.Containers.Unbounded_Synchronized_Queues;
+
+with Common;
 
 procedure Day10 is
 
    package IO renames Ada.Text_IO;
+
+   use Common.Two_Dimensional_Motion;
 
    --  SECTION
    --  global types and variables
@@ -39,27 +42,48 @@ procedure Day10 is
       Start       --  S
    );
 
+   Invalid_Symbol : exception;
+
+   function Deserialize (Symbol : Character) return Pipe is
+     (case Symbol is when '|' => Vertical, when '-' => Horizontal,
+        when 'L' => SE_Or_WN, when 'J' => SW_Or_EN, when '7' => ES_Or_NW,
+        when 'F' => WS_Or_NE, when '.' => Ground, when 'S' => Start,
+        when others => raise Invalid_Symbol with Symbol'Image);
+
+   function Serialize (P : Pipe) return Character is
+     (case P is when Horizontal => '-', when Vertical => '|',
+        when SE_Or_WN => 'L', when SW_Or_EN => 'J', when WS_Or_NE => 'F',
+        when ES_Or_NW => '7', when Ground => '.', when Start => 'S');
+
    Side_Length : constant Positive := (if Doing_Example then 20 else 140);
-   subtype Side_Range is Positive range 1 .. Side_Length;
-   Map : array (Side_Range, Side_Range) of Pipe;
+
+   package Map_Package is new Common.Two_Dimensional_Map
+     (Row_Length => Side_Length, Col_Length => Side_Length, Object => Pipe);
+
+   use Map_Package;
+
+   package Map_Package_IO is new Common.Two_Dimensional_Map_IO
+     (Doing_Example => Doing_Example, Map_Package => Map_Package);
+
+   subtype Side_Range is Row_Range;
 
    --  SUBSECTION
    --  locations
 
-   type Location is record
-      Row, Col : Side_Range;
-   end record;
+   Start_Location : Location_Record;
 
-   Start_Location : Location;
+   procedure Find_Start is
+   begin
+      for Row in Row_Range loop
+         for Col in Col_Range loop
+            if Map (Row, Col) = Start then
+               Start_Location := (Row, Col);
+            end if;
+         end loop;
+      end loop;
+   end Find_Start;
 
-   function "<" (Left, Right : Location) return Boolean is
-     (Left.Row < Right.Row
-      or else (Left.Row = Right.Row and then Left.Col < Right.Col));
-
-   package Moved_Location_Sets is new Ada.Containers.Ordered_Sets
-     (Element_Type => Location);
-
-   Moved_Locations : Moved_Location_Sets.Set;
+   Moved_Locations : Location_Sets.Set;
 
    --  SUBSECTION
    --  the traversed map
@@ -70,8 +94,6 @@ procedure Day10 is
 
    --  SECTION
    --  I/O
-
-   Invalid_Input : exception;
 
    pragma Warnings (Off, "is not referenced");
    procedure Put_Traversed_Map is
@@ -98,12 +120,7 @@ procedure Day10 is
 
             IO.Put
               ((if Moved_Locations.Contains ((Row, Col)) then 'X'
-                else
-                  (case Map (Row, Col) is when Horizontal => '-',
-                     when Vertical => '|', when SE_Or_WN => 'L',
-                     when SW_Or_EN => 'J', when WS_Or_NE => 'F',
-                     when ES_Or_NW => '7', when Ground => '.',
-                     when Start => 'S')));
+                else (Serialize (Map (Row, Col)))));
 
          end loop;
          IO.New_Line;
@@ -113,43 +130,11 @@ procedure Day10 is
 
    pragma Warnings (On, "is not referenced");
 
-   procedure Read_Input is
-      Input : IO.File_Type;
-   begin
-
-      IO.Open
-        (Input, IO.In_File,
-         (if Doing_Example then "example.txt" else "input.txt"));
-
-      for Row in Map'Range (1) loop
-
-         declare
-            S : constant String := IO.Get_Line (Input);
-         begin
-
-            for Col in Map'Range (2) loop
-
-               Map (Row, Col) :=
-                 (case S (Col) is when '|' => Vertical, when '-' => Horizontal,
-                    when 'L' => SE_Or_WN, when 'J' => SW_Or_EN,
-                    when '7' => ES_Or_NW, when 'F' => WS_Or_NE,
-                    when '.' => Ground, when 'S' => Start,
-                    when others => raise Invalid_Input with S (Col)'Image);
-               if S (Col) = 'S' then
-                  Start_Location := (Row, Col);
-               end if;
-
-            end loop;
-         end;
-      end loop;
-
-   end Read_Input;
-
    --  SECTION
    --  Parts 1 and 2
 
    type Animal is record
-      Curr, Prev : Location;
+      Curr, Prev : Location_Record;
    end record;
    --  where the animal was before, and where it is now
    --  we keep track of the "before" to prevent moving where it is now
@@ -159,7 +144,7 @@ procedure Day10 is
 
    Left_Loop, Cycle_Loop : exception;
 
-   function Can_Move (Here, From : Location) return Boolean is
+   function Can_Move (Here, From : Location_Record) return Boolean is
      (declare Current : constant Pipe := Map (From.Row, From.Col); begin (
       case Map (Here.Row, Here.Col) is
         when Vertical =>      -- |
@@ -250,17 +235,17 @@ procedure Day10 is
    end Record_Motion;
 
    procedure Move
-     (Me : in out Animal; But_Not_Here : Location := Start_Location)
+     (Me : in out Animal; But_Not_Here : Location_Record := Start_Location)
    is
       --  moves the animal to a valid location
 
-      Option : Location;
+      Option : Location_Record;
       --  where it might move
 
    begin
 
-      for DRow in -1 .. 1 when Me.Curr.Row + DRow in Side_Range loop
-         for DCol in -1 .. 1 when Me.Curr.Col + DCol in Side_Range loop
+      for DRow in Nudge when Me.Curr.Row + DRow in Side_Range loop
+         for DCol in Nudge when Me.Curr.Col + DCol in Side_Range loop
 
             if abs (DRow) /= abs (DCol) then
 
@@ -522,8 +507,7 @@ procedure Day10 is
          --  double each row for visibility
          for Each in 1 .. 2 loop
             for Col in 0 .. Map'Last (2) - 1 loop
-
-               -- double each column for visibility
+               --  double each column for visibility
                IO.Put
                  (Output,
                   (if Map (Row, Col) then Outside'Image else Inside'Image));
@@ -563,7 +547,8 @@ procedure Day10 is
    end Part_2;
 
 begin
-   Read_Input;
+   Map_Package_IO.Read_Input;
+   Find_Start;
    IO.Put_Line
      ("From entrance to farthest point takes" & Part_1'Image & " steps");
    --  Put_Traversed_Map;

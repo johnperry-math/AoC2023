@@ -13,13 +13,14 @@ pragma Ada_2022;
 
 with Ada.Text_IO;
 
-with Ada.Containers.Ordered_Sets;
-with Ada.Containers.Vectors;
+with Common;
 
 procedure Day21 is
 
    package IO renames Ada.Text_IO;
    package Nat_IO is new Ada.Text_IO.Integer_IO (Num => Natural);
+
+   use Common.Two_Dimensional_Motion;
 
    Doing_Example : constant Boolean := False;
 
@@ -31,75 +32,45 @@ procedure Day21 is
    --  SUBSECTION
    --  map information
 
-   type Object is (Plot, Rock);
+   type Object is (Plot, Rock, Start);
+
+   Invalid_Symbol : exception;
+
+   function Deserialize (Symbol : Character) return Object is
+     (case Symbol is when '.' => Plot, when '#' => Rock, when 'S' => Start,
+        when others => raise Invalid_Symbol with Symbol'Image);
+
+   function Serialize (O : Object) return Character is
+     (case O is when Plot => '.', when Rock => '#', when Start => 'S');
 
    Side_Length : constant Positive := (if Doing_Example then 11 else 131);
-   subtype Side_Range is Positive range 1 .. Side_Length;
-   type Map_Array is array (Side_Range, Side_Range) of Object;
 
-   type Location is record
-      Row, Col : Side_Range;
-   end record;
+   package Map_Package is new Common.Two_Dimensional_Map
+     (Row_Length => Side_Length, Col_Length => Side_Length, Object => Object);
 
-   Map            : Map_Array;
-   Start_Position : Location;
+   use Map_Package;
 
-   --  SUBSECTION
-   --  movement
+   package Map_IO is new Common.Two_Dimensional_Map_IO
+     (Map_Package => Map_Package);
 
-   type Direction is (North, South, East, West);
-   subtype Nudge is Integer range -1 .. 1;
-   type Drc is record
-      Row, Col : Nudge;
-   end record;
+   subtype Side_Range is Row_Range;
 
-   Deltas : constant array (Direction) of Drc :=
-     [North => (Row => -1, Col => 0), South => (Row => 1, Col => 0),
-     East   => (Row => 0, Col => 1), West => (Row => 0, Col => -1)];
+   Start_Position : Location_Record;
 
-   --  SUBSECTION
-   --  tracking movement
-
-   function "<" (Left, Right : Location) return Boolean is
-     (Left.Row < Right.Row
-      or else (Left.Row = Right.Row and then Left.Col < Right.Col));
-
-   package Location_Sets is new Ada.Containers.Ordered_Sets
-     (Element_Type => Location);
-
-   package Location_Vectors is new Ada.Containers.Vectors
-     (Index_Type => Positive, Element_Type => Location);
+   procedure Find_Start is
+   begin
+      for Row in Row_Range loop
+         for Col in Col_Range loop
+            if Map (Row, Col) = Start then
+               Start_Position := (Row, Col);
+               Map (Row, Col) := Plot;
+            end if;
+         end loop;
+      end loop;
+   end Find_Start;
 
    --  SECTION
    --  I/O
-
-   Filename : constant String :=
-     (if Doing_Example then "example.txt" else "input.txt");
-
-   procedure Read_Input is
-      Input : IO.File_Type;
-   begin
-
-      IO.Open (Input, IO.In_File, Filename);
-
-      for Row in Side_Range loop
-         declare
-            Line : constant String := IO.Get_Line (Input);
-         begin
-            for Col in Side_Range loop
-
-               Map (Row, Col) := (if Line (Col) = '#' then Rock else Plot);
-               if Line (Col) = 'S' then
-                  Start_Position := Location'(Row, Col);
-               end if;
-
-            end loop;
-         end;
-      end loop;
-
-      IO.Close (Input);
-
-   end Read_Input;
 
    procedure Put_Map_Visited (Visited : Location_Sets.Set) is
    --  useful for debugging
@@ -108,7 +79,7 @@ procedure Day21 is
       for Row in Side_Range loop
          for Col in Side_Range loop
 
-            if Visited.Contains (Location'(Row, Col)) then
+            if Visited.Contains (Location_Record'(Row, Col)) then
                IO.Put ('O');
 
             elsif Map (Row, Col) = Rock then
@@ -132,12 +103,14 @@ procedure Day21 is
 
    Part_1_Steps : constant Positive := (if Doing_Example then 6 else 64);
 
-   function Part_1 (Max_Steps : Positive; Start : Location) return Natural is
+   function Part_1
+     (Max_Steps : Positive; Start : Location_Record) return Natural
+   is
 
       To_Do : array (0 .. Max_Steps) of Location_Vectors.Vector;
       Done  : Location_Sets.Set;
 
-      Next : Location;
+      Next : Location_Record;
 
    begin
 
@@ -152,13 +125,13 @@ procedure Day21 is
             for Curr of To_Do (Step) loop
                for D of Deltas loop
 
-                  if Curr.Row + D.Row in Side_Range
-                    and then Curr.Col + D.Col in Side_Range
+                  if Curr.Row + D.DRow in Side_Range
+                    and then Curr.Col + D.DCol in Side_Range
                   then
 
                      Next :=
-                       Location'
-                         (Row => Curr.Row + D.Row, Col => Curr.Col + D.Col);
+                       Location_Record'
+                         (Row => Curr.Row + D.DRow, Col => Curr.Col + D.DCol);
 
                      if Map (Next.Row, Next.Col) = Plot
                        and then (not Done.Contains (Next))
@@ -220,26 +193,22 @@ procedure Day21 is
       --  larger map
 
       Expanded_Side_Length : constant Positive := Side_Length * Multiple;
-      subtype Expanded_Side_Range is Positive range 1 .. Expanded_Side_Length;
-      Expanded_Map :
-        array (Expanded_Side_Range, Expanded_Side_Range) of Object;
 
-      type Expanded_Location is record
-         Row, Col : Expanded_Side_Range;
-      end record;
+      package Expanded_Map_Array is new Common.Two_Dimensional_Map
+        (Row_Length => Expanded_Side_Length,
+         Col_Length => Expanded_Side_Length, Object => Object);
+
+      subtype Expanded_Side_Range is Expanded_Map_Array.Row_Range;
+      Expanded_Map renames Expanded_Map_Array.Map;
+
+      subtype Expanded_Location_Record is Expanded_Map_Array.Location_Record;
 
       --  SUBSECTION
       --  adjusting location tracking
 
-      function "<" (Left, Right : Expanded_Location) return Boolean is
-        (Left.Row < Right.Row
-         or else (Left.Row = Right.Row and then Left.Col < Right.Col));
-
-      package Expanded_Location_Sets is new Ada.Containers.Ordered_Sets
-        (Element_Type => Expanded_Location);
-
-      package Expanded_Location_Vectors is new Ada.Containers.Vectors
-        (Index_Type => Positive, Element_Type => Expanded_Location);
+      package Expanded_Location_Sets renames Expanded_Map_Array.Location_Sets;
+      package Expanded_Location_Vectors renames
+        Expanded_Map_Array.Location_Vectors;
 
       --  SUBSECTION
       --  BFS-related
@@ -247,7 +216,7 @@ procedure Day21 is
       To_Do : array (0 .. Repetitions) of Expanded_Location_Vectors.Vector;
       Done  : Expanded_Location_Sets.Set;
 
-      Next : Expanded_Location;
+      Next : Expanded_Location_Record;
 
       Final_Visits : Expanded_Location_Sets.Set;
 
@@ -263,7 +232,7 @@ procedure Day21 is
          for Row in Expanded_Side_Range loop
             for Col in Expanded_Side_Range loop
 
-               if Visited.Contains (Expanded_Location'(Row, Col)) then
+               if Visited.Contains (Expanded_Location_Record'(Row, Col)) then
                   IO.Put ('O');
                   Number_Of_Os := @ + 1;
 
@@ -352,7 +321,7 @@ procedure Day21 is
       --  BFS our way to great joy
 
       To_Do (0).Append
-        (Expanded_Location'
+        (Expanded_Location_Record'
            (Row => Expanded_Side_Length / 2 + 1,
             Col => Expanded_Side_Length / 2 + 1));
 
@@ -369,13 +338,13 @@ procedure Day21 is
             for Curr of To_Do (Step) loop
                for D of Deltas loop
 
-                  if Curr.Row + D.Row in Expanded_Side_Range
-                    and then Curr.Col + D.Col in Expanded_Side_Range
+                  if Curr.Row + D.DRow in Expanded_Side_Range
+                    and then Curr.Col + D.DCol in Expanded_Side_Range
                   then
 
                      Next :=
-                       Expanded_Location'
-                         (Row => Curr.Row + D.Row, Col => Curr.Col + D.Col);
+                       Expanded_Location_Record'
+                         (Row => Curr.Row + D.DRow, Col => Curr.Col + D.DCol);
 
                      if Expanded_Map (Next.Row, Next.Col) = Plot
                        and then (not Done.Contains (Next))
@@ -456,62 +425,68 @@ procedure Day21 is
       From_Top_Ctr   :=
         Part_1
           (Side_Length - 1,
-           Location'(Row => Side_Range'First, Col => Side_Length / 2 + 1));
+           Location_Record'
+             (Row => Side_Range'First, Col => Side_Length / 2 + 1));
       From_Bot_Ctr   :=
         Part_1
           (Side_Length - 1,
-           Location'(Row => Side_Range'Last, Col => Side_Length / 2 + 1));
+           Location_Record'
+             (Row => Side_Range'Last, Col => Side_Length / 2 + 1));
       From_Right_Mid :=
         Part_1
           (Side_Length - 1,
-           Location'(Row => Side_Length / 2 + 1, Col => Side_Range'Last));
+           Location_Record'
+             (Row => Side_Length / 2 + 1, Col => Side_Range'Last));
       From_Left_Mid  :=
         Part_1
           (Side_Length - 1,
-           Location'(Row => Side_Length / 2 + 1, Col => Side_Range'First));
+           Location_Record'
+             (Row => Side_Length / 2 + 1, Col => Side_Range'First));
 
       From_Bot_Right_1 :=
         Part_1
           (Corner_1_Steps,
-           Location'(Row => Side_Range'Last, Col => Side_Range'Last));
+           Location_Record'(Row => Side_Range'Last, Col => Side_Range'Last));
       From_Bot_Left_1  :=
         Part_1
           (Corner_1_Steps,
-           Location'(Row => Side_Range'Last, Col => Side_Range'First));
+           Location_Record'(Row => Side_Range'Last, Col => Side_Range'First));
       From_Top_Right_1 :=
         Part_1
           (Corner_1_Steps,
-           Location'(Row => Side_Range'First, Col => Side_Range'Last));
+           Location_Record'(Row => Side_Range'First, Col => Side_Range'Last));
       From_Top_Left_1  :=
         Part_1
           (Corner_1_Steps,
-           Location'(Row => Side_Range'First, Col => Side_Range'First));
+           Location_Record'(Row => Side_Range'First, Col => Side_Range'First));
 
       From_Bot_Right_2 :=
         Part_1
           (Corner_2_Steps,
-           Location'(Row => Side_Range'Last, Col => Side_Range'Last));
+           Location_Record'(Row => Side_Range'Last, Col => Side_Range'Last));
       From_Bot_Left_2  :=
         Part_1
           (Corner_2_Steps,
-           Location'(Row => Side_Range'Last, Col => Side_Range'First));
+           Location_Record'(Row => Side_Range'Last, Col => Side_Range'First));
       From_Top_Right_2 :=
         Part_1
           (Corner_2_Steps,
-           Location'(Row => Side_Range'First, Col => Side_Range'Last));
+           Location_Record'(Row => Side_Range'First, Col => Side_Range'Last));
       From_Top_Left_2  :=
         Part_1
           (Corner_2_Steps,
-           Location'(Row => Side_Range'First, Col => Side_Range'First));
+           Location_Record'(Row => Side_Range'First, Col => Side_Range'First));
 
       Full_1 :=
         Part_1
           (Side_Length + Side_Length / 2,
-           Location'(Row => Side_Range'Last, Col => Side_Range'Last / 2));
+           Location_Record'
+             (Row => Side_Range'Last, Col => Side_Range'Last / 2));
       Full_2 :=
         Part_1
           (Side_Length + Side_Length / 2 + 1,
-           Location'(Row => Side_Range'Last, Col => Side_Range'Last / 2));
+           Location_Record'
+             (Row => Side_Range'Last, Col => Side_Range'Last / 2));
 
       --  diagram
 
@@ -578,7 +553,8 @@ procedure Day21 is
    end Part_2;
 
 begin
-   Read_Input;
+   Map_IO.Read_Input;
+   Find_Start;
    IO.Put_Line
      ("On the" & Part_1_Steps'Image & "th step, the elf can visit exactly" &
       Part_1 (Part_1_Steps, Start_Position)'Image & " plots");

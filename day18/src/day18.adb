@@ -15,6 +15,8 @@ with Ada.Containers.Synchronized_Queue_Interfaces;
 with Ada.Containers.Unbounded_Synchronized_Queues;
 with Ada.Containers.Vectors;
 
+with Common;
+
 procedure Day18 is
 
    package IO renames Ada.Text_IO;
@@ -30,31 +32,22 @@ procedure Day18 is
    --  SUBSECTION
    --  map (for part 1) and locations (for part 2)
 
+   use Common.Two_Dimensional_Motion;
+
    type Map_Array is array (Integer range <>, Integer range <>) of Natural;
 
-   type Location is record
+   type Location_Record is record
       Row, Col : Integer;
    end record;
 
    package Location_Vectors is new Ada.Containers.Vectors
-     (Index_Type => Positive, Element_Type => Location);
+     (Index_Type => Positive, Element_Type => Location_Record);
 
    type Initial_Data (First_Row, Last_Row, First_Col, Last_Col : Integer) is
    record
       Map       : Map_Array (First_Row .. Last_Row, First_Col .. Last_Col);
       Locations : Location_Vectors.Vector;
    end record;
-
-   --  SUBSECTION
-   --  directions (for map setup)
-
-   type Direction is (Up, Down, Left, Right);
-   subtype Nudge is Integer range -1 .. 1;
-   type Drc is record
-      DRow, DCol : Nudge;
-   end record;
-   Deltas : constant array (Direction) of Drc :=
-     [Up => (-1, 0), Down => (1, 0), Left => (0, -1), Right => (0, 1)];
 
    --  SECTION
    --  I/O
@@ -104,7 +97,7 @@ procedure Day18 is
 
          end;
 
-         Locations.Append (Location'(Row, Col));
+         Locations.Append (Location_Record'(Row, Col));
 
          Top_Row   := Integer'Min (Top_Row, Row);
          Bott_Row  := Integer'Max (Bott_Row, Row);
@@ -225,7 +218,7 @@ procedure Day18 is
 
          end;
 
-         Locations.Append (Location'(Row, Col));
+         Locations.Append (Location_Record'(Row, Col));
 
       end loop;
 
@@ -237,9 +230,10 @@ procedure Day18 is
    --  SUBSECTION
    --  Output
 
-   procedure Put_Location (L : Location) is
+   pragma Warnings (Off, "is not referenced");
+   procedure Put_Location (Location : Location_Record) is
    begin
-      IO.Put ("(" & L.Row'Image & "," & L.Col'Image & ")");
+      IO.Put ("(" & Location.Row'Image & "," & Location.Col'Image & ")");
    end Put_Location;
 
    procedure Put_Map (Map : Map_Array) is
@@ -251,11 +245,12 @@ procedure Day18 is
          IO.New_Line;
       end loop;
    end Put_Map;
+   pragma Warnings (On, "is not referenced");
 
    --  SECTION
    --  Part 1
 
-   Map_And_Locations : Initial_Data := Read_Input;
+   Map_And_Locations : constant Initial_Data := Read_Input;
    --  ;-)
 
    procedure Flood_Fill (Map : in out Map_Array) is
@@ -263,14 +258,14 @@ procedure Day18 is
 
       package Location_Interface is new Ada.Containers
         .Synchronized_Queue_Interfaces
-        (Element_Type => Location);
+        (Element_Type => Location_Record);
 
       package Location_Queues is new Ada.Containers
         .Unbounded_Synchronized_Queues
         (Queue_Interfaces => Location_Interface);
 
       To_Do      : Location_Queues.Queue;
-      Curr, Next : Location;
+      Curr, Next : Location_Record;
 
    begin
 
@@ -287,7 +282,7 @@ procedure Day18 is
          loop
 
             Next :=
-              Location'
+              Location_Record'
                 (Row => Curr.Row + Deltas (Dir).DRow,
                  Col => Curr.Col + Deltas (Dir).DCol);
             if Map (Next.Row, Next.Col) = 255**3 then
@@ -326,55 +321,55 @@ procedure Day18 is
    --  SECTION
    --  Part 2, done the way everyone and his sister did it on Reddit
 
-   type Product_Range is range 0 .. 2**64 - 1;
+   type Product_Range is range -2**64 .. 2**64 - 1;
 
    function Shoelace_Formula
-     (Locations : Location_Vectors.Vector) return Long_Long_Integer
+     (Locations : Location_Vectors.Vector) return Product_Range
    is
 
-      Result : Long_Long_Integer := 0;
+      Result : Product_Range := 0;
 
    begin
 
       for Ith in Locations.First_Index .. Locations.Last_Index - 1 loop
          Result :=
            @ +
-           (Long_Long_Integer (Locations (Ith).Row) *
-            Long_Long_Integer (Locations (Ith + 1).Col) -
-            Long_Long_Integer (Locations (Ith).Col) *
-              Long_Long_Integer (Locations (Ith + 1).Row));
+           (Product_Range (Locations (Ith).Row) *
+            Product_Range (Locations (Ith + 1).Col) -
+            Product_Range (Locations (Ith).Col) *
+              Product_Range (Locations (Ith + 1).Row));
       end loop;
 
       Result :=
         @ +
-        (Long_Long_Integer (Locations.Last_Element.Row) *
-         Long_Long_Integer (Locations.First_Element.Col) -
-         Long_Long_Integer (Locations.Last_Element.Col) *
-           Long_Long_Integer (Locations.First_Element.Row));
+        (Product_Range (Locations.Last_Element.Row) *
+         Product_Range (Locations.First_Element.Col) -
+         Product_Range (Locations.Last_Element.Col) *
+           Product_Range (Locations.First_Element.Row));
 
       return abs (Result) / 2;
 
    end Shoelace_Formula;
 
    function Picks_Formula
-     (Locations : Location_Vectors.Vector) return Long_Long_Integer
+     (Locations : Location_Vectors.Vector) return Product_Range
    is
       --  this is NOT QUITE Pick's Theorem,
       --  on account of the border NOT QUITE capturing all the points
-      Perimeter : Long_Long_Integer := 0;
+      Perimeter : Product_Range := 0;
    begin
 
       for Ith in Locations.First_Index .. Locations.Last_Index - 1 loop
          Perimeter :=
            @ +
-           Long_Long_Integer
+           Product_Range
              (abs (Locations (Ith).Row - Locations (Ith + 1).Row) +
               abs (Locations (Ith).Col - Locations (Ith + 1).Col));
       end loop;
 
       Perimeter :=
         @ +
-        Long_Long_Integer
+        Product_Range
           (abs (Locations.Last_Element.Row - Locations.First_Element.Row) +
            abs (Locations.Last_Element.Col - Locations.First_Element.Col));
 
@@ -382,8 +377,7 @@ procedure Day18 is
 
    end Picks_Formula;
 
-   function Part_2
-     (Locations : Location_Vectors.Vector) return Long_Long_Integer
+   function Part_2 (Locations : Location_Vectors.Vector) return Product_Range
    is
    begin
       return Picks_Formula (Locations);
@@ -439,11 +433,12 @@ procedure Day18 is
    end record;
    --  we rarely eat in; we prefer to take out ;-)
 
-   function Contains (B : Takeout_Box; L : Location) return Boolean is
+   function Contains
+     (B : Takeout_Box; Location : Location_Record) return Boolean is
    --  true iff B contains L (inclusive of edges!)
 
-     (L.Row in B.Min_Row .. B.Max_Row
-      and then L.Col in B.Min_Col .. B.Max_Col);
+     (Location.Row in B.Min_Row .. B.Max_Row
+      and then Location.Col in B.Min_Col .. B.Max_Col);
 
    type Menu_Item (Valid : Boolean) is record
       case Valid is
@@ -691,12 +686,12 @@ procedure Day18 is
 begin
 
    --  feel free to uncomment these; answers should be the same
-   --  IO.Put_Line
-   --    ("The lagoon can hold" & Part_1 (Map_And_Locations.Map)'Image &
-   --     " cubic meters of lava");
-   --  IO.Put_Line
-   --    ("After revision, it can hold" & Part_2 (Reread_Input)'Image &
-   --     " cubic meters");
+   IO.Put_Line
+     ("The lagoon can hold" & Part_1 (Map_And_Locations.Map)'Image &
+      " cubic meters of lava");
+   IO.Put_Line
+     ("After revision, it can hold" & Part_2 (Reread_Input)'Image &
+      " cubic meters");
 
    IO.Put_Line
      ("By munching:" & Map_Muncher (Map_And_Locations.Locations)'Image);

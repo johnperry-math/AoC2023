@@ -15,56 +15,49 @@ with Ada.Text_IO;
 with Ada.Containers.Ordered_Maps;
 with Ada.Containers.Synchronized_Queue_Interfaces;
 with Ada.Containers.Unbounded_Synchronized_Queues;
-with Ada.Containers.Vectors;
+
+with Common;
 
 procedure Day17 is
 
    package IO renames Ada.Text_IO;
 
+   use Common.Two_Dimensional_Motion;
+
    --  SECTION
    --  global types and variables
 
    Doing_Example : constant Boolean := False;
-   Visualize     : constant Boolean := True;
+   Visualize     : constant Boolean := False;
 
    Side_Length : constant Positive := (if Doing_Example then 13 else 141);
-   subtype Side_Range is Positive range 1 .. Side_Length;
-   Map : array (Side_Range, Side_Range) of Positive;
+
+   Invalid_Symbol : exception;
+
+   function Deserialize (Symbol : Character) return Positive is
+     (case Symbol is
+        when '1' .. '9' => Character'Pos (Symbol) - Character'Pos ('0'),
+        when others => raise Invalid_Symbol with Symbol'Image);
+
+   function Serialize (O : Positive) return Character is
+     (Character'Val (O + Character'Pos ('0')));
+
+   package Map_Package is new Common.Two_Dimensional_Map
+     (Row_Length => Side_Length, Col_Length => Side_Length,
+      Object     => Positive);
+
+   use Map_Package;
+
+   package Map_Package_IO is new Common.Two_Dimensional_Map_IO
+     (Doing_Example => Doing_Example, Map_Package => Map_Package);
+
+   subtype Side_Range is Row_Range;
 
    --  SUBSECTION
-   --  movement
-
-   type Direction is (North, South, East, West);
-
-   function Opposite (Left, Right : Direction) return Boolean is
-     (case Left is when North => Right = South, when South => Right = North,
-        when East => Right = West, when West => Right = East);
-
-   subtype Nudge is Integer range -1 .. 1;
-
-   type Drc is record
-      DRow, DCol : Nudge;
-   end record;
-
-   Deltas : constant array (Direction) of Drc :=
-     [North => (-1, 0), South => (1, 0), East => (0, 1), West => (0, -1)];
-
-   --  SUBSECTION
-   --  location and state
-
-   type Location is record
-      Row, Col : Side_Range;
-   end record;
-
-   function "<" (Left, Right : Location) return Boolean is
-     (Left.Row < Right.Row
-      or else (Left.Row = Right.Row and then Left.Col < Right.Col));
-
-   package Location_Vectors is new Ada.Containers.Vectors
-     (Index_Type => Positive, Element_Type => Location);
+   --  state
 
    type State is record
-      Where    : Location;
+      Where    : Location_Record;
       Dir      : Direction;
       --  current direction of travel
       Repeated : Natural;
@@ -78,34 +71,7 @@ procedure Day17 is
    package State_Queues is new Ada.Containers.Unbounded_Synchronized_Queues
      (Queue_Interfaces => State_Interfaces);
 
-   --  SECTION
-   --  I/O
-
-   procedure Read_Input is
-      Input : IO.File_Type;
-      Dummy : Positive;
-   begin
-
-      IO.Open
-        (Input, IO.In_File,
-         (if Doing_Example then "example.txt" else "input.txt"));
-
-      for Row in Side_Range loop
-         declare
-            Line : constant String := IO.Get_Line (Input);
-         begin
-            for Col in Side_Range loop
-               Map (Row, Col) :=
-                 Character'Pos (Line (Col)) - Character'Pos ('0');
-            end loop;
-         end;
-      end loop;
-
-      IO.Close (Input);
-
-   end Read_Input;
-
-   procedure Put_Location (L : Location) is
+   procedure Put_Location (L : Location_Record) is
    begin
       IO.Put ("(");
       IO.Put (L.Row'Image);
@@ -147,7 +113,9 @@ procedure Day17 is
             for Col in Map'Range (2) loop
                for Each_Col in 1 .. 4 loop
                   for Rgb in 1 .. 3 loop
-                     if P.Contains (Location'(Row, Col)) and then Rgb < 3 then
+                     if P.Contains (Location_Record'(Row, Col))
+                       and then Rgb < 3
+                     then
                         IO.Put
                           (Output,
                            Natural'Image (255 - 10 * (10 - Map (Row, Col))));
@@ -174,7 +142,7 @@ procedure Day17 is
       type Neighbor_Cost is array (Direction, 1 .. 3) of Natural;
 
       package Location_Maps is new Ada.Containers.Ordered_Maps
-        (Key_Type => Location, Element_Type => Neighbor_Cost);
+        (Key_Type => Location_Record, Element_Type => Neighbor_Cost);
 
       Visited : Location_Maps.Map;
       To_Do   : array (0 .. 5_000) of State_Queues.Queue;
@@ -184,7 +152,7 @@ procedure Day17 is
       --  prime BFS
       To_Do (0).Enqueue
         (State'
-           (Where => Location'(Side_Range'First, Side_Range'First),
+           (Where => Location_Record'(Side_Range'First, Side_Range'First),
             Dir   => East, Repeated => 1, Path => <>));
 
       loop
@@ -194,14 +162,11 @@ procedure Day17 is
            and then Natural (To_Do (Result).Current_Use) = 0
          loop
             Result := @ + 1;
-            IO.Put_Line
-              ("Heat loss:" & Result'Image & " has" &
-               To_Do (Result).Current_Use'Image & " elements");
          end loop;
 
          declare
             Curr, Next   : State;
-            New_Location : Location;
+            New_Location : Location_Record;
          begin
 
             To_Do (Result).Dequeue (Curr);
@@ -223,7 +188,7 @@ procedure Day17 is
                   then
 
                      New_Location :=
-                       Location'
+                       Location_Record'
                          (Row => Curr.Where.Row + Deltas (Dir).DRow,
                           Col => Curr.Where.Col + Deltas (Dir).DCol);
 
@@ -272,7 +237,7 @@ procedure Day17 is
       --  must travel at least 4, can travel at most 10
 
       package Location_Maps is new Ada.Containers.Ordered_Maps
-        (Key_Type => Location, Element_Type => Neighbor_Cost);
+        (Key_Type => Location_Record, Element_Type => Neighbor_Cost);
 
       Visited : Location_Maps.Map;
       To_Do   : array (0 .. 5_000) of State_Queues.Queue;
@@ -283,11 +248,11 @@ procedure Day17 is
 
       --  prime BFS...
       To_Do (0).Enqueue
-        ((Location'(1, 1), Dir => East, Repeated => 10,
-          Path                 => [1 => Location'(1, 1)]));
+        ((Location_Record'(1, 1), Dir => East, Repeated => 10,
+          Path                        => [1 => Location_Record'(1, 1)]));
       To_Do (0).Enqueue
-        ((Location'(1, 1), Dir => South, Repeated => 10,
-          Path                 => [1 => Location'(1, 1)]));
+        ((Location_Record'(1, 1), Dir => South, Repeated => 10,
+          Path                        => [1 => Location_Record'(1, 1)]));
 
       while Current_Heat < Result loop
 
@@ -296,14 +261,14 @@ procedure Day17 is
            and then Natural (To_Do (Current_Heat).Current_Use) = 0
          loop
             Current_Heat := @ + 1;
-            IO.Put_Line
-              ("Heat loss:" & Current_Heat'Image & " has" &
-               To_Do (Current_Heat).Current_Use'Image & " elements");
+            --  IO.Put_Line
+            --    ("Heat loss:" & Current_Heat'Image & " has" &
+            --     To_Do (Current_Heat).Current_Use'Image & " elements");
          end loop;
 
          declare
             Curr, Next   : State;
-            New_Location : Location;
+            New_Location : Location_Record;
             New_Heat     : Natural;
          begin
 
@@ -328,7 +293,7 @@ procedure Day17 is
                   then
 
                      New_Location :=
-                       Location'
+                       Location_Record'
                          (Row => Curr.Where.Row + Deltas (Dir).DRow,
                           Col => Curr.Where.Col + Deltas (Dir).DCol);
 
@@ -370,7 +335,7 @@ procedure Day17 is
                   then
 
                      New_Location :=
-                       Location'
+                       Location_Record'
                          (Row => Curr.Where.Row + 4 * Deltas (Dir).DRow,
                           Col => Curr.Where.Col + 4 * Deltas (Dir).DCol);
 
@@ -382,7 +347,7 @@ procedure Day17 is
                      New_Heat      := Current_Heat;
                      for S in 1 .. 4 loop
                         Next.Path.Append
-                          (Location'
+                          (Location_Record'
                              (Curr.Where.Row + S * Deltas (Dir).DRow,
                               Curr.Where.Col + S * Deltas (Dir).DCol));
                         New_Heat :=
@@ -425,7 +390,7 @@ procedure Day17 is
    end Part_2;
 
 begin
-   Read_Input;
+   Map_Package_IO.Read_Input;
    IO.Put_Line ("Minimum heat loss to traverse the map is" & Part_1'Image);
    IO.Put_Line ("With ultra crucible," & Part_2'Image);
 end Day17;

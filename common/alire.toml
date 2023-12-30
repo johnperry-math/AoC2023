@@ -1,13 +1,7 @@
-name = "day17"
+name = "common"
 description = "Shiny new project"
 version = "0.1.0-dev"
 
 authors = ["John Perry"]
 maintainers = ["John Perry <devotus@yahoo.com>"]
 maintainers-logins = ["johnperry-math"]
-
-executables = ["day17"]
-[[depends-on]]
-common = "~0.1.0-dev"
-[[pins]]
-common = { path='../common' }

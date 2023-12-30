@@ -14,16 +14,18 @@ pragma Ada_2022;
 with Ada.Text_IO;
 
 with Ada.Containers.Ordered_Maps;
-with Ada.Containers.Ordered_Sets;
 with Ada.Containers.Synchronized_Queue_Interfaces;
 with Ada.Containers.Unbounded_Synchronized_Queues;
-with Ada.Containers.Vectors;
 
 use all type Ada.Containers.Count_Type;
+
+with Common;
 
 procedure Day23 is
 
    package IO renames Ada.Text_IO;
+
+   use Common.Two_Dimensional_Motion;
 
    --  SECTION
    --  global types and variables
@@ -34,46 +36,49 @@ procedure Day23 is
    --  the map itself
 
    Side_Length : constant Positive := (if Doing_Example then 23 else 141);
-   subtype Side_Range is Positive range 1 .. Side_Length;
 
    type Object is
      (Forest, Path, Slope_East, Slope_West, Slope_North, Slope_South);
 
-   Map : array (Side_Range, Side_Range) of Object;
+   function Opposite (Dir : Direction) return Object is
+     (case Dir is when North => Slope_South, when South => Slope_North,
+        when East => Slope_West, when West => Slope_East);
+
+   package Map_Package is new Common.Two_Dimensional_Map
+     (Row_Length => Side_Length, Col_Length => Side_Length, Object => Object);
+
+   use Map_Package;
+
+   subtype Side_Range is Row_Range;
+
+   Invalid_Symbol : exception;
+
+   function Deserialize (Symbol : Character) return Object is
+     (case Symbol is when '.' => Path, when '#' => Forest,
+        when '>' => Slope_East, when '^' => Slope_North,
+        when 'v' => Slope_South, when '<' => Slope_West,
+        when others => raise Invalid_Symbol with Symbol'Image);
+
+   function Serialize (O : Object) return Character is
+     (case O is when Forest => '#', when Path => '.', when Slope_East => '>',
+        when Slope_West => '<', when Slope_North => '^',
+        when Slope_South => 'v');
+
+   package Map_Package_IO is new Common.Two_Dimensional_Map_IO
+     (Doing_Example => Doing_Example, Map_Package => Map_Package);
 
    --  SUBSECTION
    --  motion through the map
 
-   type Location is record
-      Row, Col : Side_Range;
-   end record;
+   Goin : constant Location_Record := Location_Record'(Row => 1, Col => 2);
 
-   Goin : constant Location := Location'(Row => 1, Col => 2);
-
-   Goal : constant Location :=
-     Location'(Row => Side_Length, Col => Side_Length - 1);
-
-   type Directions is (North, South, East, West);
-
-   function Opposite (Dir : Directions) return Object is
-     (case Dir is when North => Slope_South, when South => Slope_North,
-        when East => Slope_West, when West => Slope_East);
-
-   subtype Nudge is Integer range -1 .. 1;
-
-   type Drc is record
-      Row, Col : Nudge;
-   end record;
-
-   Deltas : constant array (Directions) of Drc :=
-     [North => (Row => -1, Col => 0), South => (Row => 1, Col => 0),
-     East   => (Row => 0, Col => 1), West => (Row => 0, Col => -1)];
+   Goal : constant Location_Record :=
+     Location_Record'(Row => Side_Length, Col => Side_Length - 1);
 
    --  SUBSECTION
    --  tracking motion
 
-   package Path_Vectors is new Ada.Containers.Vectors
-     (Index_Type => Positive, Element_Type => Location);
+   package Path_Vectors renames Map_Package.Location_Vectors;
 
    package Path_Interfaces is new Ada.Containers.Synchronized_Queue_Interfaces
      (Element_Type => Path_Vectors.Vector);
@@ -83,36 +88,8 @@ procedure Day23 is
    --  SECTION
    --  I/O
 
-   procedure Read_Input is
-      Input : IO.File_Type;
-
-      Filename : constant String :=
-        (if Doing_Example then "example.txt" else "input.txt");
-
-      Invalid_Character : exception;
-   begin
-
-      IO.Open (Input, IO.In_File, Filename);
-
-      for Row in Side_Range loop
-         declare
-            Line : constant String := IO.Get_Line (Input);
-         begin
-
-            for Col in Side_Range loop
-               Map (Row, Col) :=
-                 (case Line (Col) is when '#' => Forest, when '.' => Path,
-                    when '>' => Slope_East, when '^' => Slope_North,
-                    when 'v' => Slope_South, when '<' => Slope_West,
-                    when others => raise Invalid_Character);
-            end loop;
-
-         end;
-      end loop;
-
-   end Read_Input;
-
-   procedure Put_Location (L : Location) is
+   pragma Warnings (Off, "is not referenced");
+   procedure Put_Location (L : Location_Record) is
       package Nat_IO is new IO.Integer_IO (Num => Natural);
    begin
 
@@ -123,6 +100,7 @@ procedure Day23 is
       IO.Put (")");
 
    end Put_Location;
+   pragma Warnings (On, "is not referenced");
 
    --  SECTION
    --  Part 1
@@ -150,20 +128,21 @@ procedure Day23 is
 
             declare
                Pos renames Curr.Last_Element;
-               Step : Location;
+               Step : Location_Record;
                D    : Drc;
             begin
 
-               for Dir in Directions loop
+               for Dir in Direction loop
 
                   D := Deltas (Dir);
 
-                  if Pos.Row + D.Row in Side_Range
-                    and then Pos.Col + D.Col in Side_Range
-                    and then Map (Pos.Row + D.Row, Pos.Col + D.Col) /= Forest
+                  if Pos.Row + D.DRow in Side_Range
+                    and then Pos.Col + D.DCol in Side_Range
+                    and then Map (Pos.Row + D.DRow, Pos.Col + D.DCol) /= Forest
                   then
 
-                     Step := Location'(Pos.Row + D.Row, Pos.Col + D.Col);
+                     Step :=
+                       Location_Record'(Pos.Row + D.DRow, Pos.Col + D.DCol);
 
                      if not Curr.Contains (Step) then
 
@@ -182,19 +161,19 @@ procedure Day23 is
 
                               when Slope_East =>
                                  Next.Append
-                                   (Location'(Step.Row, Step.Col + 1));
+                                   (Location_Record'(Step.Row, Step.Col + 1));
 
                               when Slope_North =>
                                  Next.Append
-                                   (Location'(Step.Row - 1, Step.Col));
+                                   (Location_Record'(Step.Row - 1, Step.Col));
 
                               when Slope_South =>
                                  Next.Append
-                                   (Location'(Step.Row + 1, Step.Col));
+                                   (Location_Record'(Step.Row + 1, Step.Col));
 
                               when Slope_West =>
                                  Next.Append
-                                   (Location'(Step.Row, Step.Col - 1));
+                                   (Location_Record'(Step.Row, Step.Col - 1));
 
                               when others =>
                                  raise Invalid_Step
@@ -224,7 +203,7 @@ procedure Day23 is
    --  graph structures
 
    type Fork_Path is record
-      Start, Stop : Location;
+      Start, Stop : Location_Record;
    end record;
 
    function "<" (Left, Right : Fork_Path) return Boolean is
@@ -238,8 +217,6 @@ procedure Day23 is
       (Left.Start = Right.Start and then Left.Stop.Row = Right.Stop.Row
        and then Left.Stop.Col < Right.Stop.Col));
 
-   package Location_Vectors is new Ada.Containers.Vectors
-     (Index_Type => Positive, Element_Type => Location);
    All_Forks : Location_Vectors.Vector;
    --  list of all Forks
 
@@ -264,16 +241,16 @@ procedure Day23 is
                Neighbors := 0;
 
                for D of Deltas loop
-                  if Row + D.Row in Side_Range
-                    and then Col + D.Col in Side_Range
-                    and then Map (Row + D.Row, Col + D.Col) /= Forest
+                  if Row + D.DRow in Side_Range
+                    and then Col + D.DCol in Side_Range
+                    and then Map (Row + D.DRow, Col + D.DCol) /= Forest
                   then
                      Neighbors := @ + 1;
                   end if;
                end loop;
 
                if Neighbors > 2 then
-                  All_Forks.Append (Location'(Row, Col));
+                  All_Forks.Append (Location_Record'(Row, Col));
                end if;
 
             end if;
@@ -292,7 +269,7 @@ procedure Day23 is
 
    procedure Map_Forks is
       --  finds the distances from each fork to the next
-      Prev, Curr, Next : Location;
+      Prev, Curr, Next : Location_Record;
 
       Steps : Natural;
    begin
@@ -302,24 +279,26 @@ procedure Day23 is
 
             Curr := All_Forks (Ith);
 
-            if Curr.Row + D.Row in Side_Range
-              and then Curr.Col + D.Col in Side_Range
-              and then Map (Curr.Row + D.Row, Curr.Col + D.Col) /= Forest
+            if Curr.Row + D.DRow in Side_Range
+              and then Curr.Col + D.DCol in Side_Range
+              and then Map (Curr.Row + D.DRow, Curr.Col + D.DCol) /= Forest
             then
 
                Steps := 1;
                Prev  := Curr;
-               Curr  := Location'(Curr.Row + D.Row, Curr.Col + D.Col);
+               Curr  := Location_Record'(Curr.Row + D.DRow, Curr.Col + D.DCol);
 
                while not All_Forks.Contains (Curr) loop
                   for D of Deltas loop
 
-                     if Curr.Row + D.Row in Side_Range
-                       and then Curr.Col + D.Col in Side_Range
-                       and then Map (Curr.Row + D.Row, Curr.Col + D.Col) /=
+                     if Curr.Row + D.DRow in Side_Range
+                       and then Curr.Col + D.DCol in Side_Range
+                       and then Map (Curr.Row + D.DRow, Curr.Col + D.DCol) /=
                          Forest
                      then
-                        Next := Location'(Curr.Row + D.Row, Curr.Col + D.Col);
+                        Next :=
+                          Location_Record'
+                            (Curr.Row + D.DRow, Curr.Col + D.DCol);
                         if Next /= Prev then
                            Prev  := Curr;
                            Curr  := Next;
@@ -366,13 +345,11 @@ procedure Day23 is
 
       Curr, Next, Best : Path_Vectors.Vector;
 
-      Invalid_Step : exception;
-
       --  Iteration   : Natural                   := 0;
       Last_Length : Ada.Containers.Count_Type := 0;
    begin
 
-      Curr.Append (Location'(Row => 1, Col => 2));
+      Curr.Append (Location_Record'(Row => 1, Col => 2));
       Queue.Enqueue (Curr);
 
       while Natural (Queue.Current_Use) > 0 loop
@@ -427,12 +404,12 @@ procedure Day23 is
 
    end Part_2;
 
-   --  function "<" (Left, Right : Location) return Boolean is
+   --  function "<" (Left, Right : Location_Record) return Boolean is
    --    (Left.Row < Right.Row
    --     or else (Left.Row = Right.Row and then Left.Col < Right.Col));
 
    --  package Location_Sets is new Ada.Containers.Ordered_Sets
-   --    (Element_Type => Location);
+   --    (Element_Type => Location_Record);
 
    --  type Discovered_Array is array (Positive range <>) of Boolean with
    --    Pack;
@@ -441,7 +418,7 @@ procedure Day23 is
    --    (Ith : Positive; Discovered : in out Discovered_Array) return Natural
    --  is
    --     Result : Natural := 0;
-   --     Here   : Location renames All_Forks (Ith);
+   --     Here   : Location_Record renames All_Forks (Ith);
    --  begin
    --     if Here /= Goal then
    --        Discovered (Ith) := True;
@@ -474,7 +451,7 @@ procedure Day23 is
    --  end Part_2_DFS;
 
 begin
-   Read_Input;
+   Map_Package_IO.Read_Input;
    IO.Put_Line ("the most scenic route's length is" & Part_1'Image & " steps");
    Find_Forks;
    Map_Forks;

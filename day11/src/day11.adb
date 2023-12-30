@@ -14,6 +14,8 @@ pragma Ada_2022;
 with Ada.Text_IO;
 with Ada.Containers.Vectors;
 
+with Common;
+
 procedure Day11 is
 
    package IO renames Ada.Text_IO;
@@ -28,57 +30,45 @@ procedure Day11 is
 
    type Object is (Galaxy, Space);
 
-   type Location is record
-      Row, Col : Positive;
-   end record;
-   --  galaxy location
+   Invalid_Symbol : exception;
 
-   package Galaxy_Vecs is new Ada.Containers.Vectors
-     (Index_Type => Positive, Element_Type => Location);
+   function Deserialize (Symbol : Character) return Object is
+     (case Symbol is when '#' => Galaxy, when '.' => Space,
+        when others => raise Invalid_Symbol);
 
-   Galaxies : Galaxy_Vecs.Vector;
-
-   --  SUBSECTION
-   --  the universe
+   function Serialize (O : Object) return Character is
+     (case O is when Galaxy => '#', when Space => '.');
 
    Initial_Dimension : constant Positive := 140;
    --  dimension of the initial universe
 
-   type Universe is array (Positive range <>, Positive range <>) of Object;
+   package Map_Package is new Common.Two_Dimensional_Map
+     (Row_Length => Initial_Dimension, Col_Length => Initial_Dimension,
+      Object     => Object);
 
-   Initial_Universe :
-     Universe (1 .. Initial_Dimension, 1 .. Initial_Dimension) :=
-     [others => [others => Space]];
+   use Map_Package;
 
-   --  SECTION I/O
+   package Map_Package_IO is new Common.Two_Dimensional_Map_IO
+     (Map_Package => Map_Package);
 
-   procedure Read_Input is
-      Input : IO.File_Type;
-   begin
+   package Galaxy_Vecs is new Ada.Containers.Vectors
+     (Index_Type => Positive, Element_Type => Location_Record);
 
-      IO.Open (Input, IO.In_File, "input.txt");
-
-      for Row in Initial_Universe'Range (1) loop
-
-         declare
-            S : constant String := IO.Get_Line (Input);
-         begin
-
-            for Col in Initial_Universe'Range (2) loop
-
-               if S (Col) = '#' then
-                  Initial_Universe (Row, Col) := Galaxy;
-                  Galaxies.Append (Location'(Row, Col));
-               end if;
-
-            end loop;
-         end;
-      end loop;
-
-   end Read_Input;
+   Galaxies : Galaxy_Vecs.Vector;
 
    --  SECTION
    --  Parts 1 and 2
+
+   procedure Find_Galaxies is
+   begin
+      for Row in Map_Package.Row_Range loop
+         for Col in Map_Package.Col_Range loop
+            if Map_Package.Map (Row, Col) = Galaxy then
+               Galaxies.Append (Location_Record'(Row, Col));
+            end if;
+         end loop;
+      end loop;
+   end Find_Galaxies;
 
    function Sum_Distances_Expanded_By (Expansion : Distance) return Distance is
       --  returns the sum of Manhattan distances
@@ -87,7 +77,7 @@ procedure Day11 is
 
       Result : Distance := 0;
 
-      U renames Initial_Universe;
+      U renames Map;
 
       --  empty rows, columns of the universe
       Empty_Col : array (U'Range (2)) of Boolean := [others => False];
@@ -113,8 +103,8 @@ procedure Day11 is
 
             declare
 
-               L1 : constant Location := Galaxies (First);
-               L2 : constant Location := Galaxies (Second);
+               L1 : constant Location_Record := Galaxies (First);
+               L2 : constant Location_Record := Galaxies (Second);
 
                --  rows and cols involved from first to second galaxy
                Min_Row : constant Positive := Positive'Min (L1.Row, L2.Row);
@@ -152,7 +142,8 @@ procedure Day11 is
    end Sum_Distances_Expanded_By;
 
 begin
-   Read_Input;
+   Map_Package_IO.Read_Input ("input.txt");
+   Find_Galaxies;
    IO.Put_Line
      ("the sum of distances between galaxies is" &
       Sum_Distances_Expanded_By (2)'Image);
