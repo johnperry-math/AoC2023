@@ -53,9 +53,10 @@ procedure Day24 is
    --  SUBSECTION
    --  data as very large integer
 
-   --  weirdly, the program crashes in Read_Input when I uncomment next line,
-   --  even though it's equivalent to the one after...?!?
-   --  type Ludicrous_Size is range -(2**31) .. +(2**31 - 1);
+   --  Long_Integer is mis-documented in gnat: it's -(2**64) .. +(2**64 - 1),
+   --  NOT -(2**32) .. +(2**32 - 1); swapping the definitions below proves it
+   --
+   --  type Ludicrous_Size is range -(2**32) .. +(2**32 - 1)
    subtype Ludicrous_Size is Long_Integer;
    package Ludicrous_IO is new IO.Integer_IO (Num => Ludicrous_Size);
 
