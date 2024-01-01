@@ -1273,6 +1273,21 @@ So I did.
   [Karger's algorithm](https://en.wikipedia.org/wiki/Karger's_algorithm),
   but at the present time the implementation remains buggy.
 
+The solution used is pretty simple:
+
+* Repeat 3 times:
+  1. Repeat n times (e.g., n=20, or n=100 if you want to be really safe):
+     1. Select two nodes at random.
+     1. Find the shortest path between them.
+  1. Count the edges used.
+  1. Remove the edge used most.
+
+With n=20, I think I _occasionally_ saw an incorrect "min cut".
+With n=100, I _never_ saw in incorrect "min cut".
+This algorithm's performance probably depends greatly on there being
+a good balance of nodes in the two ultimate graphs, since
+that increases the likelihood of selecting two nodes that cross the min cut.
+
 ### Experience
 
 This was a much harder problem for me than I expected on Christmas Day.

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html class=main>
+<link rel=stylesheet href=gnatdoc.css><body class=content><h1>Common.Two_Dimensional_Map</h1><h2>Entities</h2><h3>Array Types</h3><ul><li><a href=#d3a920395c37d7e7b1c524ea920fea3c82c09939d90e3891d799af6bb9823305>Map_Array</a></ul><h3>Record Types</h3><ul><li><a href=#7ce1a1d4c86fd8ed0e87fce23142651514fc8471ef8ead768e89217d1e50905c>Location_Record</a></ul><h3>Subtypes</h3><ul><li><a href=#f74c00fdb4f208ec68c4ce4bf93b8c8e67a1df1cd78c8bd011745e96b1ce0e64>Col_Range</a><li><a href=#27d10b789f9a610ca63c100dcde26535a42a7eba64f196a0e25b0f9bd917478d>Row_Range</a></ul><h3>Variables</h3><ul><li><a href=#a0f377209910ca1a979572688cfa18577aa7ac14e38733059f63760f32708b9a>Map</a></ul><h3>Subprograms</h3><ul><li><a href=#de771c7eca2d51203a689931fcb083ecf6e183fa91a168ccacde3b014f29ea56>"&lt;"</a><li><a href=#0cef8b5cbee9f334c0f01b3a209adc72f671c3ae00e1dbdd937dea961352212e>"="</a></ul><h3>Generic Instantiations</h3><ul><li><a href=#03e9bbec2c1bade8f365f843d94fac768a032fd6106b1717ef16a0b687798deb>Location_Sets</a><li><a href=#d99855448de97e5f19340ed01e460db2843e3b928ea1bb3bbc5a44c6e8524e29>Location_Vectors</a></ul><h2>Description</h2><p>@summary support for a two-dimensional, non-square map<h4 id=de771c7eca2d51203a689931fcb083ecf6e183fa91a168ccacde3b014f29ea56>"&lt;"</h4><pre class=ada-code-snippet><code>function "&lt;" (Left, Right : Location_Record) return Boolean
+</code></pre><p>lexicographic ordering useful for creating sets and maps<h5>Parameters</h5><dl><dt>Left<dd><dt>Right<dd></dl><h5>Return Value</h5><dl><dd></dl><h4 id=0cef8b5cbee9f334c0f01b3a209adc72f671c3ae00e1dbdd937dea961352212e>"="</h4><pre class=ada-code-snippet><code>function "=" (Left, Right : Location_Vectors.Vector) return Boolean
+</code></pre><h5>Parameters</h5><dl><dt>Left<dd><dt>Right<dd></dl><h5>Return Value</h5><dl><dd></dl><h4 id=f74c00fdb4f208ec68c4ce4bf93b8c8e67a1df1cd78c8bd011745e96b1ce0e64>Col_Range</h4><pre class=ada-code-snippet><code>subtype Col_Range is Natural range 1 .. Col_Length;
+</code></pre><h4 id=7ce1a1d4c86fd8ed0e87fce23142651514fc8471ef8ead768e89217d1e50905c>Location_Record</h4><pre class=ada-code-snippet><code>type Location_Record is record
+   Row : Row_Range;
+   Col : Col_Range;
+end record;
+</code></pre><h5>Record fields</h5><dl><dt>Row<dd><dt>Col<dd></dl><h4 id=03e9bbec2c1bade8f365f843d94fac768a032fd6106b1717ef16a0b687798deb>Location_Sets</h4><pre class=ada-code-snippet><code>package Location_Sets is new Ada.Containers.Ordered_Sets
+  (Element_Type => Location_Record);
+</code></pre><h4 id=d99855448de97e5f19340ed01e460db2843e3b928ea1bb3bbc5a44c6e8524e29>Location_Vectors</h4><pre class=ada-code-snippet><code>package Location_Vectors is new Ada.Containers.Vectors
+  (Index_Type => Positive, Element_Type => Location_Record);
+</code></pre><h4 id=a0f377209910ca1a979572688cfa18577aa7ac14e38733059f63760f32708b9a>Map</h4><pre class=ada-code-snippet><code>Map : Map_Array;
+</code></pre><p>the map itself<h4 id=d3a920395c37d7e7b1c524ea920fea3c82c09939d90e3891d799af6bb9823305>Map_Array</h4><pre class=ada-code-snippet><code>type Map_Array is array (Row_Range, Col_Range) of Object;
+</code></pre><p>the map itself<h4 id=27d10b789f9a610ca63c100dcde26535a42a7eba64f196a0e25b0f9bd917478d>Row_Range</h4><pre class=ada-code-snippet><code>subtype Row_Range is Natural range 1 .. Row_Length;
+</code></pre>

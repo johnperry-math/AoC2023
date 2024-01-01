@@ -1,0 +1,7 @@
+<!DOCTYPE html>
+<html class=main>
+<link rel=stylesheet href=gnatdoc.css><body class=content><h1>Common.Two_Dimensional_Map_IO</h1><h2>Entities</h2><h3>Subprograms</h3><ul><li><a href=#e86af9203f6a9fd89c753539f11f8d47a60b011a4359e5cb4688ba980a12be04>Put_Map</a><li><a href=#4d75aa27adc95819de8c58b07fd42f28690ccebb7c7b88d5a873f5f0f7e2dedf>Read_Input</a></ul><h2>Description</h2><h4 id=e86af9203f6a9fd89c753539f11f8d47a60b011a4359e5cb4688ba980a12be04>Put_Map</h4><pre class=ada-code-snippet><code>procedure Put_Map
+</code></pre><p>prints a very basic representation of the Map_Package.Map based on Serialize<h4 id=4d75aa27adc95819de8c58b07fd42f28690ccebb7c7b88d5a873f5f0f7e2dedf>Read_Input</h4><pre class=ada-code-snippet><code>procedure Read_Input
+  (Filename : String :=
+     (if Doing_Example then "example.txt" else "input.txt"))
+</code></pre><p>reads from the indicated file, using Deserialize to fill Map_Package.Map with appropriate symbols<h5>Parameters</h5><dl><dt>Filename<dd></dl>

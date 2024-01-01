@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html class=main>
+<link rel=stylesheet href=gnatdoc.css><body class=content><h1>Common.Two_Dimensional_Motion</h1><h2>Entities</h2><h3>Simple Types</h3><ul><li><a href=#dc34ffaecf9858f972f6e80cd51a714d2f21a87d1519e1ac5cc7aa8e6c69b2a6>Direction</a></ul><h3>Record Types</h3><ul><li><a href=#05a1e271b0570efe3f7f3722c494f4b503d8059edb8030bfe418a2053b031529>Drc</a></ul><h3>Subtypes</h3><ul><li><a href=#7ca6e16682d225234e2f1abb29047ff330561d3310cc8337f318e927c5ed8df9>Nudge</a></ul><h3>Constants</h3><ul><li><a href=#2ba2eb3f9a822e310a547eb63da13ab11f8a37179a382433d46c5bcd1118ee5e>Deltas</a></ul><h3>Subprograms</h3><ul><li><a href=#d4d945470ba6b659c965fbd625cbfe66d53d5f401045b7fbdcf79067b02d245e>Opposite</a></ul><h2>Description</h2><p>@summary support for consistent motion / examination one step in a cardinal direction<h4 id=2ba2eb3f9a822e310a547eb63da13ab11f8a37179a382433d46c5bcd1118ee5e>Deltas</h4><pre class=ada-code-snippet><code>Deltas : constant array (Direction) of Drc :=
+  [North => (-1, 0), South => (1, 0), East => (0, 1), West => (0, -1)];
+</code></pre><h4 id=dc34ffaecf9858f972f6e80cd51a714d2f21a87d1519e1ac5cc7aa8e6c69b2a6>Direction</h4><pre class=ada-code-snippet><code>type Direction is (North, South, East, West);
+</code></pre><p>the four cardinal directions; used in Deltas<h5>Enumeration Literal</h5><dl><dt>North<dd><dt>South<dd><dt>East<dd><dt>West<dd></dl><h4 id=05a1e271b0570efe3f7f3722c494f4b503d8059edb8030bfe418a2053b031529>Drc</h4><pre class=ada-code-snippet><code>type Drc is record
+   DRow, DCol : Nudge;
+end record;
+</code></pre><h5>Record fields</h5><dl><dt>DRow<dd><dt>DCol<dd></dl><h4 id=7ca6e16682d225234e2f1abb29047ff330561d3310cc8337f318e927c5ed8df9>Nudge</h4><pre class=ada-code-snippet><code>subtype Nudge is Integer range -1 .. 1;
+</code></pre><p>a "nudge" directs one from a current location to one of the cardinal directions; see Deltas<h4 id=d4d945470ba6b659c965fbd625cbfe66d53d5f401045b7fbdcf79067b02d245e>Opposite</h4><pre class=ada-code-snippet><code>function Opposite (Left, Right : Direction) return Boolean
+</code></pre><p>returns True iff Left and Right are opposite cardinal directions<h5>Parameters</h5><dl><dt>Left<dd><dt>Right<dd></dl><h5>Return Value</h5><dl><dd></dl>
