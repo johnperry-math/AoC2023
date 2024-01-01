@@ -129,4 +129,29 @@ package Common is
 
    end Two_Dimensional_Map_IO;
 
+   generic
+
+      type Base_Type is private;
+      Zero : Base_Type;
+      --  additive identity for the Base_Type;
+      --  for Universal_Integer use Zero => 0
+      with function "=" (Left, Right : Base_Type) return Boolean is <>;
+      with function "*" (Left, Right : Base_Type) return Base_Type is <>;
+      with function "/" (Left, Right : Base_Type) return Base_Type is <>;
+      with function "mod" (Left, Right : Base_Type) return Base_Type is <>;
+
+   package Mathematics is
+      --  @summary
+      --  support for mathematics useful for Advent of Code,
+      --  but not immediately available in Ada's standard library
+
+      function Gcd (A, B : Base_Type) return Base_Type;
+      --  ye olde Euclidean
+      --  (i.e., the greatest common divisor of A and B)
+
+      function Lcm (A, B : Base_Type) return Base_Type;
+      --  the least common multiple of A and B
+
+   end Mathematics;
+
 end Common;

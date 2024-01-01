@@ -48,4 +48,29 @@ package body Common is
 
    end Two_Dimensional_Map_IO;
 
+   package body Mathematics is
+
+      function Gcd (A, B : Base_Type) return Base_Type is
+
+         M    : Base_Type := A;
+         N    : Base_Type := B;
+         Q, R : Base_Type;
+
+      begin
+
+         while N /= Zero loop
+            Q := M / N;
+            R := M mod N;
+            M := N;
+            N := R;
+         end loop;
+
+         return M;
+
+      end Gcd;
+
+      function Lcm (A, B : Base_Type) return Base_Type is (A / Gcd (A, B) * B);
+
+   end Mathematics;
+
 end Common;

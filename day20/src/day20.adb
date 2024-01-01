@@ -18,6 +18,8 @@ with Ada.Containers.Synchronized_Queue_Interfaces;
 with Ada.Containers.Unbounded_Synchronized_Queues;
 with Ada.Containers.Vectors;
 
+with Common;
+
 procedure Day20 is
 
    package IO renames Ada.Text_IO;
@@ -68,6 +70,9 @@ procedure Day20 is
    --  Pulsing
 
    type Ludicrous_Size is range 0 .. 2**64 - 1;
+
+   package Math is new Common.Mathematics
+     (Base_Type => Ludicrous_Size, Zero => 0);
 
    Pulses : array (Pulse_Enum) of Ludicrous_Size := [others => 0];
 
@@ -252,34 +257,6 @@ procedure Day20 is
       end case;
    end Pulse;
 
-   --  SUBSUBSECTION
-   --  Euclid's algorithms
-   --  we need an lcm in this puzzle, so we make a gcd, too
-
-   function Gcd (A, B : Ludicrous_Size) return Ludicrous_Size is
-      --  ye olde Euclidean
-
-      M : Ludicrous_Size := Ludicrous_Size'Max (A, B);
-      N : Ludicrous_Size := Ludicrous_Size'Min (A, B);
-      R : Ludicrous_Size;
-
-   begin
-
-      while N /= 0 loop
-         R := M mod N;
-         M := N;
-         N := R;
-      end loop;
-
-      return M;
-
-   end Gcd;
-
-   function Lcm (A, B : Ludicrous_Size) return Ludicrous_Size is
-   --  compute the least common multiple of A and B
-
-     (A / Gcd (A, B) * B);
-
    --  SUBSECTION
    --  the main action
 
@@ -362,7 +339,7 @@ procedure Day20 is
       begin
 
          for Each of Rx_Source_Sources loop
-            Result := Lcm (Result, Each);
+            Result := Math.Lcm (Result, Each);
          end loop;
          IO.Put_Line
            ("It will require" & Result'Image &

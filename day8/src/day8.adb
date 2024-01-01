@@ -15,9 +15,13 @@ with Ada.Text_IO;
 with Ada.Containers.Vectors;
 with Ada.Containers.Hashed_Maps;
 
+with Common;
+
 procedure Day8 is
 
    package IO renames Ada.Text_IO;
+   package Math is new Common.Mathematics
+     (Base_Type => Long_Integer, Zero => 0);
 
    --  SECTION
    --  global types & variables
@@ -104,34 +108,6 @@ procedure Day8 is
    --  SUBSECTION
    --  Part 2
 
-   --  SUBSUBSECTION
-   --  we need an lcm in this puzzle, so we make a gcd, too
-
-   function Gcd (A, B : Long_Integer) return Long_Integer is
-      --  ye olde Euclidean
-
-      M    : Long_Integer := Long_Integer'Max (A, B);
-      N    : Long_Integer := Long_Integer'Min (A, B);
-      Q, R : Long_Integer;
-
-   begin
-
-      while N /= 0 loop
-         Q := M / N;
-         R := M mod N;
-         M := N;
-         N := R;
-      end loop;
-
-      return M;
-
-   end Gcd;
-
-   function Lcm (A, B : Long_Integer) return Long_Integer is
-   --  compute the least common multiple of A and B
-
-     (A / Gcd (A, B) * B);
-
    function Part_2 return Long_Integer is
 
       D    : Direction;
@@ -176,7 +152,7 @@ procedure Day8 is
 
       --  the cycles are regular, in part because the ghosts' paths cycle
       for Ith in Locations'Range loop
-         Result := Lcm (Result, Long_Integer (Path_Lengths (Ith)));
+         Result := Math.Lcm (Result, Long_Integer (Path_Lengths (Ith)));
       end loop;
 
       return Result;

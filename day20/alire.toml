@@ -7,3 +7,7 @@ maintainers = ["John Perry <devotus@yahoo.com>"]
 maintainers-logins = ["johnperry-math"]
 
 executables = ["day20"]
+[[depends-on]]
+common = "~0.1.0-dev"
+[[pins]]
+common = { path='../common' }
