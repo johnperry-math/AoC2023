@@ -10,6 +10,8 @@
 //
 // this basically translates the Ada code; see that for details
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::io::{BufRead, BufReader};
 
 fn main() {

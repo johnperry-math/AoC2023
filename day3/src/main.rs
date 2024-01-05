@@ -10,6 +10,8 @@
 // part 2: determine which locations in the map are gears;
 //         sum their gear "ratios"
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::io::{BufRead, BufReader};
 
 // SECTION

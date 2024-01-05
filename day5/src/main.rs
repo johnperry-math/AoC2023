@@ -11,6 +11,8 @@
 // part 2: whoops! it's not 20 seeds, but 10 seeds and 10 intervals;
 //         do it again with this understanding
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::{
     fs::File,
     io::{BufRead, BufReader, Lines},
@@ -59,7 +61,7 @@ struct InputData {
 fn read_map(lines: &mut Lines<BufReader<File>>, map: &mut Vec<Map>) {
     let mut lines = lines.skip(1);
     loop {
-        let line = lines.next().map_or("".to_string(), |line| line.unwrap());
+        let line = lines.next().map_or(String::new(), std::result::Result::unwrap);
         if line.is_empty() {
             return;
         }
@@ -83,7 +85,7 @@ fn read_map(lines: &mut Lines<BufReader<File>>, map: &mut Vec<Map>) {
             source,
             destination,
             length,
-        })
+        });
     }
 }
 

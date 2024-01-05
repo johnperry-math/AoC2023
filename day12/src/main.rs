@@ -11,6 +11,8 @@
 //
 // this basically translates the Ada code; see that for details
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::{
     collections::HashMap,
     io::{BufRead, BufReader},
@@ -139,7 +141,7 @@ fn matching_slides(
 
         let mut result = 0;
 
-        for ith in first..my_last - my_length + 1 {
+        for ith in first..=my_last - my_length {
             if first_fits_in_second(&matcher, springs, first) {
                 if ith + my_length < springs.len()
                     && (springs[ith + my_length] == Condition::Operational

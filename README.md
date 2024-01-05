@@ -806,15 +806,154 @@ the mirrors make it hard to navigate around the rocks!
 
 ### Unusual tools
 
-Originally I did this in Ada with the `Finalize` subprogram declared within
-the `Read_Input` subprogram. However, that looked ugly, so after cleaning up
-I made it more conventional.
+#### Ada
+
+Originally I declared the `Finalize` subprogram within `Read_Input`.
+However, that looked ugly, so after cleaning up, I made it more conventional.
+
+#### Rust
+
+* Use of `Option` type.
+  The Ada code does something similar with a discriminated type,
+  but it doesn't have the `Option` syntax.
+* `impl Display for Object`
+* I tried to implement `detect_horizontal_axis()` functionally at first,
+  but really struggled on account of array indexing.
+  Debugging was difficult in the functional style, so
+  I switched to something more traditional.
+  Once I debugged it, I "translated" the result to functional,
+  and kept both.
 
 ### Experience
 
 This was a bit tricky to implement. I made some dumb mistakes along the way,
 especially as regards loop termination and retention of values.
 Despite that, I enjoyed it.
+
+#### Comparison of Ada and Rust, Part 1
+
+IMHO Ada looks better in this example.
+
+**Ada 2022**
+
+      for Row in 2 .. M'Last (1) loop
+         if (for all Offset in 1 .. Natural'Min (Row - 1, M'Last (1) - Row + 1) =>
+              (for all Col in 1 .. M'Last (2) =>
+                 M (Row - Offset, Col) = M (Row + Offset - 1, Col)))
+         then
+            return Axis_Of_Symmetry'(Valid => True, Value => Row - 1);
+         end if;
+      end loop;
+      return Axis_Of_Symmetry'(Valid => False);
+
+      --  ...
+
+      for Col in 2 .. M'Last (2) loop
+         if (for all Offset in 1 .. Natural'Min (Col - 1, M'Last (2) - Col + 1) =>
+              (for all Row in 1 .. M'Last (1) =>
+                 M (Row, Col - Offset) = M (Row, Col + Offset - 1)))
+         then
+            return Axis_Of_Symmetry'(Valid => True, Value => Col - 1);
+         end if;
+      end loop;
+      return Axis_Of_Symmetry'(Valid => False);
+
+(reformatted for a more apples-to-apples comparison w/the Rust)
+
+**Rust via iterators &c.**
+
+    map.values
+        .iter()
+        .enumerate()
+        .skip(1)
+        .find(|(row, _)| {
+            (1..=*row.min(&(map.rows - row))).all(|offset| {
+                (0..map.cols).all(|col| {
+                    map.values[row - offset][col]
+                        == map.values[row + offset - 1][col]
+                })
+            })
+        })
+        .map(|(row, _)| row)
+    
+    // ...
+
+    (1..map.cols).find(|col| {
+        (1..=*col.min(&(map.cols - col))).all(|offset| {
+            map.values
+                .iter()
+                .all(|row| row[col - offset] == row[col + offset - 1])
+        })
+    })
+
+#### Comparison of Ada and Rust, Part 2
+
+On the other hand, there's something to be said for a solid`.find()` iterator.
+
+**Ada 2022**
+
+      for Row in 2 .. M'Last (1) loop
+
+         declare
+            Result                    : Axis_Of_Symmetry;
+            Number_Of_Inconsistencies : Natural := 0;
+         begin
+
+            for Offset in
+              1 ..
+                Natural'Min
+                  (Row - 1,
+                   M'Last (1) - Row + 1) when Number_Of_Inconsistencies <=
+            1
+            loop
+               for Col in 1 .. M'Last (2) loop
+
+                  if M (Row - Offset, Col) /= M (Row + Offset - 1, Col) then
+                     Number_Of_Inconsistencies := @ + 1;
+                     if Number_Of_Inconsistencies = 1 then
+                        --  we have at least one location that does not reflect
+                        Result := (Valid => True, Value => Row - 1);
+                     else
+                        --  alas, we have two locations that do not reflect
+                        exit;
+                     end if;
+                  end if;
+
+               end loop;
+            end loop;
+
+            if Number_Of_Inconsistencies = 1 then
+               return Result;
+            end if;
+
+         end;
+      end loop;
+
+      return Axis_Of_Symmetry'(Valid => False);
+
+...and that's just _one_ of them.
+I suppose I might be able to figure out how to get `'Reduce` to simplify it, but I'm not sure it will be that much simpler.
+
+**Rust**
+
+    map.values.iter().enumerate().skip(1)
+    .find(|(row, _)| {
+        (1..=*row.min(&(map.rows - row))).map(|offset| {
+            (0..map.cols).filter(|col| {
+                map.values[row - offset][*col] != map.values[row + offset - 1][*col]
+            }).count()
+        }).sum::<usize>() == 1
+    }).map(|(row, _)| row)
+
+    // ...
+
+    (1..map.cols).find(|col| {
+        (1..=*col.min(&(map.cols - col))).map(|offset| {
+            (0..map.rows).filter(|row| {
+                map.values[*row][col - offset] != map.values[*row][col + offset - 1]
+            }).count()
+        }).sum::<usize>() == 1
+    })
 
 ## Day 14: Parabolic Reflector Dish
 <span style="font-size: 8ex;">📡</span>

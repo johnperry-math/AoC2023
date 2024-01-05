@@ -11,6 +11,8 @@
 //
 // this basically translates the Ada code; see that for details
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::{
     collections::HashMap,
     io::{BufRead, BufReader},
@@ -102,9 +104,9 @@ fn read_input() -> (Vec<Direction>, HashMap<Node, Connection>, Vec<Node>) {
 }
 
 fn part_1(directions: &Vec<Direction>, map: &HashMap<Node, Connection>) -> usize {
+    const TERMINUS: Node = ['Z', 'Z', 'Z'];
     let mut n: Node = ['A', 'A', 'A'];
     let mut step = 0;
-    const TERMINUS: Node = ['Z', 'Z', 'Z'];
     while n != TERMINUS {
         let direction = directions[step % directions.len()];
         n = if direction == Direction::Left {
@@ -120,17 +122,17 @@ fn part_1(directions: &Vec<Direction>, map: &HashMap<Node, Connection>) -> usize
 fn part_2(
     directions: &Vec<Direction>,
     map: &HashMap<Node, Connection>,
-    ghost_starts: Vec<Node>,
+    mut ghost_starts: Vec<Node>,
 ) -> usize {
     let mut step = 0;
-    let mut locations = ghost_starts.clone();
+    // let mut locations = ghost_starts.clone();
     let mut path_lengths: Vec<usize> = ghost_starts.iter().map(|_| 0).collect();
-    while locations
+    while ghost_starts
         .iter()
         .enumerate()
         .any(|(_, location)| location[2] != 'Z')
     {
-        for (ith, location) in locations
+        for (ith, location) in ghost_starts
             .iter_mut()
             .enumerate()
             .filter(|(_, location)| location[2] != 'Z')

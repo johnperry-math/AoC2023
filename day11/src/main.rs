@@ -1,5 +1,3 @@
-use std::io::BufRead;
-
 // Advent of Code 2023
 //
 // John Perry
@@ -12,6 +10,10 @@ use std::io::BufRead;
 // part 2: repeat, but expand by 1 million
 //
 // this basically translates the Ada code; see that for details
+
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
+use std::io::BufRead;
 
 fn main() {
     let (universe, galaxies) = read_input();

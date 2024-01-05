@@ -130,21 +130,12 @@ procedure Day13 is
 
       for Row in 2 .. M'Last (1) loop
 
-         for Offset in 1 .. Natural'Min (Row - 1, M'Last (1) - Row + 1) loop
-
-            Has_Symmetry := True;
-
-            if
-              (for some Col in 1 .. M'Last (2) =>
-                 M (Row - Offset, Col) /= M (Row + Offset - 1, Col))
-            then
-               Has_Symmetry := False;
-               exit;
-            end if;
-
-         end loop;
-
-         if Has_Symmetry then
+         if
+           (for all Offset in 1 .. Natural'Min (Row - 1, M'Last (1) - Row + 1)
+            =>
+              (for all Col in 1 .. M'Last (2) =>
+                 M (Row - Offset, Col) = M (Row + Offset - 1, Col)))
+         then
             return Axis_Of_Symmetry'(Valid => True, Value => Row - 1);
          end if;
 
@@ -159,21 +150,13 @@ procedure Day13 is
    begin
 
       for Col in 2 .. M'Last (2) loop
-         for Offset in 1 .. Natural'Min (Col - 1, M'Last (2) - Col + 1) loop
+         if
+           (for all Offset in 1 .. Natural'Min (Col - 1, M'Last (2) - Col + 1)
+            =>
 
-            Has_Symmetry := True;
-
-            if
-              (for some Row in 1 .. M'Last (1) =>
-                 M (Row, Col - Offset) /= M (Row, Col + Offset - 1))
-            then
-               Has_Symmetry := False;
-               exit;
-            end if;
-
-         end loop;
-
-         if Has_Symmetry then
+              (for all Row in 1 .. M'Last (1) =>
+                 M (Row, Col - Offset) = M (Row, Col + Offset - 1)))
+         then
             return Axis_Of_Symmetry'(Valid => True, Value => Col - 1);
          end if;
 

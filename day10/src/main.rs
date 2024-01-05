@@ -12,6 +12,8 @@
 // to account for differences in indexing. see the Ada code
 // for detailed comments on the logic.
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::{
     collections::VecDeque,
     io::{BufRead, BufReader},
@@ -79,12 +81,12 @@ fn read_input() -> (Location, MapType) {
                     'F' => Pipe::WSOrNE,
                     '.' => Pipe::Ground,
                     'S' => Pipe::Start,
-                    _ => panic!("we encountered an invalid input! {}", symbol),
+                    _ => panic!("we encountered an invalid input! {symbol}"),
                 };
                 if symbol == 'S' {
                     start_location = Location { row, col };
                 }
-            })
+            });
     });
     (start_location, result)
 }
@@ -93,7 +95,7 @@ fn read_input() -> (Location, MapType) {
 fn put_traversed_map(traversed_map: &TraversedMapType) {
     for row in traversed_map {
         for col in row {
-            print!("{}", if *col {'#'} else {' '});
+            print!("{}", if *col { '#' } else { ' ' });
         }
         println!();
     }
@@ -106,6 +108,7 @@ struct Animal {
 }
 
 fn can_move(map: &MapType, here: Location, from: Location) -> bool {
+    #[allow(clippy::enum_glob_use)]
     use Pipe::*;
     let current = map[from.row][from.col];
     match map[here.row][here.col] {
@@ -186,6 +189,7 @@ fn can_move(map: &MapType, here: Location, from: Location) -> bool {
     }
 }
 
+#[allow(clippy::cast_possible_wrap, clippy::cast_sign_loss)]
 fn move_animal(me: &mut Animal, map: &MapType, but_not_here: Location) {
     for d_row in (-1_isize..=1)
         .filter(|d_row| (0..SIDE_LENGTH as isize).contains(&(me.curr.row as isize + d_row)))
@@ -247,6 +251,7 @@ const DOUBLED_SIDE_LENGTH: usize = 2 * SIDE_LENGTH + 1;
 
 type DoubledMapType = [[bool; DOUBLED_SIDE_LENGTH]; DOUBLED_SIDE_LENGTH];
 
+#[allow(clippy::cast_possible_wrap, clippy::cast_sign_loss)]
 fn flood_fill(is_filled: &mut DoubledMapType) {
     let mut to_do = VecDeque::<Location>::default();
 
@@ -288,13 +293,14 @@ fn size_of_interior(is_filled: &mut DoubledMapType) -> usize {
             if !is_filled[2 * row + 1][2 * col + 1] {
                 result += 1;
             }
-        })
+        });
     });
     result
 }
 
-#[allow(clippy::identity_op)]
+#[allow(clippy::identity_op, clippy::cast_possible_wrap)]
 fn double_map(map: &MapType, traversed_map: &TraversedMapType) -> DoubledMapType {
+    #[allow(clippy::enum_glob_use)]
     use Pipe::*;
     let mut result = [[false; DOUBLED_SIDE_LENGTH]; DOUBLED_SIDE_LENGTH];
 
@@ -336,7 +342,7 @@ fn double_map(map: &MapType, traversed_map: &TraversedMapType) -> DoubledMapType
                         if (0..SIDE_LENGTH as isize).contains(&(ith as isize - 1)) {
                             match map[ith - 1][jth] {
                                 Vertical | WSOrNE | ESOrNW => {
-                                    result[2 * ith + 0][2 * jth + 1] = true
+                                    result[2 * ith + 0][2 * jth + 1] = true;
                                 }
                                 _ => {}
                             }
@@ -344,7 +350,7 @@ fn double_map(map: &MapType, traversed_map: &TraversedMapType) -> DoubledMapType
                         if (0..SIDE_LENGTH).contains(&(ith + 1)) {
                             match map[ith + 1][jth] {
                                 Vertical | SEOrWN | SWOrEN => {
-                                    result[2 * ith + 2][2 * jth + 1] = true
+                                    result[2 * ith + 2][2 * jth + 1] = true;
                                 }
                                 _ => {}
                             }
@@ -352,7 +358,7 @@ fn double_map(map: &MapType, traversed_map: &TraversedMapType) -> DoubledMapType
                         if (0..SIDE_LENGTH as isize).contains(&(jth as isize - 1)) {
                             match map[ith][jth - 1] {
                                 Horizontal | SEOrWN | WSOrNE => {
-                                    result[2 * ith + 1][2 * jth + 0] = true
+                                    result[2 * ith + 1][2 * jth + 0] = true;
                                 }
                                 _ => {}
                             }
@@ -360,7 +366,7 @@ fn double_map(map: &MapType, traversed_map: &TraversedMapType) -> DoubledMapType
                         if (0..SIDE_LENGTH).contains(&(jth + 1)) {
                             match map[ith][jth + 1] {
                                 Horizontal | SWOrEN | ESOrNW => {
-                                    result[2 * ith + 1][2 * jth + 2] = true
+                                    result[2 * ith + 1][2 * jth + 2] = true;
                                 }
                                 _ => {}
                             }
@@ -368,7 +374,7 @@ fn double_map(map: &MapType, traversed_map: &TraversedMapType) -> DoubledMapType
                     }
                 }
             }
-        })
+        });
     });
     result
 }
@@ -377,7 +383,7 @@ fn double_map(map: &MapType, traversed_map: &TraversedMapType) -> DoubledMapType
 fn put_doubled_map(doubled_map: &DoubledMapType) {
     for row in doubled_map.iter() {
         for entry in row {
-            print!("{}", if *entry {'#'} else {' '});
+            print!("{}", if *entry { '#' } else { ' ' });
         }
         println!();
     }

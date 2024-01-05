@@ -9,6 +9,8 @@
 // part 2: whoops! points are inappropriate; rather, you win copies of cards
 //         and get to play them, too. how many cards do you have at the end?
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::io::{BufRead, BufReader};
 
 // SECTION
@@ -100,6 +102,7 @@ fn read_input() -> AllGames {
 }
 
 fn part_1(cards: &AllGames) -> usize {
+    #[allow(clippy::cast_possible_truncation)]
     cards
         .iter()
         .map(|setup| 2_usize.pow(setup.matches() as u32 - 1))

@@ -10,6 +10,8 @@
 //
 // this basically translates the Ada code; see that for details
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::{
     cmp::Ordering,
     collections::HashMap,
@@ -40,23 +42,24 @@ struct Hand {
     bid: usize,
 }
 
+#[allow(clippy::fallible_impl_from)]
 impl From<char> for Face {
     fn from(value: char) -> Self {
         match value {
-            '1' => Face::One,
-            '2' => Face::Two,
-            '3' => Face::Three,
-            '4' => Face::Four,
-            '5' => Face::Five,
-            '6' => Face::Six,
-            '7' => Face::Seven,
-            '8' => Face::Eight,
-            '9' => Face::Nine,
-            'T' => Face::Ten,
-            'J' => Face::Jack,
-            'Q' => Face::Queen,
-            'K' => Face::King,
-            'A' => Face::Ace,
+            '1' => Self::One,
+            '2' => Self::Two,
+            '3' => Self::Three,
+            '4' => Self::Four,
+            '5' => Self::Five,
+            '6' => Self::Six,
+            '7' => Self::Seven,
+            '8' => Self::Eight,
+            '9' => Self::Nine,
+            'T' => Self::Ten,
+            'J' => Self::Jack,
+            'Q' => Self::Queen,
+            'K' => Self::King,
+            'A' => Self::Ace,
             _ => panic!("received an invalid card {value}"),
         }
     }
@@ -71,7 +74,7 @@ impl From<String> for Hand {
             .expect("no string?!?")
             .chars()
             .take(5)
-            .map(|c| c.into())
+            .map(std::convert::Into::into)
             .enumerate()
             .for_each(|(ith, face)| cards[ith] = face);
         let bid = split
@@ -79,7 +82,7 @@ impl From<String> for Hand {
             .expect("no bid?!?")
             .parse::<usize>()
             .expect("unable to parse integer!");
-        Hand { cards, bid }
+        Self { cards, bid }
     }
 }
 
@@ -262,7 +265,7 @@ fn rank_with_joker(hand: &Hand) -> HandType {
     }
 }
 
-fn new_ranking(face: &Face) -> usize {
+const fn new_ranking(face: Face) -> usize {
     match face {
         Face::One => 1,
         Face::Two => 2,
@@ -292,8 +295,9 @@ fn second_compare(left: &Hand, right: &Hand) -> Ordering {
     } else {
         left.cards
             .iter()
+            .copied()
             .map(new_ranking)
-            .zip(right.cards.iter().map(new_ranking))
+            .zip(right.cards.iter().copied().map(new_ranking))
             .find(|(left, right)| *left != *right)
             .map(|(left, right)| left.cmp(&right))
             .unwrap()
