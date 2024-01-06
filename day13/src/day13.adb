@@ -125,7 +125,6 @@ procedure Day13 is
    end record;
 
    function Detect_Horizontal_Axis (M : Map) return Axis_Of_Symmetry is
-      Has_Symmetry : Boolean;
    begin
 
       for Row in 2 .. M'Last (1) loop
@@ -146,7 +145,6 @@ procedure Day13 is
    end Detect_Horizontal_Axis;
 
    function Detect_Vertical_Axis (M : Map) return Axis_Of_Symmetry is
-      Has_Symmetry : Boolean;
    begin
 
       for Col in 2 .. M'Last (2) loop
@@ -198,40 +196,52 @@ procedure Day13 is
    --  SECTION
    --  Part 2
 
+   type Inconsistency_Tracker is record
+      Inconsistencies : Natural;
+      Row             : Positive;
+   end record;
+
    function Find_Horizontal_Axis (M : Map) return Axis_Of_Symmetry is
+
+      function Count_Inconsistencies
+        (Accumulator : Inconsistency_Tracker; Offset : Natural)
+         return Inconsistency_Tracker
+      is
+
+         function Add_When_Different
+           (Accumulator : Inconsistency_Tracker; Col : Natural)
+            return Inconsistency_Tracker is
+           ((Row             => Accumulator.Row,
+             Inconsistencies =>
+               Accumulator.Inconsistencies +
+               (if
+                  M (Accumulator.Row - Offset, Col) =
+                  M (Accumulator.Row + Offset - 1, Col)
+                then 0
+                else 1)));
+
+         Inconsistencies : constant Inconsistency_Tracker
+            := [for Col in M'Range (2) => Col]'Reduce
+               (Add_When_Different, Accumulator);
+
+      begin
+         return Inconsistencies;
+      end Count_Inconsistencies;
+
    begin
+
       for Row in 2 .. M'Last (1) loop
 
          declare
-            Result                    : Axis_Of_Symmetry;
-            Number_Of_Inconsistencies : Natural := 0;
+            Reduction : constant Inconsistency_Tracker
+               := [for Offset in 1 .. Natural'Min
+                        (Row - 1, M'Last (1) - Row + 1) => Offset]'Reduce
+                     (Count_Inconsistencies,
+                        (Inconsistencies => 0, Row => Row));
          begin
 
-            for Offset in
-              1 ..
-                Natural'Min
-                  (Row - 1,
-                   M'Last (1) - Row + 1) when Number_Of_Inconsistencies <=
-            1
-            loop
-               for Col in 1 .. M'Last (2) loop
-
-                  if M (Row - Offset, Col) /= M (Row + Offset - 1, Col) then
-                     Number_Of_Inconsistencies := @ + 1;
-                     if Number_Of_Inconsistencies = 1 then
-                        --  we have at least one location that does not reflect
-                        Result := (Valid => True, Value => Row - 1);
-                     else
-                        --  alas, we have two locations that do not reflect
-                        exit;
-                     end if;
-                  end if;
-
-               end loop;
-            end loop;
-
-            if Number_Of_Inconsistencies = 1 then
-               return Result;
+            if Reduction.Inconsistencies = 1 then
+               return Axis_Of_Symmetry'(Valid => True, Value => Row - 1);
             end if;
 
          end;

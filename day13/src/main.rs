@@ -152,14 +152,24 @@ fn part_1(all_maps: &[Map]) -> usize {
 }
 
 fn find_horizontal_axis(map: &Map) -> Option<usize> {
-    map.values.iter().enumerate().skip(1)
-    .find(|(row, _)| {
-        (1..=*row.min(&(map.rows - row))).map(|offset| {
-            (0..map.cols).filter(|col| {
-                map.values[row - offset][*col] != map.values[row + offset - 1][*col]
-            }).count()
-        }).sum::<usize>() == 1
-    }).map(|(row, _)| row)
+    map.values
+        .iter()
+        .enumerate()
+        .skip(1)
+        .find(|(row, _)| {
+            (1..=*row.min(&(map.rows - row)))
+                .map(|offset| {
+                    (0..map.cols)
+                        .filter(|col| {
+                            map.values[row - offset][*col]
+                                != map.values[row + offset - 1][*col]
+                        })
+                        .count()
+                })
+                .sum::<usize>()
+                == 1
+        })
+        .map(|(row, _)| row)
 
     // let mut result = None;
     // for row in 1..map.rows {
@@ -191,11 +201,17 @@ fn find_horizontal_axis(map: &Map) -> Option<usize> {
 
 fn find_vertical_axis(map: &Map) -> Option<usize> {
     (1..map.cols).find(|col| {
-        (1..=*col.min(&(map.cols - col))).map(|offset| {
-            (0..map.rows).filter(|row| {
-                map.values[*row][col - offset] != map.values[*row][col + offset - 1]
-            }).count()
-        }).sum::<usize>() == 1
+        (1..=*col.min(&(map.cols - col)))
+            .map(|offset| {
+                (0..map.rows)
+                    .filter(|row| {
+                        map.values[*row][col - offset]
+                            != map.values[*row][col + offset - 1]
+                    })
+                    .count()
+            })
+            .sum::<usize>()
+            == 1
     })
     // let mut result = None;
     // for col in 1..map.cols {
