@@ -13,8 +13,11 @@ pragma Ada_2022;
 --          entry that gives you a different row or column of symmetry in each
 --          matrix
 
-with Ada.Text_IO;
 with Ada.Containers.Indefinite_Vectors;
+
+with Ada.Strings.Text_Buffers;
+
+with Ada.Text_IO;
 
 procedure Day13 is
 
@@ -23,12 +26,17 @@ procedure Day13 is
    --  SECTION
    --  global types and variables
 
-   type Object is (Ash, Rock);
+   type Object is (Ash, Rock) with Put_Image => Repr;
+
+   procedure Repr
+      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
+       O : Object);
 
    type Map is array (Positive range <>, Positive range <>) of Object;
+   type Map_Access is access all Map;
 
    package Map_Vecs is new Ada.Containers.Indefinite_Vectors
-     (Index_Type => Positive, Element_Type => Map);
+     (Index_Type => Positive, Element_Type => Map_Access);
 
    All_Maps : Map_Vecs.Vector;
 
@@ -38,15 +46,20 @@ procedure Day13 is
    --  SUBSECTION
    --  output, useful for debugging (and boy oh boy was it)
 
-   function Repr (O : Object) return Character is
-     (if O = Ash then '.' else '#');
+   procedure Repr
+      (Output : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
+       O : Object)
+   is
+   begin
+      Output.Put ((if O = Ash then "." else "#"));
+   end Repr;
 
    procedure Put_Map (M : Map) is
    begin
 
       for Row in M'Range (1) loop
          for Col in M'Range (2) loop
-            IO.Put (Repr (M (Row, Col)));
+            IO.Put (M (Row, Col)'Image);
          end loop;
          IO.New_Line;
       end loop;
@@ -62,9 +75,9 @@ procedure Day13 is
    begin
 
       declare
-         Rows : constant Positive := Positive (Map_Input.Length);
-         Cols : constant Positive := Map_Input.First_Element'Length;
-         M    : Map (1 .. Rows, 1 .. Cols);
+         Rows : constant Positive   := Positive (Map_Input.Length);
+         Cols : constant Positive   := Map_Input.First_Element'Length;
+         M    : constant Map_Access := new Map (1 .. Rows, 1 .. Cols);
       begin
 
          for Row in 1 .. Rows loop
@@ -73,6 +86,8 @@ procedure Day13 is
                  (if Map_Input (Row) (Col) = '.' then Ash else Rock);
             end loop;
          end loop;
+
+         --  Put_Map (M.all);
 
          All_Maps.Append (M);
 
@@ -172,7 +187,7 @@ procedure Day13 is
 
          declare
             Maybe_Axis : constant Axis_Of_Symmetry :=
-              Detect_Horizontal_Axis (M);
+              Detect_Horizontal_Axis (M.all);
          begin
             if Maybe_Axis.Valid then
                Result := @ + 100 * Maybe_Axis.Value;
@@ -180,7 +195,8 @@ procedure Day13 is
          end;
 
          declare
-            Maybe_Axis : constant Axis_Of_Symmetry := Detect_Vertical_Axis (M);
+            Maybe_Axis : constant Axis_Of_Symmetry :=
+              Detect_Vertical_Axis (M.all);
          begin
             if Maybe_Axis.Valid then
                Result := @ + Maybe_Axis.Value;
@@ -197,36 +213,42 @@ procedure Day13 is
    --  Part 2
 
    type Inconsistency_Tracker is record
+      M               : Map_Access;
       Inconsistencies : Natural;
-      Row             : Positive;
+      Index             : Positive;
    end record;
 
-   function Find_Horizontal_Axis (M : Map) return Axis_Of_Symmetry is
+   type Offset_Tracker is record
+      Tracker : Inconsistency_Tracker;
+      Offset  : Positive;
+   end record;
 
-      function Count_Inconsistencies
-        (Accumulator : Inconsistency_Tracker; Offset : Natural)
-         return Inconsistency_Tracker
-      is
-
-         function Add_When_Different
-           (Accumulator : Inconsistency_Tracker; Col : Natural)
-            return Inconsistency_Tracker is
-           ((Row             => Accumulator.Row,
-             Inconsistencies =>
-               Accumulator.Inconsistencies +
-               (if
-                  M (Accumulator.Row - Offset, Col) =
-                  M (Accumulator.Row + Offset - 1, Col)
-                then 0
-                else 1)));
-
-         Inconsistencies : constant Inconsistency_Tracker
-            := [for Col in M'Range (2) => Col]'Reduce
-               (Add_When_Different, Accumulator);
-
+   function Add_When_Different_Col
+     (Accumulator : Offset_Tracker; Col : Natural)
+   return Offset_Tracker is
+     (declare
+         M renames Accumulator.Tracker.M;
+         Row renames Accumulator.Tracker.Index;
+         Offset renames Accumulator.Offset;
       begin
-         return Inconsistencies;
-      end Count_Inconsistencies;
+      (Offset => Offset,
+       Tracker =>
+         (M => M, Index => Row,
+          Inconsistencies => Accumulator.Tracker.Inconsistencies +
+            (if
+               M (Row - Offset, Col) =
+               M (Row + Offset - 1, Col)
+            then 0
+            else 1))));
+
+   function Count_Row_Inconsistencies
+     (Accumulator : Inconsistency_Tracker; Offset : Natural)
+      return Inconsistency_Tracker
+   is
+   (Offset_Tracker'([for Col in Accumulator.M'Range (2) => Col]'Reduce
+      (Add_When_Different_Col, (Accumulator, Offset))).Tracker);
+
+   function Find_Horizontal_Axis (M : Map_Access) return Axis_Of_Symmetry is
 
    begin
 
@@ -235,15 +257,13 @@ procedure Day13 is
          declare
             Reduction : constant Inconsistency_Tracker
                := [for Offset in 1 .. Natural'Min
-                        (Row - 1, M'Last (1) - Row + 1) => Offset]'Reduce
-                     (Count_Inconsistencies,
-                        (Inconsistencies => 0, Row => Row));
+                     (Row - 1, M'Last (1) - Row + 1) => Offset]'Reduce
+                        (Count_Row_Inconsistencies,
+                           (M => M, Inconsistencies => 0, Index => Row));
          begin
-
             if Reduction.Inconsistencies = 1 then
                return Axis_Of_Symmetry'(Valid => True, Value => Row - 1);
             end if;
-
          end;
       end loop;
 
@@ -251,43 +271,47 @@ procedure Day13 is
 
    end Find_Horizontal_Axis;
 
-   function Find_Vertical_Axis (M : Map) return Axis_Of_Symmetry is
+   function Add_When_Different_Row
+     (Accumulator : Offset_Tracker; Row : Natural)
+   return Offset_Tracker is
+     (declare
+         M renames Accumulator.Tracker.M;
+         Col renames Accumulator.Tracker.Index;
+         Offset renames Accumulator.Offset;
+      begin
+      (Offset => Offset,
+       Tracker =>
+         (M => M, Index => Col,
+          Inconsistencies => Accumulator.Tracker.Inconsistencies +
+            (if
+               M (Row, Col - Offset) =
+               M (Row, Col + Offset - 1)
+            then 0
+            else 1))));
+
+   function Count_Col_Inconsistencies
+     (Accumulator : Inconsistency_Tracker; Offset : Natural)
+      return Inconsistency_Tracker
+   is
+   (Offset_Tracker'([for Row in Accumulator.M'Range (1) => Row]'Reduce
+      (Add_When_Different_Row, (Accumulator, Offset))).Tracker);
+
+   function Find_Vertical_Axis (M : Map_Access) return Axis_Of_Symmetry is
    begin
 
       for Col in 2 .. M'Last (2) loop
 
          declare
-            Result                    : Axis_Of_Symmetry;
-            Number_Of_Inconsistencies : Natural := 0;
+            Total : constant Inconsistency_Tracker
+               := [for Offset in 1 .. Natural'Min
+                     (Col - 1, M'Last (2) - Col + 1) => Offset]'Reduce
+                        (Count_Col_Inconsistencies,
+                           (M => M, Inconsistencies => 0, Index => Col));
+
          begin
-
-            for Offset in
-              1 ..
-                Natural'Min
-                  (Col - 1,
-                   M'Last (2) - Col + 1) when Number_Of_Inconsistencies <=
-            1
-            loop
-               for Row in 1 .. M'Last (1) loop
-
-                  if M (Row, Col - Offset) /= M (Row, Col + Offset - 1) then
-                     Number_Of_Inconsistencies := @ + 1;
-                     if Number_Of_Inconsistencies = 1 then
-                        --  we have at least one location that does not reflect
-                        Result := (Valid => True, Value => Col - 1);
-                     else
-                        --  alas, we have two locations that do not reflect
-                        exit;
-                     end if;
-                  end if;
-
-               end loop;
-            end loop;
-
-            if Number_Of_Inconsistencies = 1 then
-               return Result;
+            if Total.Inconsistencies = 1 then
+               return Axis_Of_Symmetry'(Valid => True, Value => Col - 1);
             end if;
-
          end;
       end loop;
 
@@ -327,7 +351,7 @@ procedure Day13 is
          if not Found_Axis then
             --  this would be a problem
             IO.Put_Line ("Did not find axis for");
-            Put_Map (M);
+            Put_Map (M.all);
             IO.New_Line;
          end if;
 
