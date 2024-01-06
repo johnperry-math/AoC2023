@@ -33,10 +33,10 @@ procedure Day13 is
        O : Object);
 
    type Map is array (Positive range <>, Positive range <>) of Object;
-   type Map_Access is access all Map;
+   type Map_Constant is access constant Map;
 
    package Map_Vecs is new Ada.Containers.Indefinite_Vectors
-     (Index_Type => Positive, Element_Type => Map_Access);
+     (Index_Type => Positive, Element_Type => Map_Constant);
 
    All_Maps : Map_Vecs.Vector;
 
@@ -75,17 +75,12 @@ procedure Day13 is
    begin
 
       declare
-         Rows : constant Positive   := Positive (Map_Input.Length);
-         Cols : constant Positive   := Map_Input.First_Element'Length;
-         M    : constant Map_Access := new Map (1 .. Rows, 1 .. Cols);
+         Rows : constant Positive     := Positive (Map_Input.Length);
+         Cols : constant Positive     := Map_Input.First_Element'Length;
+         M    : constant Map_Constant := new Map'
+            ([for Row in 1 .. Rows => [for Col in 1 .. Cols =>
+               (if Map_Input (Row) (Col) = '.' then Ash else Rock)]]);
       begin
-
-         for Row in 1 .. Rows loop
-            for Col in 1 .. Cols loop
-               M (Row, Col) :=
-                 (if Map_Input (Row) (Col) = '.' then Ash else Rock);
-            end loop;
-         end loop;
 
          --  Put_Map (M.all);
 
@@ -213,7 +208,7 @@ procedure Day13 is
    --  Part 2
 
    type Inconsistency_Tracker is record
-      M               : Map_Access;
+      M               : Map_Constant;
       Inconsistencies : Natural;
       Index             : Positive;
    end record;
@@ -235,9 +230,7 @@ procedure Day13 is
        Tracker =>
          (M => M, Index => Row,
           Inconsistencies => Accumulator.Tracker.Inconsistencies +
-            (if
-               M (Row - Offset, Col) =
-               M (Row + Offset - 1, Col)
+            (if M (Row - Offset, Col) = M (Row + Offset - 1, Col)
             then 0
             else 1))));
 
@@ -248,7 +241,7 @@ procedure Day13 is
    (Offset_Tracker'([for Col in Accumulator.M'Range (2) => Col]'Reduce
       (Add_When_Different_Col, (Accumulator, Offset))).Tracker);
 
-   function Find_Horizontal_Axis (M : Map_Access) return Axis_Of_Symmetry is
+   function Find_Horizontal_Axis (M : Map_Constant) return Axis_Of_Symmetry is
 
    begin
 
@@ -296,7 +289,7 @@ procedure Day13 is
    (Offset_Tracker'([for Row in Accumulator.M'Range (1) => Row]'Reduce
       (Add_When_Different_Row, (Accumulator, Offset))).Tracker);
 
-   function Find_Vertical_Axis (M : Map_Access) return Axis_Of_Symmetry is
+   function Find_Vertical_Axis (M : Map_Constant) return Axis_Of_Symmetry is
    begin
 
       for Col in 2 .. M'Last (2) loop

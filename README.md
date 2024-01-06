@@ -808,8 +808,18 @@ the mirrors make it hard to navigate around the rocks!
 
 #### Ada
 
-Originally I declared the `Finalize` subprogram within `Read_Input`.
-However, that looked ugly, so after cleaning up, I made it more conventional.
+* Originally I declared the `Finalize` subprogram within `Read_Input`.
+  However, that looked ugly, so after cleaning up, I made it more conventional.
+* After implementing the Rust, I went back and re-did the Ada using
+  Ada 2012's quantified expressions and Ada 2022's `declare` expressions
+  and `'Reduce` expressions.
+  I ended up like the result very much.
+  Some of it's very much clearer; other parts are at worst comparable, I think.
+* The `'Reduce` expression uses a custom accumulator type and reduction function!
+* In the process, I noticed that the `Object` type
+  used a custom `Repr` function for output...
+  but Ada 2022 allows one to define a custom `'Image` attribute,
+  so I did that, too!
 
 #### Rust
 
@@ -892,47 +902,64 @@ On the other hand, there's something to be said for a solid`.find()` iterator.
 
 **Ada 2022**
 
-      for Row in 2 .. M'Last (1) loop
-
-         declare
-            Result                    : Axis_Of_Symmetry;
-            Number_Of_Inconsistencies : Natural := 0;
-         begin
-
-            for Offset in
-              1 ..
-                Natural'Min
-                  (Row - 1,
-                   M'Last (1) - Row + 1) when Number_Of_Inconsistencies <=
-            1
-            loop
-               for Col in 1 .. M'Last (2) loop
-
-                  if M (Row - Offset, Col) /= M (Row + Offset - 1, Col) then
-                     Number_Of_Inconsistencies := @ + 1;
-                     if Number_Of_Inconsistencies = 1 then
-                        --  we have at least one location that does not reflect
-                        Result := (Valid => True, Value => Row - 1);
-                     else
-                        --  alas, we have two locations that do not reflect
-                        exit;
-                     end if;
-                  end if;
-
-               end loop;
-            end loop;
-
-            if Number_Of_Inconsistencies = 1 then
-               return Result;
-            end if;
-
-         end;
-      end loop;
-
-      return Axis_Of_Symmetry'(Valid => False);
-
+    type Inconsistency_Tracker is record
+       M               : Map_Constant;
+       Inconsistencies : Natural;
+       Index             : Positive;
+    end record;
+ 
+    type Offset_Tracker is record
+       Tracker : Inconsistency_Tracker;
+       Offset  : Positive;
+    end record;
+ 
+    function Add_When_Different_Col
+      (Accumulator : Offset_Tracker; Col : Natural)
+    return Offset_Tracker is
+      (declare
+          M renames Accumulator.Tracker.M;
+          Row renames Accumulator.Tracker.Index;
+          Offset renames Accumulator.Offset;
+       begin
+       (Offset => Offset,
+        Tracker =>
+          (M => M, Index => Row,
+           Inconsistencies => Accumulator.Tracker.Inconsistencies  +
+             (if M (Row - Offset, Col) = M (Row + Offset - 1, Col)
+             then 0
+             else 1))));
+ 
+    function Count_Row_Inconsistencies
+      (Accumulator : Inconsistency_Tracker; Offset : Natural)
+       return Inconsistency_Tracker
+    is
+    (Offset_Tracker'([for Col in Accumulator.M'Range (2) => Col] 'Reduce
+       (Add_When_Different_Col, (Accumulator, Offset))).Tracker);
+ 
+    function Find_Horizontal_Axis (M : Map_Constant) return  Axis_Of_Symmetry is
+ 
+    begin
+ 
+       for Row in 2 .. M'Last (1) loop
+ 
+          declare
+             Reduction : constant Inconsistency_Tracker
+                := [for Offset in 1 .. Natural'Min
+                      (Row - 1, M'Last (1) - Row + 1) => Offset] 'Reduce
+                         (Count_Row_Inconsistencies,
+                            (M => M, Inconsistencies => 0, Index  => Row));
+          begin
+             if Reduction.Inconsistencies = 1 then
+                return Axis_Of_Symmetry'(Valid => True, Value =>  Row - 1);
+             end if;
+          end;
+       end loop;
+ 
+       return Axis_Of_Symmetry'(Valid => False);
+ 
+    end Find_Horizontal_Axis;
+ 
 ...and that's just _one_ of them.
-I suppose I might be able to figure out how to get `'Reduce` to simplify it, but I'm not sure it will be that much simpler.
 
 **Rust**
 
