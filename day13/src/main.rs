@@ -1,3 +1,18 @@
+// Advent of Code 2023
+//
+// John Perry
+//
+// Day 13: Point of Incidence
+//
+// part 1: compute a number depending on the single row or column of symmetry
+//         in each matrix
+//
+// part 2: compute the same number _after_ "correcting" by changing the single
+//         entry that gives you a different row or column of symmetry in each
+//         matrix
+//
+// this basically translates the Ada code; see that for details
+
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
 
 use std::fmt::Display;

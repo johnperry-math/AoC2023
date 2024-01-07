@@ -313,7 +313,9 @@ procedure Day14 is
       Results            : Load_Vectors.Vector;
 
       Iterations       : constant Positive := 200;
-      --  hopefully 1_000 is enough to see the pattern
+      --  hopefully 200 is enough to see the pattern
+      --  if not, try raising this a bit;
+      --  I'd be shocked if 1_000 didn't do the trick
       Potential_Period : constant Positive := 100;
       Insufficient_Iterations : exception;
       --  when the number of spins isn't sufficient
@@ -382,5 +384,5 @@ procedure Day14 is
 begin
    Read_Input;
    IO.Put_Line ("The total load is" & Part_1'Image);
-   IO.Put_Line ("After an 1 billion spin cycles, the load is" & Part_2'Image);
+   IO.Put_Line ("After 1 billion spin cycles, the load is" & Part_2'Image);
 end Day14;

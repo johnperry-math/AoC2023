@@ -1002,6 +1002,17 @@ not even the arithmetic sum formula, my first suspicion when I read Part 1.
 
 Fun and relatively easy.
 
+#### Ada. vs. Rust
+
+The Rust is significantly faster:
+less than a second, versus roughly 5 seconds for the Ada.
+Nearly all of it occurs in Part 2.
+I plan to look into this.
+
+### Visualization
+
+A visualization is possible, but I didn't find it particularly insightful.
+
 ## Day 15: Lens Library
 <span style="font-size: 8ex;">🔎</span>
 
