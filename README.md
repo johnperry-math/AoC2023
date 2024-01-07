@@ -1004,10 +1004,14 @@ Fun and relatively easy.
 
 #### Ada. vs. Rust
 
-The Rust is significantly faster:
+~~The Rust is significantly faster:
 less than a second, versus roughly 5 seconds for the Ada.
 Nearly all of it occurs in Part 2.
-I plan to look into this.
+I plan to look into this.~~
+
+Well, that's embarrassing: I had forgotten that the Ada
+was writing visualizations to disk.
+Once I remove that, the Ada implementation is no longer markedly slower.
 
 ### Visualization
 

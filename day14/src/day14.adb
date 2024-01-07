@@ -18,6 +18,7 @@ procedure Day14 is
    package IO renames Ada.Text_IO;
 
    Doing_Example : constant Boolean := False;
+   Visualize     : constant Boolean := False;
 
    --  SECTION
    --  global types and variables
@@ -328,13 +329,21 @@ procedure Day14 is
       for Each in 1 .. Iterations loop
 
          Tilt_North;
-         Write_Visualization (Frame);
+         if Visualize then
+            Write_Visualization (Frame);
+         end if;
          Tilt_West;
-         Write_Visualization (Frame);
+         if Visualize then
+            Write_Visualization (Frame);
+         end if;
          Tilt_South;
-         Write_Visualization (Frame);
+         if Visualize then
+            Write_Visualization (Frame);
+         end if;
          Tilt_East;
-         Write_Visualization (Frame);
+         if Visualize then
+            Write_Visualization (Frame);
+         end if;
 
          --  record the current load
 
