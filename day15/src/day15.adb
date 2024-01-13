@@ -12,7 +12,11 @@ pragma Ada_2022;
 --          boxes, sum the focal power when done
 
 with Ada.Text_IO;
+
 with Ada.Containers.Indefinite_Vectors;
+
+with Ada.Strings.Fixed;
+with Ada.Strings.Maps;
 
 procedure Day15 is
 
@@ -40,37 +44,44 @@ procedure Day15 is
 
    subtype Hash_Value is Natural range 0 .. 255;
 
+   type Hash_Tracker is record
+      Value : Hash_Value;
+   end record;
+
+   function Hash_Character
+     (Accumulator : Hash_Tracker; Symbol : Character) return Hash_Tracker is
+     ((Value => ((Accumulator.Value + Character'Pos (Symbol)) * 17) mod 256));
+   --  (Accumulator: Hash_Value; Symbol: Character) return Hash_Value is
+   --  (((Accumulator + Character'Pos (Symbol)) * 17) mod 256);
+
    function Hash (S : String) return Hash_Value is
-      Result : Hash_Value := 0;
-   begin
-
-      for Each of S when Each /= ' ' loop
-         Result := ((@ + Character'Pos (Each)) * 17) mod 256;
-      end loop;
-
-      return Result;
-
-   end Hash;
+      (Hash_Tracker'(S'Reduce (Hash_Character, (Value => 0))).Value);
+      --  (S'Reduce (Hash_Character, 0));
 
    --  SECTION
    --  Part 1
 
    function Part_1 return Natural is
-      Result      : Natural  := 0;
-      Left, Right : Positive := Initialization'First;
+      Result      : Natural := 0;
+      Left, Right : Natural := Initialization'First;
+
+      Search_Set : constant Ada.Strings.Maps.Character_Set :=
+        Ada.Strings.Maps.To_Set (',');
    begin
 
-      while Right <= Initialization'Last loop
+      while Left <= Initialization'Last loop
 
-         while Right + 1 <= Initialization'Last
-           and then Initialization (Right + 1) /= ','
-         loop
-            Right := @ + 1;
-         end loop;
+         Right :=
+           Ada.Strings.Fixed.Index
+             (Initialization (Left .. Initialization'Last), Search_Set);
+         if Right = 0 then
+            Right := Initialization'Last;
+         else
+            Right := @ - 1;
+         end if;
 
          Result := @ + Hash (Initialization (Left .. Right));
-         Right  := @ + 2;
-         Left   := Right;
+         Left   := Right + 2;
 
       end loop;
 
@@ -101,8 +112,6 @@ procedure Day15 is
    package Box_Vectors is new Ada.Containers.Indefinite_Vectors
      (Index_Type => Positive, Element_Type => Labeled_Lens);
 
-   Boxes : array (Hash_Value) of Box_Vectors.Vector;
-
    function Find_Label (L : Lens; My_Box : Box_Vectors.Vector) return Positive
       --  ARGH Ada.Find_Index compares the entire lens, whereas
       --  I need to find only the label
@@ -124,6 +133,7 @@ procedure Day15 is
      ((1 + Hash (L.Label)) * Slot_Number * L.Focal_Length);
 
    function Part_2 (S : String) return Natural is
+      Boxes                   : array (Hash_Value) of Box_Vectors.Vector;
       Result                  : Natural  := 0;
       Label_Left, Label_Right : Positive := S'First;
    begin
@@ -137,7 +147,7 @@ procedure Day15 is
 
          declare
 
-            L : Lens := S (Label_Left .. Label_Right);
+            L : constant Lens := S (Label_Left .. Label_Right);
 
             Box : constant Hash_Value := Hash (L);
             My_Box renames Boxes (Box);
@@ -146,49 +156,51 @@ procedure Day15 is
 
          begin
 
-            if S (Label_Right + 1) = '-' then         --  remove from box
+            case S (Label_Right + 1) is
 
-               Position := Find_Label (L, My_Box);
-               if Position <= My_Box.Last_Index then
-                  My_Box.Delete (Position, 1);
-               end if;
-
-               Label_Right := @ + 3;
-
-            else                                      --  add to box
-
-               if S (Label_Right + 1) /= '=' then     --  error; doesn't occur
-                  IO.Put_Line
-                    ("uh-oh;" & Label_Right'Image & " is unexpected: " &
-                     S (Label_Left .. Label_Right + 1));
-               end if;
-
-               declare
-                  Focal_Length : Digit;
-                  Pos          : Positive;
-               begin
-
-                  Digit_IO.Get
-                    (S (Label_Right + 2 .. Label_Right + 2), Focal_Length,
-                     Pos);
+               when '-' =>          --  remove from box
 
                   Position := Find_Label (L, My_Box);
                   if Position <= My_Box.Last_Index then
-                     --  it already has it, so change focal length
-                     My_Box (Position).Focal_Length := Focal_Length;
-                  else
-                     --  it doesn't have it, so add to end
-                     My_Box.Append
-                       (Labeled_Lens'
-                          (Length => Label_Right - Label_Left + 1, Label => L,
-                           Focal_Length => Focal_Length));
+                     My_Box.Delete (Position, 1);
                   end if;
 
-               end;
+                  Label_Right := @ + 3;
 
-               Label_Right := @ + 4;
+               when '=' =>          --  add to box
 
-            end if;
+                  declare
+                     Focal_Length : Digit;
+                     Pos          : Positive;
+                  begin
+
+                     Digit_IO.Get
+                       (S (Label_Right + 2 .. Label_Right + 2), Focal_Length,
+                        Pos);
+
+                     Position := Find_Label (L, My_Box);
+                     if Position <= My_Box.Last_Index then
+                        --  it already has it, so change focal length
+                        My_Box (Position).Focal_Length := Focal_Length;
+                     else
+                        --  it doesn't have it, so add to end
+                        My_Box.Append
+                          (Labeled_Lens'
+                             (Length => Label_Right - Label_Left + 1,
+                              Label  => L, Focal_Length => Focal_Length));
+                     end if;
+
+                  end;
+
+                  Label_Right := @ + 4;
+
+               when others =>
+
+                  IO.Put_Line
+                    ("uh-oh;" & Label_Right'Image & " is unexpected: " &
+                     S (Label_Left .. Label_Right + 1));
+
+            end case;
          end;
 
          Label_Left := Label_Right;

@@ -1033,18 +1033,38 @@ The instructions to do that require you to work with the
 
 #### Ada
 
-I finally (?) come to grips with the Ada 2022 construction
+* I finally (?) come to grips with the Ada 2022 construction
 
-    Some_Array := [
-      Some_Range => (
-         for Ith of Some_Range => Do_Something_With (Ith)
-      ),
-      others => Default
-    ]
+      Some_Array := [
+        Some_Range => (
+           for Ith of Some_Range => Do_Something_With (Ith)
+        ),
+        others => Default
+      ]
+  
+  I realized later that the issue that required me to use this was   bad design,
+  so I fixed that, and this is no longer in the code.
+  But I did have it working!
 
-I realized later that the issue that required me to use this was bad design,
-so I fixed that, and this is no longer in the code.
-But I did have it working!
+* After implementing in Rust,
+
+  * I changed `Part_1` to use `Ada.Strings.Maps.Character_Set`
+    and `Ada.Strings.Fixed.Index`.
+
+  * I also changed the `Hash` function to use a reducer:
+   
+           function Hash_Character
+             (Accumulator : Hash_Tracker; Symbol : Character) return       Hash_Tracker is
+             ((Value => ((Accumulator.Value + Character'Pos (Symbol)) *       17) mod 256));
+           --  (Accumulator: Hash_Value; Symbol: Character) return       Hash_Value is
+           --  (((Accumulator + Character'Pos (Symbol)) * 17) mod 256);
+        
+           function Hash (S : String) return Hash_Value is
+              (Hash_Tracker'(S'Reduce (Hash_Character, (Value => 0))).      Value);
+              --  (S'Reduce (Hash_Character, 0));
+   
+    The commented-out lines indicate my first attempt,
+    which for some reason won't compile.
 
 ### Experience
 
