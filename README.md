@@ -1094,12 +1094,52 @@ isn't so useful; initializing all three fields wouldn't have killed me.
 When I first used it, though, I'd forgotten to change the direction, so
 it made more sense at the time.
 
+#### Rust
+
+1. Tired of dealing with index errors, I implemented the `Index` trait
+   several times here:
+   * `impl Index<Direction> for Deltas` with `Output = Diff2Dim`
+   * `impl Index<Direction> for EnergizedDir` with `Output = bool`
+   * `impl IndexMut<Direction> for EnergizedDir`
+
+   ...as well as a couple of other instances that were deleted during cleanup.
+   That enabled me to write code like this:
+
+       energized[photon.row as usize][photon.col as usize][photon.dir]
+   
+   ...where that last index (`[photon.dir]`) is accessing according to an enumeration.
+1. As the previous item implies, I decided to get around the annoying feature
+   where Rust panics when you add `0_usize - 1` by recording indices as `i8`,
+   so that I can check manipulate `phonon.row` without too much worry;
+   e.g., `(0..SIDE_LENGTH).contains(&(photon.row - 1))`.
+   The downside is that array accesses need 
+
 ### Experience
+
+#### Ada
 
 Fun and easy -- **but** -- I think that says more about
 how experienced AoC has made me with breadth-first search, the tool I used
 to track and prune beams.
 In previous years I suspect I would have struggled mightily with this one.
+
+#### Rust
+
+Also fun and easy -- **but** not quite so easy.
+To avoid some of the difficulties I've had with indexing in previous puzzles,
+I decided to implement `Index` for a few types -- in particular, so that
+I could index over the `Direction` type, which Rust doesn't allow natively.
+
+Rather amazingly, both parts worked the first time,
+and the readability of the indexing is nice,
+but the implementation is awkward, very much so in the case of `Deltas`.
+
+Also, a big demerit to Rust's implementers for forcing you to return a borrow:
+
+      fn index(&self, index: T) -> &Self::Output
+
+...which means that copy-able `struct`s cannot be returned, or at least
+not in an obvious fashion.
 
 ### Visualization
 

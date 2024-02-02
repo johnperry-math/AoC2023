@@ -1,3 +1,17 @@
+// Advent of Code 2023
+//
+// John Perry
+//
+// Day 14: Parabolic Reflector Dish
+//
+// part 1: compute the load incurred by the movable rocks after tilting north
+//
+// part 2: compute the load after 1 billion spin cycles
+//
+// this basically translates the Ada code; see that for details
+
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::io::BufRead;
 
 fn main() {
