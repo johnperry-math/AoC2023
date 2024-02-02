@@ -1112,7 +1112,10 @@ it made more sense at the time.
    where Rust panics when you add `0_usize - 1` by recording indices as `i8`,
    so that I can check manipulate `phonon.row` without too much worry;
    e.g., `(0..SIDE_LENGTH).contains(&(photon.row - 1))`.
-   The downside is that array accesses need 
+   The downside is that array accesses need to be converted to `usize`.
+   Looking at it now, however, I realize that
+   I should be able to `impl Index<isize>` for the appropriate type and
+   get away with it... so maybe I will one day.
 
 ### Experience
 
