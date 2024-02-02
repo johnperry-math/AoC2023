@@ -2,11 +2,12 @@
 //
 // John Perry
 //
-// Day 14: Parabolic Reflector Dish
+// Day 15: Lens Library
 //
-// part 1: compute the load incurred by the movable rocks after tilting north
+// part 1: compute the sum of results of HASH algorithm on each sequence entry
 //
-// part 2: compute the load after 1 billion spin cycles
+// part 2: use the algorithm to insert and remove lenses in a sequence of
+//         boxes, sum the focal power when done
 //
 // this basically translates the Ada code; see that for details
 
@@ -33,6 +34,7 @@ fn read_input() -> String {
 type HashValue = u8;
 
 fn hash(s: &str) -> HashValue {
+    #[allow(clippy::cast_possible_truncation)]
     s.chars()
         .filter(|symbol| *symbol != ' ')
         .fold(0, |result, symbol| {
@@ -73,7 +75,7 @@ fn part_2(string: &str) -> usize {
     let mut boxes = [EMPTY_BOX; 256];
     string.split(',').for_each(|command| {
         let chars = command.chars();
-        let label: String = chars.take_while(|c| c.is_ascii_lowercase()).collect();
+        let label: String = chars.take_while(char::is_ascii_lowercase).collect();
         let mut chars = command.chars().skip(label.len());
         let slot = usize::from(hash(&label));
         let ch = chars.next().expect("unable to get next character!");

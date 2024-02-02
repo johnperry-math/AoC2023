@@ -4,7 +4,7 @@ pragma Ada_2022;
 --
 --  John Perry
 --
---  Day 14: Lens Library
+--  Day 15: Lens Library
 --
 --  part 1: compute the sum of results of HASH algorithm on each sequence entry
 --
