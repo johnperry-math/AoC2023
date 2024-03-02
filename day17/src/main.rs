@@ -12,7 +12,6 @@
 // see that for problem-specific details
 
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
-// need the following to silence clippy's warning when converting i8 to usize
 
 const DOING_EXAMPLE: bool = false;
 const SIDE_LENGTH: usize = if DOING_EXAMPLE { 13 } else { 141 };
