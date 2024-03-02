@@ -1163,13 +1163,38 @@ Each city block incurs a certain amount of heat loss (input).
 
 ### Unusual tools
 
+#### Ada
+
 Nothing I can recall.
 
+#### Rust
+
+I re-implemented most of the functionality of the Ada `Common` package
+to help with solving this puzzle in Rust.
+
 ### Experience
+
+#### Ada
 
 This should have been easier, but I prematurely returned
 when finding _any_ path from start to finish, without queuing it up first,
 so I cut off some shorter paths.
+
+#### Rust
+
+Re-implementing `Common` took more thought than I expected,
+because Rust doesn't have certain helpful Ada features.
+Once I had that done, and even added a test -- it needs more! --
+I implemented Part 1 surprisingly easily & quickly.
+Unfortunately, Part 2 got hung up several times:
+* one of them on account of a bug in implementing `Map::in_range()`;
+* one of them for generating new states even when we'd already visited one --
+  i.e., I put a `}` in the wrong place;
+* one of them for just making the working Part 1 generic
+  and not noticing that Part 2 works a bit differently,
+  so it can't simply be a re-instantiation of Part 1.
+
+There may have been more, too, but that's all I recall.
 
 ### Visualizations
 
