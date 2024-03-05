@@ -180,7 +180,7 @@ procedure Day18 is
       Input    : IO.File_Type;
       Distance : Natural;
 
-      Row, Col : Integer;
+      Row, Col : Integer;   --  irritating that this didn't warn me
 
       Locations : Location_Vectors.Vector;
 
@@ -565,7 +565,7 @@ procedure Day18 is
    procedure Munch (Item : Menu_Item; Buffet : in out Location_Vectors.Vector)
    is
    --  removes item from buffet and updates locations;
-   --  DOES NOT prune redundant locations; you need to call Clean_Place_Plate for that
+   --  DOES NOT prune redundant locations; call Clean_Place_Plate for that
    begin
 
       if Buffet (Item.First).Row > Buffet (Item.Second).Row then

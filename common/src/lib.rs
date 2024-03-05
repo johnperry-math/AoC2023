@@ -136,15 +136,19 @@ pub mod two_dimensional_map {
     }
 
     impl<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object> Map<ROW_LENGTH, COL_LENGTH, Object> {
-        pub const fn in_range(&self, location: Location, dir: Direction) -> bool {
-            #[allow(clippy::enum_glob_use)]
-            use Direction::*;
-            match dir {
-                North => location.row > 0,
-                South => location.row < ROW_LENGTH - 1,
-                East => location.col < COL_LENGTH - 1,
-                West => location.col > 0,
-            }
+        pub const fn in_range(location: Location, dir: Direction) -> bool {
+            in_range(location, dir, ROW_LENGTH, COL_LENGTH)
+        }
+    }
+
+    pub const fn in_range(location: Location, dir: Direction, row_length: usize, col_length: usize) -> bool {
+        #[allow(clippy::enum_glob_use)]
+        use Direction::*;
+        match dir {
+            North => location.row > 0,
+            South => location.row < row_length - 1,
+            East => location.col < col_length - 1,
+            West => location.col > 0,
         }
     }
 }

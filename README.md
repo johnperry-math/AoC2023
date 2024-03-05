@@ -1225,7 +1225,14 @@ The elves need to dig a trench to store lava.
 * I finally got to use Ada's built-in ability to read numbers of different bases!
   And it was _easy_!
 
+#### Rust
+
+* I finally got to use Rust's standard library function to read numbers of different bases!
+  And it was _also_ easy!
+
 ### Experience
+
+#### Ada
 
 Part 2 of this one beat me down pretty hard, even though I had a very good idea
 (diagrammed below) which is now implemented!
@@ -1252,6 +1259,21 @@ in addition to the desired "tables".
 That turned out to be a very quick fix:
 it was now working with part 2 of the example...
 and also on both parts of the input!
+
+_After the fact,_ while translating the Ada to Rust,
+I discovered that I may have lucked out:
+I neglected to initialize a the variables `Row` and `Col` of `Reread_Input`.
+Since I never run the Ada in "release" mode, the compiler set them for me.
+It doesn't seem to matter anyway (relative locations for the win!)
+but a warning may have been nice.
+
+#### Rust
+
+The design is a wee bit more efficient than the Ada;
+for example, it doesn't "reread" the input, and
+I only implemented "my" way of doing Part 2.
+It took me longer to write than I'd have liked,
+but it works well. :grin:
 
 ### Visualization
 
