@@ -28,6 +28,7 @@ procedure Day18 is
    Doing_Example : constant Boolean := False;
    Filename      : constant String  :=
      (if Doing_Example then "example.txt" else "input.txt");
+   Visualization : Boolean          := False;
 
    --  SUBSECTION
    --  map (for part 1) and locations (for part 2)
@@ -48,6 +49,16 @@ procedure Day18 is
       Map       : Map_Array (First_Row .. Last_Row, First_Col .. Last_Col);
       Locations : Location_Vectors.Vector;
    end record;
+
+   Min_Row, Min_Col : Integer := Integer'Last;
+   Max_Row, Max_Col : Integer := Integer'First;
+
+   package Location_Interface is new Ada.Containers
+     .Synchronized_Queue_Interfaces
+     (Element_Type => Location_Record);
+
+   package Location_Queues is new Ada.Containers.Unbounded_Synchronized_Queues
+     (Queue_Interfaces => Location_Interface);
 
    --  SECTION
    --  I/O
@@ -218,10 +229,17 @@ procedure Day18 is
 
          end;
 
+         Max_Row := Integer'Max (Row, Max_Row);
+         Max_Col := Integer'Max (Col, Max_Col);
+         Min_Row := Integer'Min (Row, Min_Row);
+         Min_Col := Integer'Min (Col, Min_Col);
          Locations.Append (Location_Record'(Row, Col));
 
       end loop;
 
+      IO.Put_Line
+        ("Dimensions: " & Min_Row'Image & ".." & Max_Row'Image & " x " &
+         Min_Col'Image & ".." & Max_Col'Image);
       IO.Close (Input);
       return Locations;
 
@@ -245,6 +263,107 @@ procedure Day18 is
          IO.New_Line;
       end loop;
    end Put_Map;
+
+   procedure Put_Visualization (Step : Natural; Path : Location_Vectors.Vector)
+   is
+      File        : IO.File_Type;
+      Suffix      : String := "_000.pbm";
+      Step_String : String := Step'Image;
+
+      --  I needed the following values to get a clear flood fill
+      subtype Row_Range is Natural range 0 .. 4_000;
+      subtype Col_Range is Natural range 0 .. 4_000;
+
+      type Raster_Array is array (Row_Range, Col_Range) of Boolean with
+        Pack;
+      Raster : Raster_Array := [others => [others => False]];
+
+      L1, L2 : Location_Record;
+
+      type Fraction is digits 18;
+
+      procedure Draw_To_Raster (L1, L2 : Location_Record) is
+         X1, X2, Y1, Y2 : Natural;
+      begin
+         X1 :=
+           Natural
+             (Fraction ((L1.Col - Min_Col)) / Fraction ((Max_Col - Min_Col)) *
+              Fraction (Raster'Length (2) - 3)) +
+           1;
+         X2 :=
+           Natural
+             (Fraction ((L2.Col - Min_Col)) / Fraction ((Max_Col - Min_Col)) *
+              Fraction (Raster'Length (2) - 3)) +
+           1;
+         Y1 :=
+           Natural
+             (Fraction ((L1.Row - Min_Row)) / Fraction ((Max_Row - Min_Row)) *
+              Fraction (Raster'Length (1) - 3)) +
+           1;
+         Y2 :=
+           Natural
+             (Fraction ((L2.Row - Min_Row)) / Fraction ((Max_Row - Min_Row)) *
+              Fraction (Raster'Length (1) - 3)) +
+           1;
+         for Row in Natural'Min (Y1, Y2) .. Natural'Max (Y1, Y2) loop
+            for Col in Natural'Min (X1, X2) .. Natural'Max (X1, X2) loop
+               Raster (Row, Col) := True;
+            end loop;
+         end loop;
+      end Draw_To_Raster;
+
+      procedure Flood_Fill is
+         To_Do      : Location_Queues.Queue;
+         Curr, Next : Location_Record;
+      begin
+         To_Do.Enqueue ((0, 0));
+         To_Do.Enqueue ((Raster'Last (1), 0));
+         To_Do.Enqueue ((0, Raster'Last (2)));
+         To_Do.Enqueue ((Raster'Last (1), Raster'Last (2)));
+         while Natural (To_Do.Current_Use) > 0 loop
+            To_Do.Dequeue (Curr);
+            for Dir in Direction when Curr.Row + Deltas (Dir).DRow in
+              Raster'Range (1)
+            and then Curr.Col + Deltas (Dir).DCol in Raster'Range (2)
+            loop
+               Next :=
+                 Location_Record'
+                   (Row => Curr.Row + Deltas (Dir).DRow,
+                    Col => Curr.Col + Deltas (Dir).DCol);
+               if not Raster (Next.Row, Next.Col) then
+                  Raster (Next.Row, Next.Col) := True;
+                  To_Do.Enqueue (Next);
+               end if;
+            end loop;
+         end loop;
+      end Flood_Fill;
+
+   begin
+      for Ith in Path.First_Index .. Path.Last_Index - 1 loop
+         L1 := Path (Ith);
+         L2 := Path (Ith + 1);
+         Draw_To_Raster (L1, L2);
+      end loop;
+      L1 := Path.Last_Element;
+      L2 := Path.First_Element;
+      Draw_To_Raster (L1, L2);
+      Flood_Fill;
+      for Ith in Step_String'First + 1 .. Step_String'Last loop
+         Suffix (4 - (Step_String'Last - Ith)) := Step_String (Ith);
+      end loop;
+      IO.Create (File, IO.Out_File, "Frame" & Suffix);
+      IO.Put_Line (File, "P1");
+      IO.Put_Line (File, Positive'Image (Raster'Length (2)));
+      IO.Put_Line (File, Positive'Image (Raster'Length (1)));
+      IO.New_Line (File);
+      for Row in Raster'Range (1) loop
+         for Col in Raster'Range (2) loop
+            IO.Put (File, (if Raster (Row, Col) then "0 " else "1 "));
+         end loop;
+         IO.New_Line (File);
+      end loop;
+      IO.Close (File);
+   end Put_Visualization;
    pragma Warnings (On, "is not referenced");
 
    --  SECTION
@@ -255,14 +374,6 @@ procedure Day18 is
 
    procedure Flood_Fill (Map : in out Map_Array) is
       --  floods Map from the outside with 0
-
-      package Location_Interface is new Ada.Containers
-        .Synchronized_Queue_Interfaces
-        (Element_Type => Location_Record);
-
-      package Location_Queues is new Ada.Containers
-        .Unbounded_Synchronized_Queues
-        (Queue_Interfaces => Location_Interface);
 
       To_Do      : Location_Queues.Queue;
       Curr, Next : Location_Record;
@@ -642,10 +753,17 @@ procedure Day18 is
 
       Buffet : Location_Vectors.Vector := Locations;
 
+      Step : Natural := 0;
+
    begin
 
       --  repeat as long as there's sufficient "food" to eat ;-)
       while Natural (Buffet.Length) > 4 loop
+
+         if Visualization then
+            Put_Visualization (Step, Buffet);
+         end if;
+         Step := @ + 1;
 
          --  look for a place to munch
          for Ith in Buffet.First_Index .. Buffet.Last_Index loop
@@ -667,6 +785,10 @@ procedure Day18 is
          end if;
 
       end loop;
+
+      if Visualization then
+         Put_Visualization (Step, Buffet);
+      end if;
 
       --  only 4 remain... munch a "free-to-compute" rectangle
       Result :=
@@ -695,6 +817,7 @@ begin
 
    IO.Put_Line
      ("By munching:" & Map_Muncher (Map_And_Locations.Locations)'Image);
+   Visualization := False;
    IO.Put_Line ("Munching for real:" & Map_Muncher (Reread_Input)'Image);
 
 end Day18;

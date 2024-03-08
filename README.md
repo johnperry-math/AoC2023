@@ -1325,6 +1325,8 @@ and we also have to watch out for situations where we try to munch this:
     |   |oops!|   |
     +---+     +---+
 
+![all_frames_optimized.gif](day18/all_frames_optimized.gif)
+
 ## Day 19: Aplenty
 <span style="font-size: 8ex;">:stuffed_flatbread:</span>
 
