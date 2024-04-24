@@ -1,0 +1,8 @@
+[package]
+name = "day19"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+enum-iterator = "2.0.1"
+lazy_static = "1.4.0"

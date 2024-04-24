@@ -178,19 +178,18 @@ procedure Day19 is
 
                Pos := @ + 2;
 
-               declare
-                  Crit : Criterion;
-               begin
-
-                  while (for some I in Pos .. S'Last => S (I) = ',') loop
+               while (for some I in Pos .. S'Last => S (I) = ',') loop
+                  declare
+                     Crit : Criterion;
+                  begin
                      Get_Criterion (S (Pos .. S'Last), Crit, Pos);
                      R.Criteria.Append (Crit);
-                  end loop;
+                  end;
+               end loop;
 
-                  Get_Label (S (Pos .. S'Last), R.Default, Pos);
-                  Pos := @ + 1;
+               Get_Label (S (Pos .. S'Last), R.Default, Pos);
+               Pos := @ + 1;
 
-               end;
             end loop;
 
             All_Rules.Insert (L, R);
@@ -218,7 +217,7 @@ procedure Day19 is
       for A in Attribute loop
          IO.Put (A'Image);
          IO.Put (":");
-         IO.Put (P (A)'Image);
+         IO.Put (P (A)'Image & "; ");
       end loop;
    end Put_Part;
 
@@ -405,7 +404,6 @@ procedure Day19 is
                         TLess.Location      := C.Dest;
                         Traces.Enqueue (TLess);
                      end if;
-                     IO.New_Line;
                      Found := True;
 
                   end if;

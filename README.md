@@ -1342,11 +1342,25 @@ They give you a list of filtering rules and a list of parts.
 
 * this was the debut of `Ludicrous_size` :grinning:
 
+#### Rust
+
+* used some tools I haven't used often, if at all:
+   * `lazy_static` to define some constants
+   * `enum_iterator` to iterate through `Attribute`
+   * a customized string type (`Label`)
+   * `String::chars()` iteration
+   * `Index` _and_ `IndexMut` traits
+
 ### Experience
 
-The hardest part of this problem for me was the parsing;
+In both Ada and Rust, the hardest part of this problem for me was the parsing;
 otherwise, I used interval splitting,
 much like [Day 5](#day-5-if-you-give-a-seed-a-fertilizer).
+
+Rust was a little harder to deal with because `enum` types 
+have so little functionality unless you derive or implement traits.
+It was especially annoying that an array is considered a foreign type,
+which meant that I could not implement any traits on `Label`.
 
 ## Day 20: Pulse Propagation
 <span style="font-size: 8ex;">:radio_button:</span>
