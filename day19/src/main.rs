@@ -11,6 +11,8 @@
 // this basically translates the Ada code;
 // see that for problem-specific details
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use lazy_static::lazy_static;
 use std::{
     collections::{HashMap, VecDeque},

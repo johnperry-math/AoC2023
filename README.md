@@ -1376,15 +1376,35 @@ made up of modules which broadcast low and high pulses to each other.
 
 ### Unusual tools
 
+#### Ada
 * `Ludicrous_Size` with lcm! :grinning:
+
+#### Rust
+* I still think `impl Index` and `impl IndexMut` is worth mentioning here.
+* 
 
 ### Experience
 
+#### Ada
 A glance at the leaderboard filled me with :fearful:,
 as this seems to have taken the longest (so far) for the top 100 participants.
 In all honestly, I'm not sure why; I didn't have much trouble with it at all.
 I guess it took people a while to work out how to activate `rx`,
 since it isn't terribly straightforward, but neither is it very difficult.
+
+#### Rust
+Translating the Ada to Rust took a lot longer than I had hoped,
+mainly because the borrow checker doesn't like you to iterate through keys
+and simultaneously change some of the data the keys refer to.
+The problem arises in `setup_memories`, where you have to iterate
+through all the modules, identify the children whose labels
+appear at the top level _and_ whose kind is `Conjunction`,
+then add the current label to its top-level list of memories.
+
+I suspect there's a more straightforward way to make this work using iterators,
+but since I'm merely translating the Ada right now,
+I settled for creating a new set of memories and copying them over.
+It's really ugly for the time being.
 
 ## Day 21: Step Counter
 <span style="font-size: 8ex;">:walking:</span>
