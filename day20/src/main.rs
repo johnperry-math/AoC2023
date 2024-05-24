@@ -140,7 +140,7 @@ fn read_input() -> BTreeMap<Label, ModuleRecord> {
 }
 
 fn setup_memories(all_modules: &mut BTreeMap<Label, ModuleRecord>) {
-    let mut new_memories: BTreeMap<[char; 2], Vec<MemoryRecord>> = BTreeMap::new();
+    let mut new_memories = BTreeMap::<[char; 2], Vec<MemoryRecord>>::new();
     for label in all_modules.keys() {
         for child_label in &all_modules[label].children {
             if all_modules.contains_key(child_label) {

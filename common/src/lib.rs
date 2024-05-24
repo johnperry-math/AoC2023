@@ -66,11 +66,11 @@ pub mod two_dimensional_motion {
 }
 
 pub mod two_dimensional_map {
-    use std::ops::{Index, IndexMut};
+    use std::ops::{Index, IndexMut, Range};
 
     use crate::two_dimensional_motion::Direction;
 
-    #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy)]
+    #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Hash)]
     pub struct Location {
         row: usize,
         col: usize,
@@ -135,13 +135,44 @@ pub mod two_dimensional_map {
         }
     }
 
+    impl<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object> Index<(usize, usize)>
+        for Map<ROW_LENGTH, COL_LENGTH, Object>
+    {
+        type Output = Object;
+
+        fn index(&self, index: (usize, usize)) -> &Self::Output {
+            &self.locations[index.0][index.1]
+        }
+    }
+
+    impl<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object> IndexMut<(usize, usize)>
+        for Map<ROW_LENGTH, COL_LENGTH, Object>
+    {
+        fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
+            &mut self.locations[index.0][index.1]
+        }
+    }
+
     impl<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object> Map<ROW_LENGTH, COL_LENGTH, Object> {
         pub const fn in_range(location: Location, dir: Direction) -> bool {
             in_range(location, dir, ROW_LENGTH, COL_LENGTH)
         }
+
+        pub const fn row_range(&self) -> Range<usize> {
+            0..ROW_LENGTH
+        }
+
+        pub const fn col_range(&self) -> Range<usize> {
+            0..COL_LENGTH
+        }
     }
 
-    pub const fn in_range(location: Location, dir: Direction, row_length: usize, col_length: usize) -> bool {
+    pub const fn in_range(
+        location: Location,
+        dir: Direction,
+        row_length: usize,
+        col_length: usize,
+    ) -> bool {
         #[allow(clippy::enum_glob_use)]
         use Direction::*;
         match dir {
@@ -158,7 +189,9 @@ pub mod two_dimensional_map_io {
 
     use crate::two_dimensional_map::{Location, Map};
 
-    pub fn read_input<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object: Default + Copy>(filename: String, deserialize: &dyn Fn(char) -> Object
+    pub fn read_input<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object: Default + Copy>(
+        filename: String,
+        deserialize: &dyn Fn(char) -> Object,
     ) -> Map<ROW_LENGTH, COL_LENGTH, Object> {
         let mut map = Map::default();
         let file = std::fs::File::open(filename).expect("where's my input?!?");
