@@ -1423,10 +1423,21 @@ An elf wants to visit a number of garden plots while walking around.
 
 ### Unusual tools
 
+#### Original Ada solution
+
 * Determination
 * Diligence
 * Hard work
 * Patience
+
+#### Rust solution
+
+* Back to the `common` crate! Which I updated! since
+  * Turns out Rust has a `Range` type that you can use as an honest-to-goodness type!
+  * It's awfully nice to access a `Map` using a tuple rather than a full `Location`!
+* Learned how to build an array using `std::array::from_fn`.
+* If I use this `common` crate for future work, I'll have to rethink the types.
+  Constantly casting `i8`, `isize`, `usize` gets old fast.
 
 ### Experience
 

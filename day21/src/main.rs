@@ -15,7 +15,6 @@
 #![warn(clippy::all, clippy::pedantic, clippy::nursery)]
 
 use std::collections::HashSet;
-use std::ops::Range;
 
 use common::two_dimensional_map::Location;
 use common::two_dimensional_map_io;
@@ -39,8 +38,6 @@ fn deserialize(symbol: char) -> Object {
 }
 
 const SIDE_LENGTH: usize = 131;
-#[allow(clippy::cast_possible_wrap)]
-const SIDE_RANGE: Range<isize> = 0..SIDE_LENGTH as isize;
 
 type Map = common::two_dimensional_map::Map<SIDE_LENGTH, SIDE_LENGTH, Object>;
 
@@ -73,7 +70,8 @@ fn part_1(map: &Map, start: Location) -> usize {
                     let row = curr.row() as isize + isize::from(delta(d).d_row());
                     #[allow(clippy::cast_possible_wrap, clippy::cast_possible_truncation)]
                     let col = curr.col() as isize + isize::from(delta(d).d_col());
-                    if SIDE_RANGE.contains(&row) && SIDE_RANGE.contains(&col) {
+                    #[allow(clippy::cast_sign_loss)]
+                    if map.row_range().contains(&(row as usize)) && map.col_range().contains(&(col as usize)) {
                         #[allow(clippy::cast_sign_loss)]
                         let next = Location::new(row as usize, col as usize);
                         #[allow(
