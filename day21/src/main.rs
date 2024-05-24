@@ -63,7 +63,6 @@ fn part_1(map: &Map, start: Location) -> usize {
     to_do[0].push(start);
     let mut done = HashSet::new();
 
-    println!("{}", to_do.len());
     for step in 0..to_do.len() {
         done.clear();
         if step < to_do.len() - 1 {
