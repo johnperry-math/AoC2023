@@ -422,16 +422,17 @@ procedure Day21 is
 
       IO.Put_Line ("Calculating progress; please wait a few seconds...");
 
-      From_Top_Ctr   :=
+      From_Top_Ctr :=
         Part_1
           (Side_Length - 1,
            Location_Record'
              (Row => Side_Range'First, Col => Side_Length / 2 + 1));
-      From_Bot_Ctr   :=
+      From_Bot_Ctr :=
         Part_1
           (Side_Length - 1,
            Location_Record'
              (Row => Side_Range'Last, Col => Side_Length / 2 + 1));
+
       From_Right_Mid :=
         Part_1
           (Side_Length - 1,

@@ -1438,6 +1438,7 @@ An elf wants to visit a number of garden plots while walking around.
 * Learned how to build an array using `std::array::from_fn`.
 * If I use this `common` crate for future work, I'll have to rethink the types.
   Constantly casting `i8`, `isize`, `usize` gets old fast.
+* Part 2 led to another annoyance with indices.
 
 ### Experience
 
