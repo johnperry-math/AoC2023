@@ -1467,11 +1467,21 @@ The sand is falling in ~~bricks~~ slabs, but we need to demolish some.
 
 ### Experience
 
+#### Ada
+
 Fun and relatively easy.
 The approach I use is not perhaps the most efficient, but I like it.
 The one caveat is that I didn't realize I need to
 re-sort the bricks after they fall the first time.
 That set me back on Part 1 a while.
+
+#### Rust
+
+The need to manually include range endpoints _really_ held me up in debugging.
+I don't think it's just because I'm copying from Ada, either;
+when I see `a..b` I think of `b` as included; it's part of mathematical training,
+so I'd probably have made this mistake even were I coding Rust from scratch --
+and, come to think of it, I often have.
 
 ## Day 23: A Long Walk
 <span style="font-size: 8ex;">:evergreen_tree:</span>
