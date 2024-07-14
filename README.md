@@ -1465,6 +1465,12 @@ The sand is falling in ~~bricks~~ slabs, but we need to demolish some.
 #### Ada 
 * Still enjoying Ada 2022's `when` condition on `for` loops.
 
+#### Rust
+* `impl Display for Brick` while debugging
+* `impl PartialOrd for Brick` because the derived ordering would be incorrect
+* returned a struct of `InputData` instead of a tuple
+* I kind of like how `struct Maxs` turned out, especially with its `expand_to` method
+
 ### Experience
 
 #### Ada
