@@ -1507,12 +1507,31 @@ but then realized I didn't need it.
 
 ### Experience
 
+#### Ada
+
 Aside from making the mistake of using breadth-first search
 instead of depth-first, this was fun and relatively easy.
 
 _[added later:] I'm not sure the problem was BFS as opposed to DFS,
 as DFS also takes a while. I want to return to this problem later
 to figure out what I'm doing wrong._
+
+#### Rust
+
+* For once -- or at least, for the first time in a while --
+I managed to translate the Ada right on the first try for both parts.
+Indeed, the review illuminated a way to improve the Ada.
+* The `common` crate's features have proved enormously useful in terms of
+utility, saving time, and reducing frustration.
+It's necessarily different in some ways from the Ada version,
+but I'm strongly considering porting its "value-added" features to Ada.
+* I had a vague memory that the `ForkPath` type required a non-lexicographic ordering,
+so I implemented that at first, but realized my mistake after I wrote it.
+I decided to leave it in anyway.
+
+   It was nice simply to derive `Ord` and `PartialOrd` in this case
+where a lexicographic ordering suffices, rather than define them explicitly,
+as Ada requires in this case.
 
 ## Day 24: Never Tell Me The Odds
 <span style="font-size: 8ex;">⛈️</span>

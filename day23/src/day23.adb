@@ -258,13 +258,6 @@ procedure Day23 is
          end loop;
       end loop;
 
-      --  IO.Put_Line ("Forks:");
-      --  for Each of All_Forks loop
-      --     IO.Put ("   ");
-      --     Put_Location (Each);
-      --     IO.New_Line;
-      --  end loop;
-
    end Find_Forks;
 
    procedure Map_Forks is
@@ -274,19 +267,18 @@ procedure Day23 is
       Steps : Natural;
    begin
 
-      for Ith in All_Forks.First_Index .. All_Forks.Last_Index loop
+      for Start of All_Forks loop
          for D of Deltas loop
 
-            Curr := All_Forks (Ith);
-
-            if Curr.Row + D.DRow in Side_Range
-              and then Curr.Col + D.DCol in Side_Range
-              and then Map (Curr.Row + D.DRow, Curr.Col + D.DCol) /= Forest
+            if Start.Row + D.DRow in Side_Range
+              and then Start.Col + D.DCol in Side_Range
+              and then Map (Start.Row + D.DRow, Start.Col + D.DCol) /= Forest
             then
 
                Steps := 1;
-               Prev  := Curr;
-               Curr  := Location_Record'(Curr.Row + D.DRow, Curr.Col + D.DCol);
+               Prev  := Start;
+               Curr  :=
+                 Location_Record'(Start.Row + D.DRow, Start.Col + D.DCol);
 
                while not All_Forks.Contains (Curr) loop
                   for D of Deltas loop
@@ -310,14 +302,7 @@ procedure Day23 is
                   end loop;
                end loop;
 
-               --  IO.Put ("Inserting ");
-               --  Put_Location (All_Forks (Ith));
-               --  IO.Put (" -> ");
-               --  Put_Location (Next);
-               --  IO.Put_Line (":" & Steps'Image);
-
-               Fork_Path_Lengths.Insert
-                 (Fork_Path'(All_Forks (Ith), Next), Steps);
+               Fork_Path_Lengths.Insert (Fork_Path'(Start, Next), Steps);
 
             end if;
 
@@ -354,27 +339,12 @@ procedure Day23 is
 
       while Natural (Queue.Current_Use) > 0 loop
 
-         --  Iteration := @ + 1;
-         --  if Iteration mod 10 = 0 then
-         --     IO.Put_Line
-         --       ("On iteration" & Iteration'Image & " we have" &
-         --        Queue.Current_Use'Image & " paths to consider");
-         --     IO.Put_Line
-         --       ("Current best path has" & Best.Length'Image &
-         --        " steps (less one!)");
-         --  end if;
-
          Queue.Dequeue (Curr);
 
          if Curr.Length > Last_Length then
             IO.Put_Line ("path length is now" & Curr.Length'Image);
             Last_Length := Curr.Length;
             IO.Put_Line ("paths in queue:" & Queue.Current_Use'Image);
-            --  IO.Put ("   Dequeued ");
-            --  for L of Curr loop
-            --     IO.Put ("(" & L.Row'Image & "," & L.Col'Image & ")  ");
-            --  end loop;
-            --  IO.New_Line;
          end if;
 
          if Curr.Last_Element = Goal
