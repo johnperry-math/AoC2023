@@ -6,7 +6,7 @@ Because 5 years of pain and suffering aren't enough. :grin:
 This year features an attempt to implement the same algorithm
 in both Ada and Rust.
 For fun, I throw in some Modula-2 from time to time...
-well, at least once.
+well, at least ~~once~~ twice.
 
 * [Mathematics and Computer Science](#mathematics-and-computer-science): Some interesting mathematical topics in this year's puzzles
 * [Ranking of problems by difficulty](#ranking-of-problems-by-difficulty)
@@ -1558,6 +1558,8 @@ We need to pulverize the hailstones!
 
 ### Experience
 
+#### Solving it, period
+
 Sheesh.
 
 I reckon the one consolation is that _quite a few_ people posting solutions
@@ -1626,6 +1628,58 @@ that the system reduces to six linear equations in six variables:
 
 ...and a bunch more. This really _is_ linear, and is "easy" to solve in code.
 So I did.
+
+#### Ada
+
+I'm writing this now, many months after writing the above.
+It _looks_ as if the Ada "just worked", or at least it didn't give me issues.
+
+#### Rust
+
+[**Double sheesh**](#solving-it-period).
+
+Both part 1 and the translated solution to part 2
+were _relatively_ straightforward; the only issue I remember is that
+I neglected to `.trim` after `.split`ting a string, so the float parser choked.
+Fine; that's on me.
+
+On the other hand, the Groebner basis solution to part 2 took _hours_ to get working,
+because `f64` isn't as accurate as Ada's `digits` type.
+You will see this when you `cargo run`, because in my annoyance I've left it in there:
+```
+182094293871285 * 539 = 98148824396622610!!!
+```
+No, that should end with a **5**. I understand that floating point can be fuzzy,
+but Ada managed to get it right.
+
+That doesn't mean everything's sweetness and light for Ada, either.
+While debugging the rust, I noticed that Ada was also getting some computations wrong;
+it's just that the Ada somehow managed to get them wrong the same way every time
+(? I think?!?) so they magically canceled out at the end... or something to that effect.
+Cranking `digits` up a point or two seems to have fixed the issues I saw.
+
+As for the Rust:
+* I thought about trying `f128` instead of `f64`,
+  but that requires the nightly compiler, so I put that off, perhaps indefinitely.
+* I tried an arbitrary-precision fixed-point crate, but it had issues, as well.
+* At this point I turned to
+  the [malachite crate](https://docs.rs/malachite/latest/malachite/index.html), but:
+  * Its floating-point implementation also came in terribly wrong.
+    To be fair, that is explicitly a work in progress. OK.
+  * I switched to its `Rational` type, and **that finally worked**.
+
+FWIW, I tried that product above in C in the file `woe.c`, using `double` precision,
+and its result was even worse for both gcc and clang;
+
+| compiler | result | error |
+|---|---|---|
+| gnat | 98148824396622615 | ✅ |
+| rustc | 9814882439662210 | ❌  |
+| clang | 98148824396622608 | ❌❌❌ |
+| gcc | 98148824396622608 | ❌❌❌ |
+
+The **moral of the story** is of course that
+you should not perform Groebner basis-style computations in floating point.
 
 ## Day 25: Snowverload
 <span style="font-size: 8ex;">:snowflake:</span>

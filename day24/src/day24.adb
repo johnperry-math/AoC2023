@@ -28,18 +28,18 @@ procedure Day24 is
    --  SUBSECTION
    --  data as floating point
 
-   type Float_14 is digits 16;
+   type Float_17 is digits 18;
 
-   package Float_14_IO is new IO.Float_IO (Num => Float_14);
+   package Float_14_IO is new IO.Float_IO (Num => Float_17);
 
-   Part_1_Min : constant Float_14 :=
+   Part_1_Min : constant Float_17 :=
      (if Doing_Example then 7.0 else 200_000_000_000_000.0);
-   Part_1_Max : constant Float_14 :=
+   Part_1_Max : constant Float_17 :=
      (if Doing_Example then 27.0 else 400_000_000_000_000.0);
 
    type Hailstone_Record is record
-      X, Y, Z    : Float_14;
-      Dx, Dy, Dz : Float_14;
+      X, Y, Z    : Float_17;
+      Dx, Dy, Dz : Float_17;
    end record;
 
    package Hailstone_Vecs is new Ada.Containers.Vectors
@@ -47,7 +47,7 @@ procedure Day24 is
 
    All_Hailstones : Hailstone_Vecs.Vector;
 
-   type Reduction_Matrix is array (1 .. 6, 1 .. 7) of Float_14;
+   type Reduction_Matrix is array (1 .. 6, 1 .. 7) of Float_17;
    --  used to perform a primitive Gaussian elimination
 
    --  SUBSECTION
@@ -146,7 +146,7 @@ procedure Day24 is
    type Intersection (Valid : Boolean) is record
       case Valid is
          when True =>
-            X, Y, Z : Float_14;
+            X, Y, Z : Float_17;
             --  location of valid intersection
          when False =>
             null;
@@ -161,8 +161,8 @@ procedure Day24 is
       --  or if the intersection is "backward" with respect to current position
 
       P_Ith, P_Jth : Hailstone_Record;
-      M_Ith, M_Jth : Float_14;            --  slopes
-      X, Y         : Float_14;            --  (X, Y) location of intersection
+      M_Ith, M_Jth : Float_17;            --  slopes
+      X, Y         : Float_17;            --  (X, Y) location of intersection
 
    begin
 
@@ -253,7 +253,7 @@ procedure Day24 is
       New_X_Set, New_Y_Set, New_Z_Set                   : Ludicrous_Sets.Set;
       Potential_X_Set, Potential_Y_Set, Potential_Z_Set : Ludicrous_Sets.Set;
 
-      First_M, Second_M, Ca, Cb : Float_14;
+      First_M, Second_M, Ca, Cb : Float_17;
    begin
 
       --  he doesn't mention it, but this next line is load-bearing
@@ -349,14 +349,14 @@ procedure Day24 is
       --  i get lost here
       --  this seems to compute the slope of the slopes?
       --  but then it's used as if it's a regular slope
-      First_M  := Float_14 (First.Dy - Dy) / Float_14 (First.Dx - Dx);
-      Second_M := Float_14 (Second.Dy - Dy) / Float_14 (Second.Dx - Dx);
+      First_M  := Float_17 (First.Dy - Dy) / Float_17 (First.Dx - Dx);
+      Second_M := Float_17 (Second.Dy - Dy) / Float_17 (Second.Dx - Dx);
       --  no idea what this is about
-      Ca       := Float_14 (First.Y) - First_M * Float_14 (First.X);
-      Cb       := Float_14 (Second.Y) - Second_M * Float_14 (Second.X);
+      Ca       := Float_17 (First.Y) - First_M * Float_17 (First.X);
+      Cb       := Float_17 (Second.Y) - Second_M * Float_17 (Second.X);
       --  find the point where we must originate
       X_Pos    := Ludicrous_Size ((Cb - Ca) / (First_M - Second_M));
-      Y_Pos    := Ludicrous_Size (First_M * Float_14 (X_Pos) + Ca);
+      Y_Pos    := Ludicrous_Size (First_M * Float_17 (X_Pos) + Ca);
       Time     := (X_Pos - First.X) / (First.Dx - Dx);
       Z_Pos    := First.Z + (First.Dz - Dz) * Time;
 
@@ -376,9 +376,9 @@ procedure Day24 is
       --  whether we've found the stones yet
 
       Matrix  : Reduction_Matrix;
-      Pivoter : Float_14;
+      Pivoter : Float_17;
 
-      X, Y, Z : Float_14;
+      X, Y, Z : Float_17;
       --  the solution
 
    begin
