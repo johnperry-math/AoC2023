@@ -2,6 +2,3 @@
 name = "day24"
 version = "0.1.0"
 edition = "2021"
-
-[dependencies]
-malachite = { version = "0.4.16", features = ["floats"] }

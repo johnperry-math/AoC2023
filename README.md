@@ -1681,6 +1681,14 @@ and its result was even worse for both gcc and clang;
 The **moral of the story** is of course that
 you should not perform Groebner basis-style computations in floating point.
 
+#### Update on Rust
+
+I went ahead and switched to `f128`.
+It won't compile (for now) unless you enable the nightly compiler (`+nightly`).
+It produces the correct answer, so I'll leave it there.
+If you're curious to see how it worked with `malachite`
+switch to commit `26bef1b2d89f1059a3f12eac5742ccb2592b3b8f`.
+
 ## Day 25: Snowverload
 <span style="font-size: 8ex;">:snowflake:</span>
 

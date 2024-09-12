@@ -12,21 +12,21 @@
 // this basically translates the Ada code;
 // see that for problem-specific details
 
+#![feature(f128)]
+
 use std::collections::BTreeSet;
 
-use malachite::Rational;
-
-const PART_1_MIN: f64 = 200_000_000_000_000.0;
-const PART_1_MAX: f64 = 400_000_000_000_000.0;
+const PART_1_MIN: f128 = 200_000_000_000_000.0;
+const PART_1_MAX: f128 = 400_000_000_000_000.0;
 
 #[derive(Clone)]
 struct HailstoneRecord {
-    x: Rational,
-    y: Rational,
-    z: Rational,
-    dx: Rational,
-    dy: Rational,
-    dz: Rational,
+    x: f128,
+    y: f128,
+    z: f128,
+    dx: f128,
+    dy: f128,
+    dz: f128,
 }
 
 #[derive(PartialEq, PartialOrd, Ord, Eq)]
@@ -42,12 +42,12 @@ struct LudicrousStoneRecord {
 impl From<&LudicrousStoneRecord> for HailstoneRecord {
     fn from(value: &LudicrousStoneRecord) -> Self {
         Self {
-            x: Rational::from(value.x),
-            y: Rational::from(value.y),
-            z: Rational::from(value.z),
-            dx: Rational::from(value.dx),
-            dy: Rational::from(value.dy),
-            dz: Rational::from(value.dz),
+            x: value.x as f128,
+            y: value.y as f128,
+            z: value.z as f128,
+            dx: value.dx as f128,
+            dy: value.dy as f128,
+            dz: value.dz as f128,
         }
     }
 }
@@ -116,21 +116,14 @@ enum Intersection {
 }
 
 fn intersect_in_future(first: &HailstoneRecord, second: &HailstoneRecord) -> Intersection {
-    use malachite::num::arithmetic::traits::Abs;
-    let m_ith = first.dy.clone() / first.dx.clone();
-    let m_jth = second.dy.clone() / second.dx.clone();
+    let m_ith = first.dy / first.dx;
+    let m_jth = second.dy / second.dx;
 
-    if (m_ith.clone() - m_jth.clone()).abs() > 0.000_000_000_01 {
-        let x = ((second.y.clone() - first.y.clone())
-            + (m_ith.clone() * first.x.clone() - m_jth.clone() * second.x.clone()))
-            / (m_ith.clone() - m_jth.clone());
-        if (PART_1_MIN..PART_1_MAX).contains(&x)
-            && (x.clone() - first.x.clone()) / first.dx.clone() > 0.0
-        {
-            let y = m_ith.clone() * (x.clone() - first.x.clone()) + first.y.clone();
-            if (PART_1_MIN..PART_1_MAX).contains(&y)
-                && (y - second.y.clone()) / (second.dy.clone()) > 0.0
-            {
+    if (m_ith - m_jth).abs() > 0.000_000_000_01 {
+        let x = ((second.y - first.y) + (m_ith * first.x - m_jth * second.x)) / (m_ith - m_jth);
+        if (PART_1_MIN..PART_1_MAX).contains(&x) && (x - first.x) / first.dx > 0.0 {
+            let y = m_ith * (x - first.x) + first.y;
+            if (PART_1_MIN..PART_1_MAX).contains(&y) && (y - second.y) / (second.dy) > 0.0 {
                 return Intersection::Valid;
             }
         }
@@ -260,128 +253,107 @@ fn find_triplet(all_hailstones: &[HailstoneRecord]) -> [HailstoneRecord; 3] {
     panic!("this isn't supposed to happen!");
 }
 
-fn part_2_by_gb(all_hailstones: &[HailstoneRecord]) -> Rational {
-    use malachite::rounding_modes::RoundingMode;
+fn part_2_by_gb(all_hailstones: &[HailstoneRecord]) -> usize {
     let [first, second, third] = find_triplet(all_hailstones);
     println!(
         "{} * {} = {}!!!",
-        <malachite::Rational as malachite::num::conversion::traits::RoundingInto<f64>>::rounding_into(second.x.clone(), RoundingMode::Nearest)
-        .0,
-        <malachite::Rational as malachite::num::conversion::traits::RoundingInto<f64>>::rounding_into(second.dy.clone(), RoundingMode::Nearest)
-        .0,
-        <malachite::Rational as malachite::num::conversion::traits::RoundingInto<f64>>::rounding_into(second.x.clone(), RoundingMode::Nearest)
-        .0 * <malachite::Rational as malachite::num::conversion::traits::RoundingInto<f64>>::rounding_into(second.dy.clone(), RoundingMode::Nearest)
-        .0
+        second.x as i64,
+        second.dy as i64,
+        (second.x * second.dy) as i64
     );
 
     let mut matrix = [
         [
-            first.y.clone() - second.y.clone(),
-            second.x.clone() - first.x.clone(),
-            Rational::from(0),
-            second.dy.clone() - first.dy.clone(),
-            first.dx.clone() - second.dx.clone(),
-            Rational::from(0),
-            -(first.x.clone() * first.dy.clone()
-                - first.y.clone() * first.dx.clone()
-                - second.x.clone() * second.dy.clone()
-                + second.y.clone() * second.dx.clone()),
+            first.y - second.y,
+            second.x - first.x,
+            0.0,
+            second.dy - first.dy,
+            first.dx - second.dx,
+            0.0,
+            -(first.x * first.dy - first.y * first.dx - second.x * second.dy
+                + second.y * second.dx),
         ],
         [
-            first.z.clone() - second.z.clone(),
-            Rational::from(0),
-            second.x.clone() - first.x.clone(),
-            second.dz.clone() - first.dz.clone(),
-            Rational::from(0),
-            first.dx.clone() - second.dx.clone(),
-            -(first.x.clone() * first.dz.clone()
-                - first.z.clone() * first.dx.clone()
-                - second.x.clone() * second.dz.clone()
-                + second.z.clone() * second.dx.clone()),
+            first.z - second.z,
+            0.0,
+            second.x - first.x,
+            second.dz - first.dz,
+            0.0,
+            first.dx - second.dx,
+            -(first.x * first.dz - first.z * first.dx - second.x * second.dz
+                + second.z * second.dx),
         ],
         [
-            Rational::from(0),
-            first.z.clone() - second.z.clone(),
-            second.y.clone() - first.y.clone(),
-            Rational::from(0),
-            second.dz.clone() - first.dz.clone(),
-            first.dy.clone() - second.dy.clone(),
-            -(first.y.clone() * first.dz.clone()
-                - first.z.clone() * first.dy.clone()
-                - second.y.clone() * second.dz.clone()
-                + second.z.clone() * second.dy.clone()),
+            0.0,
+            first.z - second.z,
+            second.y - first.y,
+            0.0,
+            second.dz - first.dz,
+            first.dy - second.dy,
+            -(first.y * first.dz - first.z * first.dy - second.y * second.dz
+                + second.z * second.dy),
         ],
         [
-            first.y.clone() - third.y.clone(),
-            third.x.clone() - first.x.clone(),
-            Rational::from(0),
-            third.dy.clone() - first.dy.clone(),
-            first.dx.clone() - third.dx.clone(),
-            Rational::from(0),
-            -(first.x.clone() * first.dy.clone()
-                - first.y.clone() * first.dx.clone()
-                - third.x.clone() * third.dy.clone()
-                + third.y.clone() * third.dx.clone()),
+            first.y - third.y,
+            third.x - first.x,
+            0.0,
+            third.dy - first.dy,
+            first.dx - third.dx,
+            0.0,
+            -(first.x * first.dy - first.y * first.dx - third.x * third.dy + third.y * third.dx),
         ],
         [
-            first.z.clone() - third.z.clone(),
-            Rational::from(0),
-            third.x.clone() - first.x.clone(),
-            third.dz.clone() - first.dz.clone(),
-            Rational::from(0),
-            first.dx.clone() - third.dx.clone(),
-            -(first.x.clone() * first.dz.clone()
-                - first.z.clone() * first.dx.clone()
-                - third.x * third.dz.clone()
-                + third.z.clone() * third.dx.clone()),
+            first.z - third.z,
+            0.0,
+            third.x - first.x,
+            third.dz - first.dz,
+            0.0,
+            first.dx - third.dx,
+            -(first.x * first.dz - first.z * first.dx - third.x * third.dz + third.z * third.dx),
         ],
         [
-            Rational::from(0),
-            first.z.clone() - third.z.clone(),
-            third.y.clone() - first.y.clone(),
-            Rational::from(0),
-            third.dz.clone() - first.dz.clone(),
-            first.dy.clone() - third.dy.clone(),
-            -(first.y.clone() * first.dz.clone()
-                - first.z.clone() * first.dy.clone()
-                - third.y.clone() * third.dz
-                + third.z.clone() * third.dy.clone()),
+            0.0,
+            first.z - third.z,
+            third.y - first.y,
+            0.0,
+            third.dz - first.dz,
+            first.dy - third.dy,
+            -(first.y * first.dz - first.z * first.dy - third.y * third.dz + third.z * third.dy),
         ],
     ];
 
     for pivot in 0..=4 {
         if matrix[pivot][pivot] == 0.0 {
             for col in pivot..=6 {
-                let pivoter = matrix[pivot][col].clone();
-                matrix[pivot][col] = matrix[pivot + 1][col].clone();
+                let pivoter = matrix[pivot][col];
+                matrix[pivot][col] = matrix[pivot + 1][col];
                 matrix[pivot + 1][col] = pivoter;
             }
         }
         for row in pivot + 1..=5 {
-            let pivoter = matrix[row][pivot].clone();
+            let pivoter = matrix[row][pivot];
             for col in pivot..=6 {
-                matrix[row][col] -=
-                    pivoter.clone() / matrix[pivot][pivot].clone() * matrix[pivot][col].clone();
+                matrix[row][col] -= pivoter / matrix[pivot][pivot] * matrix[pivot][col];
             }
         }
     }
 
     for row in 3..=4 {
-        let pivoter = matrix[row][5].clone();
+        let pivoter = matrix[row][5];
         for col in 5..=6 {
-            matrix[row][col] -= pivoter.clone() / matrix[5][5].clone() * matrix[5][col].clone();
+            matrix[row][col] -= pivoter / matrix[5][5] * matrix[5][col];
         }
     }
-    let pivoter = matrix[3][4].clone();
+    let pivoter = matrix[3][4];
     for col in 4..=6 {
-        matrix[3][col] -= pivoter.clone() / matrix[4][4].clone() * matrix[4][col].clone();
+        matrix[3][col] -= pivoter / matrix[4][4] * matrix[4][col];
     }
 
-    let x = matrix[3][6].clone() / matrix[3][3].clone();
-    let y = matrix[4][6].clone() / matrix[4][4].clone();
-    let z = matrix[5][6].clone() / matrix[5][5].clone();
+    let x = matrix[3][6] / matrix[3][3];
+    let y = matrix[4][6] / matrix[4][4];
+    let z = matrix[5][6] / matrix[5][5];
 
-    x + y + z
+    (x + y + z) as usize
 }
 
 fn main() {
