@@ -1772,3 +1772,15 @@ Likewise, days 19 and 22 were a bit easy, so why was day 23 so hard?
 
 But I still love the problem! And while the last week of this year's puzzles
 were a true, grinding burden, I'm glad I did them.
+
+#### Ada
+
+Monte Carlo algorithm, which required `Ada.Numerics.Discrete.Random`.
+
+#### Rust
+
+Similarly, the `rand` crate.
+Also, `impl Display` for `EdgeRecord`, which was a bit tough
+since `LabelString` is just a character array,
+which means the compiler considers it foreign,
+so I had to think a few minutes more on how to implement it.
