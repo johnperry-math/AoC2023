@@ -1638,6 +1638,8 @@ It _looks_ as if the Ada "just worked", or at least it didn't give me issues.
 
 [**Double sheesh**](#solving-it-period).
 
+#### First attempt
+
 Both part 1 and the translated solution to part 2
 were _relatively_ straightforward; the only issue I remember is that
 I neglected to `.trim` after `.split`ting a string, so the float parser choked.
@@ -1681,13 +1683,32 @@ and its result was even worse for both gcc and clang;
 The **moral of the story** is of course that
 you should not perform Groebner basis-style computations in floating point.
 
-#### Update on Rust
+#### Trying `f128`
 
 I went ahead and switched to `f128`.
 It won't compile (for now) unless you enable the nightly compiler (`+nightly`).
 It produces the correct answer, so I'll leave it there.
 If you're curious to see how it worked with `malachite`
 switch to commit `26bef1b2d89f1059a3f12eac5742ccb2592b3b8f`.
+
+#### Consulting rustaceans
+
+After talking with a colleague at work, I discovered the problem: on my machine,
+* Ada compiles the values to `TBYTE`, which uses ten bytes;
+* Rust and C compile the value to `QWORD`, which uses eight bytes.
+
+That explains the loss of precision.
+It's not clear to me why Rust and C print different values,
+but I suspect that's due to the algorithms they use to display floating point numbers.
+
+I also asked at [the Rust forum](https://users.rust-lang.org/t/bug-in-f64-when-given-a-large-integer-within-precision/117491/).
+The answer I accepted pointed me to the [`rust_decimal`](https://docs.rs/rust_decimal/latest/rust_decimal/) crate,
+which still doesn't quite do the job:
+it crashed on me several times on account of numerical instability.
+(This is not exactly surprising with what I'm doing... but still.)
+I decided to quash that by guarding against very small numbers.
+I imagine I could remove the guard by thinking more about where to fix the decimal,
+so perhaps I'll look into that at some point.
 
 ## Day 25: Snowverload
 <span style="font-size: 8ex;">:snowflake:</span>

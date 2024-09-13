@@ -12,21 +12,22 @@
 // this basically translates the Ada code;
 // see that for problem-specific details
 
-#![feature(f128)]
-
 use std::collections::BTreeSet;
 
-const PART_1_MIN: f128 = 200_000_000_000_000.0;
-const PART_1_MAX: f128 = 400_000_000_000_000.0;
+use rust_decimal::prelude::*;
+use rust_decimal_macros::dec;
+
+const PART_1_MIN: Decimal = dec!(200_000_000_000_000.0);
+const PART_1_MAX: Decimal = dec!(400_000_000_000_000.0);
 
 #[derive(Clone)]
 struct HailstoneRecord {
-    x: f128,
-    y: f128,
-    z: f128,
-    dx: f128,
-    dy: f128,
-    dz: f128,
+    x: Decimal,
+    y: Decimal,
+    z: Decimal,
+    dx: Decimal,
+    dy: Decimal,
+    dz: Decimal,
 }
 
 #[derive(PartialEq, PartialOrd, Ord, Eq)]
@@ -42,12 +43,12 @@ struct LudicrousStoneRecord {
 impl From<&LudicrousStoneRecord> for HailstoneRecord {
     fn from(value: &LudicrousStoneRecord) -> Self {
         Self {
-            x: value.x as f128,
-            y: value.y as f128,
-            z: value.z as f128,
-            dx: value.dx as f128,
-            dy: value.dy as f128,
-            dz: value.dz as f128,
+            x: Decimal::from_i64(value.x).expect("i64 didn't fit into decimal!"),
+            y: Decimal::from_i64(value.y).expect("i64 didn't fit into decimal!"),
+            z: Decimal::from_i64(value.z).expect("i64 didn't fit into decimal!"),
+            dx: Decimal::from_i64(value.dx).expect("i64 didn't fit into decimal!"),
+            dy: Decimal::from_i64(value.dy).expect("i64 didn't fit into decimal!"),
+            dz: Decimal::from_i64(value.dz).expect("i64 didn't fit into decimal!"),
         }
     }
 }
@@ -119,11 +120,11 @@ fn intersect_in_future(first: &HailstoneRecord, second: &HailstoneRecord) -> Int
     let m_ith = first.dy / first.dx;
     let m_jth = second.dy / second.dx;
 
-    if (m_ith - m_jth).abs() > 0.000_000_000_01 {
+    if (m_ith - m_jth).abs() > dec!(0.000_000_000_01) {
         let x = ((second.y - first.y) + (m_ith * first.x - m_jth * second.x)) / (m_ith - m_jth);
-        if (PART_1_MIN..PART_1_MAX).contains(&x) && (x - first.x) / first.dx > 0.0 {
+        if (PART_1_MIN..PART_1_MAX).contains(&x) && (x - first.x) / first.dx > dec!(0.0) {
             let y = m_ith * (x - first.x) + first.y;
-            if (PART_1_MIN..PART_1_MAX).contains(&y) && (y - second.y) / (second.dy) > 0.0 {
+            if (PART_1_MIN..PART_1_MAX).contains(&y) && (y - second.y) / (second.dy) > dec!(0.0) {
                 return Intersection::Valid;
             }
         }
@@ -257,37 +258,37 @@ fn part_2_by_gb(all_hailstones: &[HailstoneRecord]) -> usize {
     let [first, second, third] = find_triplet(all_hailstones);
     println!(
         "{} * {} = {}!!!",
-        second.x as i64,
-        second.dy as i64,
-        (second.x * second.dy) as i64
+        second.x,
+        second.dy,
+        (second.x * second.dy)
     );
 
     let mut matrix = [
         [
             first.y - second.y,
             second.x - first.x,
-            0.0,
+            dec!(0.0),
             second.dy - first.dy,
             first.dx - second.dx,
-            0.0,
+            dec!(0.0),
             -(first.x * first.dy - first.y * first.dx - second.x * second.dy
                 + second.y * second.dx),
         ],
         [
             first.z - second.z,
-            0.0,
+            dec!(0.0),
             second.x - first.x,
             second.dz - first.dz,
-            0.0,
+            dec!(0.0),
             first.dx - second.dx,
             -(first.x * first.dz - first.z * first.dx - second.x * second.dz
                 + second.z * second.dx),
         ],
         [
-            0.0,
+            dec!(0.0),
             first.z - second.z,
             second.y - first.y,
-            0.0,
+            dec!(0.0),
             second.dz - first.dz,
             first.dy - second.dy,
             -(first.y * first.dz - first.z * first.dy - second.y * second.dz
@@ -296,26 +297,26 @@ fn part_2_by_gb(all_hailstones: &[HailstoneRecord]) -> usize {
         [
             first.y - third.y,
             third.x - first.x,
-            0.0,
+            dec!(0.0),
             third.dy - first.dy,
             first.dx - third.dx,
-            0.0,
+            dec!(0.0),
             -(first.x * first.dy - first.y * first.dx - third.x * third.dy + third.y * third.dx),
         ],
         [
             first.z - third.z,
-            0.0,
+            dec!(0.0),
             third.x - first.x,
             third.dz - first.dz,
-            0.0,
+            dec!(0.0),
             first.dx - third.dx,
             -(first.x * first.dz - first.z * first.dx - third.x * third.dz + third.z * third.dx),
         ],
         [
-            0.0,
+            dec!(0.0),
             first.z - third.z,
             third.y - first.y,
-            0.0,
+            dec!(0.0),
             third.dz - first.dz,
             first.dy - third.dy,
             -(first.y * first.dz - first.z * first.dy - third.y * third.dz + third.z * third.dy),
@@ -323,7 +324,7 @@ fn part_2_by_gb(all_hailstones: &[HailstoneRecord]) -> usize {
     ];
 
     for pivot in 0..=4 {
-        if matrix[pivot][pivot] == 0.0 {
+        if matrix[pivot][pivot] == dec!(0.0) {
             for col in pivot..=6 {
                 let pivoter = matrix[pivot][col];
                 matrix[pivot][col] = matrix[pivot + 1][col];
@@ -334,6 +335,11 @@ fn part_2_by_gb(all_hailstones: &[HailstoneRecord]) -> usize {
             let pivoter = matrix[row][pivot];
             for col in pivot..=6 {
                 matrix[row][col] -= pivoter / matrix[pivot][pivot] * matrix[pivot][col];
+                // unstable arithmetic, oops!
+                // weird that ada doesn't have this issue
+                if matrix[row][col].abs() < dec!(0.00000001) {
+                    matrix[row][col] = dec!(0.0);
+                }
             }
         }
     }
@@ -353,7 +359,9 @@ fn part_2_by_gb(all_hailstones: &[HailstoneRecord]) -> usize {
     let y = matrix[4][6] / matrix[4][4];
     let z = matrix[5][6] / matrix[5][5];
 
-    (x + y + z) as usize
+    (x + y + z)
+        .to_usize()
+        .expect("result did not fit in usize... ")
 }
 
 fn main() {
