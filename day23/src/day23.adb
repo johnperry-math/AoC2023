@@ -11,6 +11,8 @@ pragma Ada_2022;
 --
 --  part 2: repeat, except now you can walk up slopes
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 with Ada.Text_IO;
 
 with Ada.Containers.Ordered_Maps;

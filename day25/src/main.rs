@@ -11,6 +11,8 @@
 // this basically translates the Ada code;
 // see that for problem-specific details
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::collections::{HashMap, HashSet, VecDeque};
 
 use rand::Rng;
@@ -211,10 +213,10 @@ fn part_1(graph: &mut Graph) -> usize {
         .expect("how is the graph empty?!?");
     group_one.insert(source);
     for dest in all_labels.filter(|label| *label != source) {
-        if !find_path(*source, *dest, graph).is_empty() {
-            group_one.insert(dest);
-        } else {
+        if find_path(*source, *dest, graph).is_empty() {
             group_two.insert(dest);
+        } else {
+            group_one.insert(dest);
         }
     }
 

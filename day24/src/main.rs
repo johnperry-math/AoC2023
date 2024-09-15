@@ -12,6 +12,8 @@
 // this basically translates the Ada code;
 // see that for problem-specific details
 
+#![warn(clippy::all, clippy::pedantic, clippy::nursery)]
+
 use std::collections::BTreeSet;
 
 use rust_decimal::prelude::*;
@@ -116,6 +118,7 @@ enum Intersection {
     Invalid,
 }
 
+#[allow(clippy::similar_names)]
 fn intersect_in_future(first: &HailstoneRecord, second: &HailstoneRecord) -> Intersection {
     let m_ith = first.dy / first.dx;
     let m_jth = second.dy / second.dx;
@@ -223,11 +226,21 @@ fn part_2(all_hailstones: &mut [LudicrousStoneRecord]) -> i64 {
     let first = &all_hailstones[0];
     let second = &all_hailstones[1];
 
+    #[allow(clippy::cast_precision_loss)]
     let first_m = (first.dy - dy) as f64 / (first.dx - dx) as f64;
+    #[allow(clippy::cast_precision_loss)]
     let second_m = (second.dy - dy) as f64 / (second.dx - dx) as f64;
+    #[allow(clippy::cast_precision_loss, clippy::suboptimal_flops)]
     let ca = first.y as f64 - first_m * first.x as f64;
+    #[allow(clippy::cast_precision_loss, clippy::suboptimal_flops)]
     let cb = second.y as f64 - second_m * second.x as f64;
+    #[allow(clippy::cast_precision_loss, clippy::cast_possible_truncation)]
     let x_pos = ((cb - ca) / (first_m - second_m)) as i64;
+    #[allow(
+        clippy::cast_precision_loss,
+        clippy::cast_possible_truncation,
+        clippy::suboptimal_flops
+    )]
     let y_pos = (first_m * x_pos as f64 + ca) as i64;
     let time = (x_pos - first.x) / (first.dx - dx);
     let z_pos = first.z + (first.dz - dz) * time;
