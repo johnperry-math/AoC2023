@@ -45,18 +45,22 @@ TYPE MapLine = POINTER TO MapLineArray;
 TYPE MapRef = POINTER TO MapArray;
 
 PROCEDURE NewMap (Row_Length, Col_Length: CARDINAL): MapRef;
+PROCEDURE ReleaseMap (VAR Map: MapRef; Rows, Cols: CARDINAL);
 
 TYPE LocationVector;
 
 PROCEDURE NewVector (): LocationVector;
+PROCEDURE ReleaseVector (VAR Vector: LocationVector);
 PROCEDURE Append (VAR Vector: LocationVector; Location: LocationRecord);
 PROCEDURE Element (Vector: LocationVector; Index: CARDINAL): LocationRecord;
 
 TYPE LocationQueue;
 
 PROCEDURE NewQueue (): LocationQueue;
+PROCEDURE ReleaseQueue (VAR Queue: LocationQueue);
 PROCEDURE Enqueue (VAR Queue: LocationQueue; Location: LocationRecord);
 PROCEDURE Dequeue (VAR Queue: LocationQueue): LocationRecord;
+PROCEDURE IsEmpty (Queue: LocationQueue): BOOLEAN;
 
 (*** Two_Dimensional_Map_IO ***)
 

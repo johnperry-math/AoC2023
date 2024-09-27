@@ -4,7 +4,7 @@ Types, packages, and subprograms useful for Advent of Code
 
 IMPLEMENTATION MODULE Common;
 
-FROM SYSTEM IMPORT ADR, CAST;
+FROM SYSTEM IMPORT ADR, CAST, TSIZE;
 
 IMPORT FIO, InOut, Storage;
 
@@ -25,9 +25,15 @@ PROCEDURE NewMap(Row_Length, Col_Length: CARDINAL): MapRef;
 VAR
     Result: MapRef;
 BEGIN
-    Storage.ALLOCATE (Result, Row_Length * Col_Length);
+    Storage.ALLOCATE (Result, Row_Length * Col_Length * TSIZE (Object));
     RETURN Result;              
 END NewMap;
+
+PROCEDURE ReleaseMap (VAR Map: MapRef; Rows, Cols: CARDINAL);
+BEGIN
+    Storage.DEALLOCATE (Map, Rows * Cols * TSIZE (Object));
+    Map := NIL;
+END ReleaseMap;
 
 TYPE LocationArray = ARRAY CARDINAL OF LocationRecord;
 TYPE LocationArrayPointer = POINTER TO LocationArray;
@@ -45,12 +51,19 @@ VAR
     Values: LocationArrayPointer;
 BEGIN
     Storage.ALLOCATE (Result, SIZE(LocationVectorRecord));
-    Storage.ALLOCATE (Values, 1000);
+    Storage.ALLOCATE (Values, 1000 * TSIZE (LocationRecord));
     Result^.Values := Values;
     Result^.Size := 1000;
     Result^.LastIndex := 0;
     RETURN Result;
 END NewVector;
+
+PROCEDURE ReleaseVector (VAR Vector: LocationVector);
+BEGIN
+    Storage.DEALLOCATE (Vector^.Values, Vector^.Size * TSIZE (LocationRecord));
+    Storage.DEALLOCATE (Vector, TSIZE (LocationVectorRecord));
+    Vector := NIL;
+END ReleaseVector;
 
 PROCEDURE Append (VAR Vector: LocationVector; Location: LocationRecord);
 VAR
@@ -58,16 +71,16 @@ VAR
     I: CARDINAL;
 BEGIN
     IF Vector^.Size = Vector^.LastIndex THEN
-        Storage.ALLOCATE (Temp, Vector^.Size * 2);
+        Storage.ALLOCATE (Temp, 2 * Vector^.Size * TSIZE (LocationRecord));
         FOR I := 0 TO Vector^.Size - 1 DO
             Temp^[I] := Vector^.Values^[I];
         END;
-        Storage.DEALLOCATE (Vector^.Values, Vector^.Size);
+        Storage.DEALLOCATE (Vector^.Values, Vector^.Size * TSIZE (LocationRecord));
         Vector^.Values := Temp;
         Vector^.Size := Vector^.Size * 2;
     END;
     Vector^.Values^[Vector^.LastIndex] := Location;
-    Vector^.LastIndex := Vector^.LastIndex + 1;
+    INC(Vector^.LastIndex);
 END Append;
 
 PROCEDURE Element (Vector: LocationVector; Index: CARDINAL): LocationRecord;
@@ -77,30 +90,41 @@ END Element;
 
 TYPE LocationQueueRecord = RECORD
     Size, FirstIndex, LastIndex: CARDINAL;
+    Number: CARDINAL;
     Values  : LocationArrayPointer;
 END;
 
 TYPE LocationQueue = POINTER TO LocationQueueRecord;
 
 PROCEDURE NewQueue(): LocationQueue;
+CONST INITIAL_SIZE = 1000; (* Tested with 10 to make sure reallocation works *)
 VAR
     Result: LocationQueue;
     Values: LocationArrayPointer;
 BEGIN
-    Storage.ALLOCATE (Result, SIZE(LocationQueueRecord));
-    Storage.ALLOCATE (Values, 1000);
+    Storage.ALLOCATE (Result, TSIZE(LocationQueueRecord));
+    Storage.ALLOCATE (Values, INITIAL_SIZE * TSIZE(LocationRecord));
     Result^.Values := Values;
-    Result^.Size := 1000;
+    Result^.Size := INITIAL_SIZE;
     Result^.FirstIndex := 0;
     Result^.LastIndex := 0;
+    Result^.Number := 0;
     RETURN Result;
 END NewQueue;
+
+PROCEDURE ReleaseQueue(VAR Queue: LocationQueue);
+BEGIN
+    Storage.DEALLOCATE (Queue^.Values, Queue^.Size * TSIZE (LocationRecord));
+    Storage.DEALLOCATE (Queue, TSIZE (LocationQueueRecord));
+    Queue := NIL;   
+END ReleaseQueue;
 
 PROCEDURE IsEmpty(Queue: LocationQueue): BOOLEAN;
 VAR
     Result: BOOLEAN;
 BEGIN
-    Result := Queue^.FirstIndex = Queue^.LastIndex;
+    Result := Queue^.Number = 0;
+    (* Result := Queue^.FirstIndex = Queue^.LastIndex; *)
     RETURN Result;  
 END IsEmpty;
 
@@ -108,33 +132,43 @@ PROCEDURE IsFull(Queue: LocationQueue): BOOLEAN;
 VAR
     Result: BOOLEAN;
 BEGIN
-    Result := (Queue^.FirstIndex = 0) AND (Queue^.LastIndex = Queue^.Size - 1);
+    (* Result := (Queue^.FirstIndex = 0) AND (Queue^.LastIndex = Queue^.Size - 1);
     Result := Result OR (
         (Queue^.FirstIndex > Queue^.LastIndex)
             AND (Queue^.FirstIndex - 1 = Queue^.LastIndex)
-    );
+    ); *)
+    Result := Queue^.Number = Queue^.Size;
     RETURN Result;
 END IsFull;
 
 PROCEDURE Enqueue (VAR Queue: LocationQueue; Location: LocationRecord);
 VAR
     Temp: LocationArrayPointer;
-    I: CARDINAL;
+    I, J: CARDINAL;
 BEGIN
     IF IsFull(Queue) THEN
-        Storage.ALLOCATE (Temp, Queue^.Size * 2);
+        InOut.WriteString ("Re-sizing"); InOut.WriteLn;
+        Storage.ALLOCATE (Temp, 2 * Queue^.Size * TSIZE (LocationRecord));
+        J := Queue^.FirstIndex;
         FOR I := 0 TO Queue^.Size - 1 DO
-            Temp^[I] := Queue^.Values^[I];
+            Temp^[I] := Queue^.Values^[J];
+            INC(J);
+            IF J = Queue^.Size THEN
+                J := 0;
+            END;
         END;
-        Storage.DEALLOCATE (Queue^.Values, Queue^.Size);
+        Storage.DEALLOCATE (Queue^.Values, Queue^.Size * TSIZE (LocationRecord));
         Queue^.Values := Temp;
         Queue^.Size := Queue^.Size * 2;
+        Queue^.FirstIndex := 0;
+        Queue^.LastIndex := Queue^.Number - 1;
     END;
     Queue^.Values^[Queue^.LastIndex] := Location;
-    Queue^.LastIndex := Queue^.LastIndex + 1;
+    INC(Queue^.LastIndex);
     IF Queue^.LastIndex = Queue^.Size THEN
         Queue^.LastIndex := 0;
     END;
+    INC(Queue^.Number);
 END Enqueue;
 
 PROCEDURE Dequeue (VAR Queue: LocationQueue): LocationRecord;
@@ -143,9 +177,10 @@ VAR
 BEGIN
     Result := Queue^.Values^[Queue^.FirstIndex];
     Queue^.FirstIndex := Queue^.FirstIndex + 1;
-    IF Queue^.FirstIndex = Queue^.Size - 1 THEN
+    IF Queue^.FirstIndex = Queue^.Size THEN
         Queue^.FirstIndex := 0;
     END;
+    DEC(Queue^.Number);
     RETURN Result;
 END Dequeue;
 

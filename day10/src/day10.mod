@@ -19,6 +19,8 @@ TYPE Pipe = (
     Start
 );
 
+TYPE PipeSet = SET OF Pipe;
+
 PROCEDURE Deserialize (Symbol: CHAR): Common.Object;
 VAR
     Result: Common.Object;
@@ -59,8 +61,9 @@ END Serialize;
 
 CONST SIDE_LENGTH = 140;
 
-TYPE RowRange = [1..SIDE_LENGTH];
-TYPE ColRange = [1..SIDE_LENGTH];
+TYPE SideRange = [1..SIDE_LENGTH];
+TYPE RowRange = SideRange;
+TYPE ColRange = SideRange;
 
 VAR Map: ARRAY RowRange, ColRange OF Common.Object;
 
@@ -110,6 +113,18 @@ BEGIN
         END;
     END;
 END InitializeTraversedMap;
+
+PROCEDURE PutTraversedMap;
+VAR
+    Row, Col: CARDINAL;
+BEGIN
+    FOR Row := 1 TO SIDE_LENGTH DO
+        FOR Col := 1 TO SIDE_LENGTH DO
+            InOut.Write (TraversedMap [Row, Col]);
+        END;
+        InOut.WriteLn;
+    END;
+END PutTraversedMap;
 
 TYPE Animal = RECORD
     Curr, Prev: Common.LocationRecord;
@@ -268,29 +283,209 @@ BEGIN
             EXIT;
         END;
         Move (Second, StartLocation);
+        RecordMotion (Second);  
         IF (First.Curr.Row = Second.Curr.Row)
         AND (First.Curr.Col = Second.Curr.Col)
         THEN
             EXIT;
         END;
-        Step := Step + 1;
+        INC(Step);
     END;
 
     RETURN Step + 1;    
     
 END Part_1;
 
+CONST DOUBLED_SIDE_LENGTH = 2 * SIDE_LENGTH;
+TYPE DoubledSideRange = [0..DOUBLED_SIDE_LENGTH];
+
+TYPE DoubledMapType = ARRAY DoubledSideRange, DoubledSideRange OF BOOLEAN;
+
+VAR DoubledMap: DoubledMapType;
+
+PROCEDURE FloodFill;
+VAR
+    ToDo: Common.LocationQueue;
+    Current, Next: Common.LocationRecord;
+
+    DRow, DCol: Common.Nudge;
+BEGIN
+    ToDo := Common.NewQueue();
+    Current.Row := 0;
+    Current.Col := 0;
+    Common.Enqueue (ToDo, Current);
+    DoubledMap [0, 0] := TRUE;
+    Current.Row := DOUBLED_SIDE_LENGTH;
+    Common.Enqueue (ToDo, Current);
+    DoubledMap [DOUBLED_SIDE_LENGTH, 0] := TRUE;
+
+    WHILE NOT Common.IsEmpty (ToDo) DO
+        Current := Common.Dequeue (ToDo);
+
+        FOR DRow := -1 TO 1 DO
+            IF Current.Row + DRow <= DOUBLED_SIDE_LENGTH THEN
+                FOR DCol := -1 TO 1 DO
+                    IF Current.Col + DCol <= DOUBLED_SIDE_LENGTH THEN
+                        Next.Row := Current.Row + DRow;
+                        Next.Col := Current.Col + DCol;
+                        IF NOT DoubledMap [Next.Row, Next.Col] THEN
+                            DoubledMap [Next.Row, Next.Col] := TRUE;
+                            Common.Enqueue (ToDo, Next);
+                        END;
+                    END;
+                END;
+            END;
+        END;
+    END;
+
+    Common.ReleaseQueue (ToDo);
+
+END FloodFill;
+
+PROCEDURE SizeOfInterior (): CARDINAL;
+VAR
+    Result: CARDINAL;
+    Row, Col: DoubledSideRange;
+BEGIN
+    Result := 0;
+    FOR Row := 1 TO SIDE_LENGTH DO
+        FOR Col := 1 TO SIDE_LENGTH DO
+            IF NOT DoubledMap [2 * Row - 1, 2 * Col - 1] THEN
+                INC(Result);
+            END;
+        END;
+    END;
+    RETURN Result;
+END SizeOfInterior;
+
+PROCEDURE PutDoubledMap;
+VAR
+    Row, Col: CARDINAL;
+BEGIN
+    FOR Row := 0 TO DOUBLED_SIDE_LENGTH DO
+        FOR Col := 0 TO DOUBLED_SIDE_LENGTH DO
+            IF DoubledMap [Row, Col] THEN
+                InOut.Write ('#');
+            ELSE
+                InOut.Write (' ');
+            END;
+        END;
+        InOut.WriteLn;
+    END;
+END PutDoubledMap;
+
+PROCEDURE DoubleMap;
+VAR
+    Row, Col: CARDINAL;
+    TestSet : PipeSet;
+BEGIN
+    FOR Row := 0 TO DOUBLED_SIDE_LENGTH DO
+        FOR Col := 0 TO DOUBLED_SIDE_LENGTH DO
+            DoubledMap [Row, Col] := FALSE;
+        END;
+    END;
+    FOR Row := 0 TO SIDE_LENGTH DO
+        FOR Col := 0 TO SIDE_LENGTH DO
+            IF TraversedMap [Row, Col] # ' ' THEN
+                CASE CAST (Pipe, Map [Row, Col].Value) OF
+                  Vertical :
+                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+
+                  | Horizontal :
+                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+
+                  | SE_Or_WN :
+                     DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+
+                  | SW_Or_EN :
+                     DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
+                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
+
+                  | WS_Or_NE :
+                     DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+
+                  | ES_Or_NW :
+                     DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
+                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                     DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+
+                  (*| Ground :
+                      nothing, apparently *)
+
+                  | Start :
+                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+
+                     IF (Row - 1 >= 1) AND (Row - 1 <= SIDE_LENGTH) THEN
+                        TestSet := PipeSet { Vertical, WS_Or_NE, ES_Or_NW };
+                        IF (CAST (Pipe, Map [Row - 1, Col].Value) IN TestSet)
+                        THEN
+                              DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
+                        END;
+                     END;
+
+                     IF (Row + 1 >= 1) AND (Row + 1 <= SIDE_LENGTH) THEN
+                        TestSet := PipeSet { Vertical , SE_Or_WN , SW_Or_EN };
+                        IF (CAST (Pipe, Map [Row + 1, Col].Value) IN TestSet)
+                        THEN
+                              DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+                        END;
+                     END;
+
+                     IF (Col - 1 >= 1) AND (Col - 1 <= SIDE_LENGTH) THEN
+                        TestSet := PipeSet { Horizontal , SE_Or_WN , WS_Or_NE };
+                        IF (CAST (Pipe, Map [Row, Col - 1].Value) IN TestSet)
+                        THEN
+                              DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
+                        END;
+                     END;
+
+                     IF (Col + 1 >= 1) AND (Col + 1 <= SIDE_LENGTH) THEN
+                        TestSet := PipeSet { Horizontal , SW_Or_EN , ES_Or_NW };
+                        IF (CAST (Pipe, Map [Row, Col + 1].Value) IN TestSet)
+                        THEN
+                              DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+                        END;
+                     END;
+
+                END;
+            END;
+        END;
+    END;
+END DoubleMap;
+
+PROCEDURE Part_2 (): CARDINAL;
+BEGIN
+    DoubleMap;
+    (*PutDoubledMap;*)
+    FloodFill;
+    (*PutDoubledMap;*)
+    RETURN SizeOfInterior ();
+END Part_2;
+
 BEGIN
     AllocateSource (SourceOfException);
     InitializeTraversedMap;
     Common.ReadInput("input.txt", ADR(Map), SIDE_LENGTH, SIDE_LENGTH, Deserialize);
-    FindStart;
-    (*InOut.WriteString("Start location is ");
-    InOut.WriteCard(StartLocation.Row, 0); InOut.WriteString(", ");
-    InOut.WriteCard(StartLocation.Col, 0); InOut.WriteLn;*)
     (*Common.PutMap(ADR(Map), SIDE_LENGTH, SIDE_LENGTH, Serialize);*)
+    FindStart;
+
     InOut.WriteString ("From entrance to farthest point takes ");
     InOut.WriteCard (Part_1 (), 0);
     InOut.WriteString (" steps");
     InOut.WriteLn;
+
+    (*PutTraversedMap;*)
+
+    InOut.WriteString ("Nest area contains ");
+    InOut.WriteCard (Part_2 (), 0);
+    InOut.WriteString (" spaces");
+    InOut.WriteLn;
+
 END Day10.

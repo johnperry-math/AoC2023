@@ -674,6 +674,30 @@ But you need his help!
   so formatting was a hassle.
 * Exception handling, at least during debugging.
 
+#### Modula-2
+
+To compile the Modula-2 solution with `gm2`
+(the Gnu Modula-2 compiler) type
+
+    make -f Modula2_Makefile
+
+You can then run the resulting `Day10` file.
+The makefile will also clean:
+
+    make clean -f Modula2_Makefile
+
+I completed this puzzle in Modula-2 in order to:
+* Implement the `Common` module.
+
+...and, since Modula-2 neither offers containers of any sort,
+let alone generic containers, nor manages memory for you **at all*,
+this compels me to:
+* Implement a type-specific, resizable vector and a queue.
+* Manage memory.
+
+Modula-2's range types are not terribly functional (see below)
+so I also resorted to `SET`s.
+
 ### Experience
 
 This is much more complex than the previous puzzles.
@@ -695,6 +719,31 @@ Still, I made it harder than it needed to be.
 
 All that aside, it's a very good puzzle.
 I just hope we get some easier ones the next couple of days. :grin:
+
+#### Modula-2
+
+Translating this was much harder than the previous attempts;
+it took me several days, working for probably 3-4 hours a day on average.
+Problems I had, in no particular order:
+* 👤 Remembering how Modula-2's opaque types worked.
+  A big drawback is that they are restricted to pointer types,
+  forcing even more effort with pointers than I would like.
+* 🤯 Forgetting how to allocate and deallocate memory.
+  It doesn't much help that `NEW` is sort of a useless function when it comes to arrays,
+  unless that's yet another bug in the `gm2` compiler.
+* 🐜 Speaking of bugs in the `gm2` compiler, I discovered at least 3.
+  When I mean "bug" here, I mean that the compilation halts
+  with a "compiler error" message.
+  Modules that replicate these bugs with minimal working examples
+  appear in the `src/m2_bugs` folder.
+
+Things I missed from Ada:
+* Containers in the standard library.
+* Generics. This is _not_  the same as the above.
+* Subrange types seem mostly useless:
+  you can neither iterate over them,
+  nor even check if a value is an element of them.
+* Ada 2022's `for ... when ... loop`.
 
 #### Rust
 

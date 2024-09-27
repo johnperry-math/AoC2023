@@ -1,0 +1,6 @@
+all:
+	gm2 -fiso -c -I../common/src ../common/src/Common.mod
+	gm2 -fiso -I../common/src src/day10.mod Common.o -o Day10
+
+clean:
+	rm Day10 Common.o

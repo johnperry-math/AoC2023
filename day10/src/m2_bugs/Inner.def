@@ -1,0 +1,5 @@
+DEFINITION MODULE Inner;
+
+PROCEDURE P;    
+
+END Inner.

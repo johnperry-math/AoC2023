@@ -1,0 +1,7 @@
+DEFINITION MODULE Alternate;
+
+TYPE Array2 = ARRAY CARDINAL, CARDINAL OF CHAR;
+
+PROCEDURE P(A: Array2);
+
+END Alternate.
