@@ -154,6 +154,7 @@ pub mod two_dimensional_map {
     }
 
     impl<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object> Map<ROW_LENGTH, COL_LENGTH, Object> {
+        #[must_use]
         pub const fn in_range(location: Location, dir: Direction) -> bool {
             in_range(location, dir, ROW_LENGTH, COL_LENGTH)
         }
@@ -167,6 +168,7 @@ pub mod two_dimensional_map {
         }
     }
 
+    #[must_use]
     pub const fn in_range(
         location: Location,
         dir: Direction,
@@ -189,6 +191,8 @@ pub mod two_dimensional_map_io {
 
     use crate::two_dimensional_map::{Location, Map};
 
+    /// # Panics
+    /// if it cannot find `filename` and fails to read an expected line, this will panic
     pub fn read_input<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object: Default + Copy>(
         filename: String,
         deserialize: &dyn Fn(char) -> Object,

@@ -133,7 +133,7 @@ fn part_1(map: &Map<SIDE_LENGTH, SIDE_LENGTH, usize>) -> usize {
                 .assign(curr.dir, curr.repeated, result);
 
             for dir in ALL_DIRECTIONS {
-                if map.in_range(curr.location, dir)
+                if Map::<SIDE_LENGTH, SIDE_LENGTH, usize>::in_range(curr.location, dir)
                     && (curr.dir != dir || curr.repeated < MIN_RUN + LENGTH - 1)
                 {
                     let new_location = curr.location.delta(dir);
@@ -207,7 +207,7 @@ fn part_2(map: &Map<SIDE_LENGTH, SIDE_LENGTH, usize>) -> usize {
             for dir in ALL_DIRECTIONS {
                 if dir == curr.dir
                     && curr.repeated < MIN_RUN + LENGTH - 1
-                    && map.in_range(curr.location, dir)
+                    && Map::<SIDE_LENGTH, SIDE_LENGTH, usize>::in_range(curr.location, dir)
                 {
                     let new_location = curr.location.delta(dir);
                     let mut next = State {

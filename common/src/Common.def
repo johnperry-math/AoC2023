@@ -1,0 +1,78 @@
+(*
+Types, packages, and subprograms useful for Advent of Code
+*)
+
+DEFINITION MODULE Common;
+
+(*** Two_Dimensional_Motion ***)
+
+TYPE
+    Direction = (North, South, East, West);
+
+PROCEDURE Opposite(Left, Right: Direction): BOOLEAN;
+
+TYPE Nudge = [-1..1];
+
+TYPE Drc = RECORD
+    DRow: Nudge;
+    DCol: Nudge;
+END;
+
+TYPE DrcArray = ARRAY Direction OF Drc;
+
+CONST Deltas = DrcArray {
+    {-1, 0},
+    {1, 0},
+    {0, 1},
+    {0, -1} 
+};
+
+(*** Two_Dimensional_Map ***)
+
+TYPE LocationRecord = RECORD
+    Row, Col: CARDINAL;
+END;
+
+TYPE Object = RECORD
+    Value: CARDINAL; (* cast your enum to a cardinal and back *)
+END;
+
+TYPE MapArray = ARRAY CARDINAL, CARDINAL OF Object;
+TYPE MapReference = POINTER TO MapArray;
+TYPE MapLineArray = ARRAY CARDINAL OF Object;
+TYPE MapLine = POINTER TO MapLineArray;
+
+TYPE MapRef = POINTER TO MapArray;
+
+PROCEDURE NewMap (Row_Length, Col_Length: CARDINAL): MapRef;
+
+TYPE LocationVector;
+
+PROCEDURE NewVector (): LocationVector;
+PROCEDURE Append (VAR Vector: LocationVector; Location: LocationRecord);
+PROCEDURE Element (Vector: LocationVector; Index: CARDINAL): LocationRecord;
+
+TYPE LocationQueue;
+
+PROCEDURE NewQueue (): LocationQueue;
+PROCEDURE Enqueue (VAR Queue: LocationQueue; Location: LocationRecord);
+PROCEDURE Dequeue (VAR Queue: LocationQueue): LocationRecord;
+
+(*** Two_Dimensional_Map_IO ***)
+
+TYPE Serializer = PROCEDURE (Object): CHAR;
+TYPE Deserializer = PROCEDURE (CHAR): Object;
+
+PROCEDURE ReadInput (
+    Filename    : ARRAY OF CHAR;
+    Map         : MapLine;
+    Rows, Cols  : CARDINAL;
+    Deserialize : Deserializer
+);
+PROCEDURE PutMap (
+    Map        : MapLine;
+    Rows, Cols : CARDINAL;
+    Serialize  : Serializer
+);
+
+END Common.

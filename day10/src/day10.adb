@@ -78,6 +78,7 @@ procedure Day10 is
          for Col in Col_Range loop
             if Map (Row, Col) = Start then
                Start_Location := (Row, Col);
+               return;
             end if;
          end loop;
       end loop;
