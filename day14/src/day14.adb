@@ -155,31 +155,29 @@ procedure Day14 is
    begin
 
       for Row in System'Range (1) loop
-         for Col in System'Range (2) loop
+         for Col in System'Range (2) when System (Row, Col) = Movable loop
 
-            if System (Row, Col) = Movable then
-               declare
-                  Travel_Row         : Natural := Row;
-                  Movable_In_The_Way : Natural := 0;
-               begin
+                     declare
+                        Travel_Row         : Natural := Row;
+                        Movable_In_The_Way : Natural := 0;
+                     begin
 
-                  while Travel_Row > 1
-                    and then System (Travel_Row - 1, Col) /= Immovable
-                  loop
+                        while Travel_Row > 1
+                        and then System (Travel_Row - 1, Col) /= Immovable
+                        loop
 
-                     Travel_Row := @ - 1;
-                     if System (Travel_Row, Col) = Movable then
-                        Movable_In_The_Way := @ + 1;
-                     end if;
+                           Travel_Row := @ - 1;
+                           if System (Travel_Row, Col) = Movable then
+                              Movable_In_The_Way := @ + 1;
+                           end if;
 
-                  end loop;
+                        end loop;
 
-                  Result :=
-                    @ +
-                    Load (Side_Length - (Travel_Row + Movable_In_The_Way) + 1);
+                        Result :=
+                        @ +
+                        Load (Side_Length - (Travel_Row + Movable_In_The_Way) + 1);
 
-               end;
-            end if;
+                     end;
          end loop;
       end loop;
 

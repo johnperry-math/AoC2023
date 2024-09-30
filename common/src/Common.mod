@@ -8,7 +8,7 @@ FROM SYSTEM IMPORT ADR, CAST, TSIZE;
 
 IMPORT FIO, InOut, Storage;
 
-PROCEDURE Opposite(Left, Right: Direction): BOOLEAN;
+PROCEDURE Opposite (Left, Right: Direction): BOOLEAN;
 VAR 
     Result: BOOLEAN;
 BEGIN
@@ -21,7 +21,7 @@ BEGIN
     RETURN Result;
 END Opposite;
 
-PROCEDURE NewMap(Row_Length, Col_Length: CARDINAL): MapRef;
+PROCEDURE NewMap (Row_Length, Col_Length: CARDINAL): MapRef;
 VAR
     Result: MapRef;
 BEGIN
@@ -45,12 +45,12 @@ END;
 
 TYPE LocationVector = POINTER TO LocationVectorRecord;
 
-PROCEDURE NewVector(): LocationVector;
+PROCEDURE NewVector (): LocationVector;
 VAR
     Result: LocationVector;
     Values: LocationArrayPointer;
 BEGIN
-    Storage.ALLOCATE (Result, SIZE(LocationVectorRecord));
+    Storage.ALLOCATE (Result, SIZE (LocationVectorRecord));
     Storage.ALLOCATE (Values, 1000 * TSIZE (LocationRecord));
     Result^.Values := Values;
     Result^.Size := 1000;
@@ -75,12 +75,15 @@ BEGIN
         FOR I := 0 TO Vector^.Size - 1 DO
             Temp^[I] := Vector^.Values^[I];
         END;
-        Storage.DEALLOCATE (Vector^.Values, Vector^.Size * TSIZE (LocationRecord));
+        Storage.DEALLOCATE (
+            Vector^.Values,
+            Vector^.Size * TSIZE (LocationRecord)
+        );
         Vector^.Values := Temp;
         Vector^.Size := Vector^.Size * 2;
     END;
     Vector^.Values^[Vector^.LastIndex] := Location;
-    INC(Vector^.LastIndex);
+    INC (Vector^.LastIndex);
 END Append;
 
 PROCEDURE Element (Vector: LocationVector; Index: CARDINAL): LocationRecord;
@@ -96,14 +99,14 @@ END;
 
 TYPE LocationQueue = POINTER TO LocationQueueRecord;
 
-PROCEDURE NewQueue(): LocationQueue;
+PROCEDURE NewQueue (): LocationQueue;
 CONST INITIAL_SIZE = 1000; (* Tested with 10 to make sure reallocation works *)
 VAR
     Result: LocationQueue;
     Values: LocationArrayPointer;
 BEGIN
-    Storage.ALLOCATE (Result, TSIZE(LocationQueueRecord));
-    Storage.ALLOCATE (Values, INITIAL_SIZE * TSIZE(LocationRecord));
+    Storage.ALLOCATE (Result, TSIZE (LocationQueueRecord));
+    Storage.ALLOCATE (Values, INITIAL_SIZE * TSIZE (LocationRecord));
     Result^.Values := Values;
     Result^.Size := INITIAL_SIZE;
     Result^.FirstIndex := 0;
@@ -112,31 +115,25 @@ BEGIN
     RETURN Result;
 END NewQueue;
 
-PROCEDURE ReleaseQueue(VAR Queue: LocationQueue);
+PROCEDURE ReleaseQueue (VAR Queue: LocationQueue);
 BEGIN
     Storage.DEALLOCATE (Queue^.Values, Queue^.Size * TSIZE (LocationRecord));
     Storage.DEALLOCATE (Queue, TSIZE (LocationQueueRecord));
     Queue := NIL;   
 END ReleaseQueue;
 
-PROCEDURE IsEmpty(Queue: LocationQueue): BOOLEAN;
+PROCEDURE IsEmpty (Queue: LocationQueue): BOOLEAN;
 VAR
     Result: BOOLEAN;
 BEGIN
     Result := Queue^.Number = 0;
-    (* Result := Queue^.FirstIndex = Queue^.LastIndex; *)
-    RETURN Result;  
+    RETURN Result;
 END IsEmpty;
 
-PROCEDURE IsFull(Queue: LocationQueue): BOOLEAN;
+PROCEDURE IsFull (Queue: LocationQueue): BOOLEAN;
 VAR
     Result: BOOLEAN;
 BEGIN
-    (* Result := (Queue^.FirstIndex = 0) AND (Queue^.LastIndex = Queue^.Size - 1);
-    Result := Result OR (
-        (Queue^.FirstIndex > Queue^.LastIndex)
-            AND (Queue^.FirstIndex - 1 = Queue^.LastIndex)
-    ); *)
     Result := Queue^.Number = Queue^.Size;
     RETURN Result;
 END IsFull;
@@ -146,13 +143,12 @@ VAR
     Temp: LocationArrayPointer;
     I, J: CARDINAL;
 BEGIN
-    IF IsFull(Queue) THEN
-        InOut.WriteString ("Re-sizing"); InOut.WriteLn;
+    IF IsFull (Queue) THEN
         Storage.ALLOCATE (Temp, 2 * Queue^.Size * TSIZE (LocationRecord));
         J := Queue^.FirstIndex;
         FOR I := 0 TO Queue^.Size - 1 DO
             Temp^[I] := Queue^.Values^[J];
-            INC(J);
+            INC (J);
             IF J = Queue^.Size THEN
                 J := 0;
             END;
@@ -164,11 +160,11 @@ BEGIN
         Queue^.LastIndex := Queue^.Number - 1;
     END;
     Queue^.Values^[Queue^.LastIndex] := Location;
-    INC(Queue^.LastIndex);
+    INC (Queue^.LastIndex);
     IF Queue^.LastIndex = Queue^.Size THEN
         Queue^.LastIndex := 0;
     END;
-    INC(Queue^.Number);
+    INC (Queue^.Number);
 END Enqueue;
 
 PROCEDURE Dequeue (VAR Queue: LocationQueue): LocationRecord;
@@ -180,34 +176,39 @@ BEGIN
     IF Queue^.FirstIndex = Queue^.Size THEN
         Queue^.FirstIndex := 0;
     END;
-    DEC(Queue^.Number);
+    DEC (Queue^.Number);
     RETURN Result;
 END Dequeue;
 
-PROCEDURE ReadInput(Filename: ARRAY OF CHAR; Map: MapLine; Rows, Cols: CARDINAL; Deserialize: Deserializer);
+PROCEDURE ReadInput (
+    Filename: ARRAY OF CHAR;
+    Map: MapLine;
+    Rows, Cols: CARDINAL;
+    Deserialize: Deserializer
+);
 VAR
     Input: FIO.File;
     Row, Col: CARDINAL;
     Line: ARRAY [1..1000] OF CHAR;
     Eol: CHAR;
 BEGIN
-    Input := FIO.OpenToRead(Filename);
+    Input := FIO.OpenToRead (Filename);
     FOR Row := 0 TO Rows - 1 DO
-        FIO.ReadString(Input, Line);
+        FIO.ReadString (Input, Line);
         FOR Col := 0 TO Cols - 1 DO
-            Map^[Row * Cols + Col] := Deserialize(Line[Col + 1]);
+            Map^[Row * Cols + Col] := Deserialize (Line[Col + 1]);
         END;
     END;    
-    FIO.Close(Input);
+    FIO.Close (Input);
 END ReadInput;
 
-PROCEDURE PutMap(Map: MapLine; Rows, Cols: CARDINAL; Serialize: Serializer);
+PROCEDURE PutMap (Map: MapLine; Rows, Cols: CARDINAL; Serialize: Serializer);
 VAR
     Row, Col: CARDINAL;
 BEGIN
     FOR Row := 0 TO Rows - 1 DO
         FOR Col := 0 TO Cols - 1 DO
-            InOut.Write(Serialize(Map^[Row * Cols + Col]));
+            InOut.Write (Serialize (Map^[Row * Cols + Col]));
         END;
         InOut.WriteLn;
     END;

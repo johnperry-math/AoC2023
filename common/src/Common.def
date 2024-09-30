@@ -6,10 +6,9 @@ DEFINITION MODULE Common;
 
 (*** Two_Dimensional_Motion ***)
 
-TYPE
-    Direction = (North, South, East, West);
+TYPE Direction = (North, South, East, West);
 
-PROCEDURE Opposite(Left, Right: Direction): BOOLEAN;
+PROCEDURE Opposite (Left, Right: Direction): BOOLEAN;
 
 TYPE Nudge = [-1..1];
 
@@ -21,10 +20,10 @@ END;
 TYPE DrcArray = ARRAY Direction OF Drc;
 
 CONST Deltas = DrcArray {
-    {-1, 0},
-    {1, 0},
-    {0, 1},
-    {0, -1} 
+    {-1,  0},
+    { 1,  0},
+    { 0,  1},
+    { 0, -1} 
 };
 
 (*** Two_Dimensional_Map ***)
@@ -34,18 +33,25 @@ TYPE LocationRecord = RECORD
 END;
 
 TYPE Object = RECORD
-    Value: CARDINAL; (* cast your enum to a cardinal and back *)
+    (* to use this, cast enum/pointer/whatever  to a cardinal and back *)
+    (* see day10 for an example *)
+    Value: CARDINAL;
 END;
 
-TYPE MapArray = ARRAY CARDINAL, CARDINAL OF Object;
-TYPE MapReference = POINTER TO MapArray;
-TYPE MapLineArray = ARRAY CARDINAL OF Object;
-TYPE MapLine = POINTER TO MapLineArray;
+(** Map types **)
 
-TYPE MapRef = POINTER TO MapArray;
+TYPE MapArray     = ARRAY CARDINAL, CARDINAL OF Object;
+TYPE MapRef       = POINTER TO MapArray;
+
+(* gm2 has issues with two-dimensional arrays as parameters, so we use this *)
+(* see example (s) in the m2_bugs folder                                     *)
+TYPE MapLineArray = ARRAY CARDINAL OF Object;
+TYPE MapLine      = POINTER TO MapLineArray;
 
 PROCEDURE NewMap (Row_Length, Col_Length: CARDINAL): MapRef;
 PROCEDURE ReleaseMap (VAR Map: MapRef; Rows, Cols: CARDINAL);
+
+(** Location vectors **)
 
 TYPE LocationVector;
 
@@ -53,6 +59,8 @@ PROCEDURE NewVector (): LocationVector;
 PROCEDURE ReleaseVector (VAR Vector: LocationVector);
 PROCEDURE Append (VAR Vector: LocationVector; Location: LocationRecord);
 PROCEDURE Element (Vector: LocationVector; Index: CARDINAL): LocationRecord;
+
+(** Location queues **)
 
 TYPE LocationQueue;
 
@@ -64,7 +72,7 @@ PROCEDURE IsEmpty (Queue: LocationQueue): BOOLEAN;
 
 (*** Two_Dimensional_Map_IO ***)
 
-TYPE Serializer = PROCEDURE (Object): CHAR;
+TYPE Serializer   = PROCEDURE (Object): CHAR;
 TYPE Deserializer = PROCEDURE (CHAR): Object;
 
 PROCEDURE ReadInput (
@@ -73,6 +81,7 @@ PROCEDURE ReadInput (
     Rows, Cols  : CARDINAL;
     Deserialize : Deserializer
 );
+
 PROCEDURE PutMap (
     Map        : MapLine;
     Rows, Cols : CARDINAL;

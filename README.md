@@ -6,7 +6,7 @@ Because 5 years of pain and suffering aren't enough. :grin:
 This year features an attempt to implement the same algorithm
 in both Ada and Rust.
 For fun, I throw in some Modula-2 from time to time...
-well, at least ~~once~~ twice.
+well, at least ~~once~~ ~~twice~~ thrice (Days 1, 3, and 10).
 
 * [Mathematics and Computer Science](#mathematics-and-computer-science): Some interesting mathematical topics in this year's puzzles
 * [Ranking of problems by difficulty](#ranking-of-problems-by-difficulty)

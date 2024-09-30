@@ -36,7 +36,7 @@ BEGIN
       | '.' : P :=  Ground;
       | 'S' : P :=  Start;
     END;
-    Result.Value := CAST(CARDINAL, P);
+    Result.Value := CAST (CARDINAL, P);
     RETURN Result;
 END Deserialize;
 
@@ -45,16 +45,16 @@ VAR
     Result: CHAR;
     P: Pipe;
 BEGIN
-    P := CAST(Pipe, O.Value);
+    P := CAST (Pipe, O.Value);
     CASE P OF
-        Vertical: Result := '|';
-      |  Horizontal : Result := '-';
-      |  SE_Or_WN   : Result := 'L';
-      |  SW_Or_EN   : Result := 'J';
-      |  ES_Or_NW   : Result := '7';
-      |  WS_Or_NE   : Result := 'F';
-      |  Ground     : Result := '.';
-      |  Start      : Result := 'S';
+        Vertical   : Result := '|';
+      | Horizontal : Result := '-';
+      | SE_Or_WN   : Result := 'L';
+      | SW_Or_EN   : Result := 'J';
+      | ES_Or_NW   : Result := '7';
+      | WS_Or_NE   : Result := 'F';
+      | Ground     : Result := '.';
+      | Start      : Result := 'S';
     END;
     RETURN Result;
 END Serialize;
@@ -69,18 +69,18 @@ VAR Map: ARRAY RowRange, ColRange OF Common.Object;
 
 TYPE ObjectArray = ARRAY Pipe OF Common.Object;
 CONST Objects = ObjectArray {
-    Common.Object {CAST(CARDINAL, Vertical)},
-    Common.Object {CAST(CARDINAL, Horizontal)},
-    Common.Object {CAST(CARDINAL, SE_Or_WN)},
-    Common.Object {CAST(CARDINAL, SW_Or_EN)},
-    Common.Object {CAST(CARDINAL, WS_Or_NE)},
-    Common.Object {CAST(CARDINAL, ES_Or_NW)},
-    Common.Object {CAST(CARDINAL, Ground)},
-    Common.Object {CAST(CARDINAL, Start)}
+    Common.Object { CAST (CARDINAL, Vertical) },
+    Common.Object { CAST (CARDINAL, Horizontal) },
+    Common.Object { CAST (CARDINAL, SE_Or_WN) },
+    Common.Object { CAST (CARDINAL, SW_Or_EN) },
+    Common.Object { CAST (CARDINAL, WS_Or_NE) },
+    Common.Object { CAST (CARDINAL, ES_Or_NW) },
+    Common.Object { CAST (CARDINAL, Ground) },
+    Common.Object { CAST (CARDINAL, Start) }
 };
 
 CONST PipeObject = Common.Object {
-    CAST(CARDINAL, Vertical)
+    CAST (CARDINAL, Vertical)
 };
 
 VAR StartLocation: Common.LocationRecord;
@@ -93,7 +93,7 @@ BEGIN
     FOR Row := 1 TO SIDE_LENGTH DO
         FOR Col := 1 TO SIDE_LENGTH DO
             IF Map [Row, Col].Value = Objects[Start].Value THEN
-                StartLocation := Common.LocationRecord {Row, Col};
+                StartLocation := Common.LocationRecord { Row, Col };
                 RETURN;
             END;
         END;
@@ -197,10 +197,10 @@ BEGIN
            AND (Current # Horizontal)
            AND (Current # SE_Or_WN)
            AND (Current # SW_Or_EN));
-      | Ground: RAISE (SourceOfException, ORD(LeftLoop), "Ground");
-      | Start: RAISE (SourceOfException, ORD(CycleLoop), "Start");
+      | Ground: RAISE (SourceOfException, ORD (LeftLoop), "Ground");
+      | Start: RAISE (SourceOfException, ORD (CycleLoop), "Start");
     END;
-    RAISE(SourceOfException, ORD(CannotMove), "Unknown reason");
+    RAISE (SourceOfException, ORD (CannotMove), "Unknown reason");
     RETURN FALSE;
 END CanMove;
 
@@ -230,15 +230,23 @@ VAR
     DRow, DCol : Common.Nudge;
 BEGIN
     FOR DRow := -1 TO 1 DO
-        IF (Me.Curr.Row + DRow >= 1) AND (Me.Curr.Row + DRow <= SIDE_LENGTH) THEN
+        IF (Me.Curr.Row + DRow >= 1) AND (Me.Curr.Row + DRow <= SIDE_LENGTH)
+        THEN
             FOR DCol := -1 TO 1 DO
-                IF (Me.Curr.Col + DCol >= 1) AND (Me.Curr.Col + DCol <= SIDE_LENGTH) THEN
+                IF (Me.Curr.Col + DCol >= 1)
+                    AND (Me.Curr.Col + DCol <= SIDE_LENGTH)
+                THEN
                     Option.Row := Me.Curr.Row + DRow;
                     Option.Col := Me.Curr.Col + DCol;
-                    IF ((Option.Row # Me.Prev.Row)         OR (Option.Col # Me.Prev.Col))
-                        AND ((Option.Row # ButNotHere.Row) OR (Option.Col # ButNotHere.Col))
-                        AND (CAST(Pipe, Map[Option.Row, Option.Col]) # Ground)
-                        AND CanMove (Option, Me.Curr)
+                    IF (
+                        (Option.Row # Me.Prev.Row)
+                            OR (Option.Col # Me.Prev.Col)
+                        ) AND (
+                            (Option.Row # ButNotHere.Row)
+                            OR (Option.Col # ButNotHere.Col)
+                        ) AND (
+                            CAST (Pipe, Map[Option.Row, Option.Col]) # Ground
+                        ) AND CanMove (Option, Me.Curr)
                     THEN
                         Me.Prev.Row := Me.Curr.Row;
                         Me.Prev.Col := Me.Curr.Col;
@@ -278,18 +286,18 @@ BEGIN
         Move (First, StartLocation);
         RecordMotion (First);
         IF (First.Curr.Row = Second.Curr.Row)
-        AND (First.Curr.Col = Second.Curr.Col)
+            AND (First.Curr.Col = Second.Curr.Col)
         THEN
             EXIT;
         END;
         Move (Second, StartLocation);
         RecordMotion (Second);  
         IF (First.Curr.Row = Second.Curr.Row)
-        AND (First.Curr.Col = Second.Curr.Col)
+            AND (First.Curr.Col = Second.Curr.Col)
         THEN
             EXIT;
         END;
-        INC(Step);
+        INC (Step);
     END;
 
     RETURN Step + 1;    
@@ -310,7 +318,7 @@ VAR
 
     DRow, DCol: Common.Nudge;
 BEGIN
-    ToDo := Common.NewQueue();
+    ToDo := Common.NewQueue ();
     Current.Row := 0;
     Current.Col := 0;
     Common.Enqueue (ToDo, Current);
@@ -351,7 +359,7 @@ BEGIN
     FOR Row := 1 TO SIDE_LENGTH DO
         FOR Col := 1 TO SIDE_LENGTH DO
             IF NOT DoubledMap [2 * Row - 1, 2 * Col - 1] THEN
-                INC(Result);
+                INC (Result);
             END;
         END;
     END;
@@ -389,70 +397,70 @@ BEGIN
             IF TraversedMap [Row, Col] # ' ' THEN
                 CASE CAST (Pipe, Map [Row, Col].Value) OF
                   Vertical :
-                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
 
                   | Horizontal :
-                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
 
                   | SE_Or_WN :
-                     DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+                    DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
 
                   | SW_Or_EN :
-                     DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
-                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
 
                   | WS_Or_NE :
-                     DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+                    DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
 
                   | ES_Or_NW :
-                     DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
-                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
-                     DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
 
                   (*| Ground :
                       nothing, apparently *)
 
                   | Start :
-                     DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
+                    DoubledMap [2 * Row - 1, 2 * Col - 1] := TRUE;
 
-                     IF (Row - 1 >= 1) AND (Row - 1 <= SIDE_LENGTH) THEN
+                    IF (Row - 1 >= 1) AND (Row - 1 <= SIDE_LENGTH) THEN
                         TestSet := PipeSet { Vertical, WS_Or_NE, ES_Or_NW };
                         IF (CAST (Pipe, Map [Row - 1, Col].Value) IN TestSet)
                         THEN
-                              DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
+                                DoubledMap [2 * Row - 2, 2 * Col - 1] := TRUE;
                         END;
-                     END;
+                    END;
 
-                     IF (Row + 1 >= 1) AND (Row + 1 <= SIDE_LENGTH) THEN
+                    IF (Row + 1 >= 1) AND (Row + 1 <= SIDE_LENGTH) THEN
                         TestSet := PipeSet { Vertical , SE_Or_WN , SW_Or_EN };
                         IF (CAST (Pipe, Map [Row + 1, Col].Value) IN TestSet)
                         THEN
-                              DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
+                                DoubledMap [2 * Row - 0, 2 * Col - 1] := TRUE;
                         END;
-                     END;
+                    END;
 
-                     IF (Col - 1 >= 1) AND (Col - 1 <= SIDE_LENGTH) THEN
+                    IF (Col - 1 >= 1) AND (Col - 1 <= SIDE_LENGTH) THEN
                         TestSet := PipeSet { Horizontal , SE_Or_WN , WS_Or_NE };
                         IF (CAST (Pipe, Map [Row, Col - 1].Value) IN TestSet)
                         THEN
-                              DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
+                                DoubledMap [2 * Row - 1, 2 * Col - 2] := TRUE;
                         END;
-                     END;
+                    END;
 
-                     IF (Col + 1 >= 1) AND (Col + 1 <= SIDE_LENGTH) THEN
+                    IF (Col + 1 >= 1) AND (Col + 1 <= SIDE_LENGTH) THEN
                         TestSet := PipeSet { Horizontal , SW_Or_EN , ES_Or_NW };
                         IF (CAST (Pipe, Map [Row, Col + 1].Value) IN TestSet)
                         THEN
-                              DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
+                                DoubledMap [2 * Row - 1, 2 * Col - 0] := TRUE;
                         END;
-                     END;
+                    END;
 
                 END;
             END;
@@ -472,8 +480,13 @@ END Part_2;
 BEGIN
     AllocateSource (SourceOfException);
     InitializeTraversedMap;
-    Common.ReadInput("input.txt", ADR(Map), SIDE_LENGTH, SIDE_LENGTH, Deserialize);
-    (*Common.PutMap(ADR(Map), SIDE_LENGTH, SIDE_LENGTH, Serialize);*)
+    Common.ReadInput (
+        "input.txt",
+        ADR (Map),
+        SIDE_LENGTH, SIDE_LENGTH,
+        Deserialize
+    );
+    (*Common.PutMap (ADR (Map), SIDE_LENGTH, SIDE_LENGTH, Serialize);*)
     FindStart;
 
     InOut.WriteString ("From entrance to farthest point takes ");
