@@ -22,7 +22,9 @@ Otherwise, I'll avoid talking about personal preference.
   * [Rust](#rust)
   * [Similarities](#similarities)
   * [Differences](#differences)
+  * [Feature comparison](#feature-comparison)
   * [Why should I care about Language X?](#why-should-i-care-about-language-x)
+  * [Speed and reliability](#speed-and-reliability)
 * [Case study 1: File iteration and processing with error handling](#case-study-1-file-iteration-and-processing-with-error-handling)
 * [Case study 2: Modularity and generics](#case-study-2-modularity-and-generics)
 * [Case study 3: Enumerations](#case-study-3-enumerations)
@@ -110,8 +112,6 @@ Both Ada and Rust are:
 
 Only major differences here. There's no way I'll touch on all of them.
 
-#### General differences
-
 * Ada and Rust have somewhat different notions of safety. I won't comment further, because that's beyond scope and this is already long in the tooth.
 * Ada relies on a very detailed, carefully considered specification that is an ISO standard determined by a committee of academic and industry experts. The Ada Reference Manual is [freely available and downloadable online](http://www.ada-auth.org/standards/22rm/html/RM-TTL.html). Parts of it can be difficult to read, but I use it routinely as a reference and discussions of Ada frequently refer back to the ARM.
 * Rust's specification seems to be [The Rust Reference](https://doc.rust-lang.org/reference/index.html) and/or the compiler.
@@ -121,19 +121,22 @@ Only major differences here. There's no way I'll touch on all of them.
     >
   * The standard library's documentation is [separate](https://doc.rust-lang.org/std/index.html) from the language reference.
 
-#### Feature differences
+### Feature comparison
 
-The following table indicates whether something is built into the language and available immediately. It also indicates whether you can find it in a library, regardless of how robust the library is. For example, Rust's [tokio](https://tokio.rs/) and [GNAT extensions to Ada](https://docs.adacore.com/gnat_rm-docs/html/gnat_rm/gnat_rm/gnat_language_extensions.html).
+The following table indicates whether something is built into the language and available immediately. It also indicates whether you can find it in a library, regardless of how robust the library is. As examples of what I mean:
+* By "built into the language and available immediately", Rust's [tokio](https://tokio.rs/) and [GNAT extensions to Ada](https://docs.adacore.com/gnat_rm-docs/html/gnat_rm/gnat_rm/gnat_language_extensions.html).
+* However, you _can_ get concurrent programming in Rust by pulling in the widely used tokio library. For cases like that, I use the 📖 icon.
+* On the other hand, "nightly" or compiler-specific "extensions" to a language don't count, so they get an ❌, though I might remark on them in the notes if I'm aware of them.
 
 **Legend**
 
-* ✔️ default
+✔️ default
 
-* 📝 default for debug mode; opt-in for release mode
+📝 default for debug mode; opt-in for release mode
 
-* 📖 available with a library not in `Ada.` / `std::`
+📖 available with a library not in `Ada.` / `std::`
 
-* ❌ unavailable
+❌ unavailable
 
 
 | topic                                                     | Ada  | Spark | Rust | Notes                                                                                                                                                                                                                        |
@@ -142,23 +145,19 @@ The following table indicates whether something is built into the language and a
 | array indexing by any discrete type                             | ✔️ | ✔️  | ❌   | e.g., `type Direction is (Up, Dn, Lt, Rt); type Destinations is array (Direction) of Location;`                                                                                                                               |
 | automatic detection and collection of unused heap objects | ❌   | ✔️ | ✔️ | I'd call this "built-in garbage collection", but these days everyone thinks that means a tracing garbage collector running in the background, and neither Spark nor Rust uses those.                                                                                                                                |
 | concurrent programming / tasking                          | ✔️ | ✔️  | 📖   | Rust's `async` requires a non-standard library                                                                                                                                                                                |
-| containers with generics                                               | ✔️ | ✔️  | ✔️ |                                                                                                                                                                                       |
+| containers with generics                                               | ✔️ | ✔️  | ✔️ |  included if only because implementing Day 10 in Modula-2 reminded me how glad I am that we have generics these days                                                                                                                                                                                     |
 | design by contract (DBC)                                  | ✔️ | ✔️  | 📖   | Rustaceans can try [the contracts crate](https://gitlab.com/karroffel/contracts) and [mirai](https://github.com/endorlabs/MIRAI)                                                                                                                                                                 |
-| DBC compile-time verification                             | ❌   | ✔️  | ❌   | the                                                                                                                                    |
-| exception handling                                        | ✔️ | ✔️  | ❌   | for Rust, see "optional" and "result" values below                                                                                                                                                                           |
-| functional chaining                                       | 📖   | 📖    | ✔️ | only recently learned about [this iterators crate for Ada](https://github.com/mosteo/iterators), so I haven't compared                                                                                                                                                                  |
+| DBC compile-time verification                             | ❌   | ✔️  | ❌   | Rust has the [MIRAI](https://github.com/facebookexperimental/MIRAI) crate, but it's nowhere near as functional as Spark, so it doesn't get the 📖 icon                                                                                                  |
+| error handling via exceptions and exception types | ✔️ | ✔️  | ❌   | for Rust, see "error handling via return types"  below                                                                                                                                                                           |
+| error handling via return types | ❌   | ❌    | ✔️ | for Ada, see "error handling via exceptions and exception types"; see also [Case Study 1](#case-study-1-file-iteration-and-processing-with-error-handling)'s discussion for why the ability to roll your own without too much trouble doesn't rise to the same level |                                                                                                                        | functional chaining                                       | 📖   | 📖    | ✔️ | only recently learned about [this iterators crate for Ada](https://github.com/mosteo/iterators), so I haven't compared                                                                                                                                                                  |
 | functional purity                                         | ❌   | ✔️  | ✔️ | whether you can specify a function has side effects *only* via an opt-in mechanism                                                                                                                            |
 | global variables                                          | ✔️ | ✔️  | ❌   | i may catch grief for this, but at least in safe Rust, *all* variables must be local to a function, while Ada allows global variables in a compilation unit, such as a package, and Rust doesn't allow even module-level globals                                                                        |
 | integer overflow checking                                         | ✔️ | ✔️  | 📝   |                                                                                                                                                                                                                              |
 | memory safety                                             | ❌   | ✔️  | ✔️ | i can't possibly go into the details of this here, but: in Ada it is possible to reference a`null` pointer at run-time; in both Spark and Rust this violates the language specification (or you're engaged in `unsafe` Rust) |
-| macro programming                                                    | ❌   | ❌    | ✔️ |                                                                                                                                                                                                                              |
-| "optional" values                                         | ❌   | ❌    | ✔️ |                                                                                                                                                                                                                              |
+| macro programming                                                    | ❌   | ❌    | ✔️ |  Ada has generics, but it's not clear to me (nor to some much more knowledgeable Ada users) that this suffices for the job                                                                                                                                                                                                                            |
+| object-oriented progamming via inheritance | ✔️ | ✔️ | ❌ | rust has explicitly rejected the inheritance of _fields_, although `Trait`s allow one to inherit _methods_ |
 | pattern matching                                          | ❌   | ❌    | ✔️ | e.g.,`if let Some(thing) = fnctn_with_optional_result(...)`                                                                                                                                                                  |
-| "result" values                                           | ❌   | ❌    | ✔️ |                                                                                                                                                                                                                              |
 | ranges and subranges as types                             | ✔️ | ✔️  | ❌   | e.g.,`type Digit is new Positive range 0..9`                                                                                                                                                                                 |
-|                                                           |      |       |      |                                                                                                                                                                                                                              |
-|                                                           |      |       |      |                                                                                                                                                                                                                              |
-
 ### Speed and reliability
 
 * Rust has a well-deserved reputation for fast execution times. It has a less well-deserved reputation for slow compilation times. We've noticed at work that C++ projects always, *always* takes disproportionately longer to compile than Rust.
@@ -167,6 +166,7 @@ The following table indicates whether something is built into the language and a
 
 Almost all my solutions run quickly on my machine, even in "debug" mode, but one or two take quite a few seconds, and perhaps even a few minutes. I've seen Ada programs run faster than Rust programs and vice-versa. For what it's worth, here are a few samples plucked at random from the latter few days, when things tend to get more complicated. Times are an average of 3 runs, measured in seconds, except for day 23, which is just one run.
 
+An listing of the compiler switches used for each column heading appears at the end of this section.
 
 | day | Ada development | Ada release | Rust debug    | Rust release |
 | ----- | ----------------- | ------------- | --------------- | -------------- |
@@ -197,6 +197,56 @@ So, Ada has a bit of an unfair advantage: it's using a machine-native type, whil
 On the other hand, Ada's advantage here comes from its higher-level programming approach.
 
 (How did I come up with `digits 18`? Some time ago I tried to see how far I could crank up the digits before the compiler declined, and 18 was gnat's limit.)
+
+**Compiler switches for column headings**
+
+Programs were build using Alire (`alr`) and Cargo (`cargo`).
+* Alire switches are gnat switches, which are spread over several pages of the gnat reference. I've linked to them! But to determine which were active, I inspected the swtches listed in the generated file `config/day14_config.gpr`.
+   * `alr build` activates   :
+      * [Debug mode](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-Og): `-Og` (optimize) and `-g` (include symbols)
+      * [Placement of functions & data](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-ffunction-sections): `-ffunction-sections`, `-fdata-sections`
+      * [Warnings](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gnat_ugn/Warning-Message-Control.html#index--gnatwa-_0028gcc_0029): `-gnatwa`, `-gnatw.X`
+      * [All validity checks](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gnat_ugn/Validity-Checking.html#index--gnatVa-_0028gcc_0029)`-gnatVa`
+      * [Style checks](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gnat_ugn/Style-Checking.html): `-gnaty3`, `-gnatya`, `-gnatyA`, `-gnatyB`, `-gnatyb`, `-gnatyc`, `-gnaty-d`, `-gnatye`, `-gnatyf`, `-gnatyh`, `-gnatyi`, `-gnatyI`, `-gnatyk`, `-gnatyl`, `-gnatym`, `-gnatyn`, `-gnatyO`, `-gnatyp`, `-gnatyr`, `-gnatyS`, `-gnatyt`, `-gnatyu`, `-gnatyx`
+      * [UTF encoding](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gnat_ugn/Character-Set-Control.html#index--gnatW-_0028gcc_0029-1): `-gnatW8`
+   * `alr build --release` activates:
+      * [All optimizations](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-Og): `-O3`
+      * [Placement of functions & data](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html#index-ffunction-sections): `-ffunction-sections`, `-fdata-sections`
+      * [Inline when specified](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gnat_ugn/Alphabetical-List-of-All-Switches.html#index--gnatn-_0028gcc_0029): `-gnatn`
+      * [UTF encoding](https://gcc.gnu.org/onlinedocs/gcc-13.3.0/gnat_ugn/Character-Set-Control.
+
+  It's worth pointing out that `-gnatVd` is the default. It enables all the checks [required by the reference manual](https://ada-lang.io/docs/arm/AA-13/AA-13.9#1391--data-validity). I disabled it for day 25, but did not see a significant impact on performance.
+
+* Cargo switches are all explained [on this page](https://doc.rust-lang.org/cargo/reference/profiles.html#profile-settings).
+   * `cargo build`, [which activates](https://doc.rust-lang.org/cargo/reference/profiles.html#dev):
+
+         [profile.dev]
+         opt-level = 0
+         debug = true
+         split-debuginfo = '...'  # Platform-specific.
+         strip = "none"
+         debug-assertions = true
+         overflow-checks = true
+         lto = false
+         panic = 'unwind'
+         incremental = true
+         codegen-units = 256
+         rpath = false
+   * `cargo build --release`, [which activates](https://doc.rust-lang.org/cargo/reference/profiles.html#release):
+
+         [profile.release]
+         opt-level = 3
+         debug = false
+         split-debuginfo = '...'  # Platform-specific.
+         strip = "none"
+         debug-assertions = false
+         overflow-checks = false
+         lto = false
+         panic = 'unwind'
+         incremental = false
+         codegen-units = 16
+         rpath = false
+
 
 ## Case Study 1: File iteration and processing, with error handling
 
@@ -375,7 +425,15 @@ end Read_Input;
 ```
 If an error occurs, I could forget to handle it. Worse, a client subprogram might never realize the exception could occur! And I certainly *have* forgotten to handle it in cases where it occurs.
 
-Spark's handling of exceptions is more sophisticated, but I'm not familiar enough with it to comment.
+It is worth mentioning some caveats:
+* With Ada, you _could_ roll your own `Option` and `Result`. One Ada user [pointed out three ways to do it](https://forum.ada-lang.io/t/irenic-language-comparisons-ada-and-rust-aoc-overall/1275/15?u=cantanima):
+  * An instance of `Ada.Containers.Indefinite_Holders`; [Ada2012]
+  * Variant records; [Ada83] (I've used this approach myself at least once)
+  * Arrays, unconstrained. [Ada83]
+
+  However, there's no _standard_ way to do it in the language or standard library, so there's no culture of doing it, especially when it's possible to `raise` an `exception` type.
+* Even Rust code can `panic!`, and often does during development. For example, indexing an invalid array or vector index with the `[]` operator will panic. That said, Rust's programming culture *has* generally adopted the idiom; `Option` and `Result` types are in such widespread use that I can't remember seeing a crate that lacks them. Lacking a traditional exception mechanism seems to have done a lot in this regard.
+* Spark's handling of exceptions is more sophisticated than Ada's, but I'm not familiar enough with it to comment.
 
 ## Case Study 2: Modularity and generics
 
@@ -423,7 +481,7 @@ package body Common is
    --  snip
 end Common;
 ```
-Almost no executable code may take place within the specification, though Ada 2022 allows functions that return an expression, such as
+Almost no executable code may take place within the specification, though Ada 2012 allows functions that return an expression, such as
 
 ```ada
 function Opposite (Left, Right : Direction) return Boolean is
