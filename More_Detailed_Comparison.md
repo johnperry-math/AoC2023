@@ -11,6 +11,8 @@ The choice of topic is obviously subjective, but I'll try to restrain my comment
 as well as some distinctive features I'm aware of in each language's approach.
 Otherwise, I'll avoid talking about personal preference.
 
+(Well after I began writing this, but a little before I finished, AdaCore published [a similarly-themed review](https://blog.adacore.com/should-i-choose-ada-spark-or-rust-over-c-c) that addresses quite a few different points.)
+
 ## Table of Contents
 
 * [Caveats and Disclaimers](#caveats-and-disclaimers)
