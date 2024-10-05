@@ -65,7 +65,7 @@ That said:
 * My solutions may not be optimal, or even advisable.
   * I only look at other people's solutions, or even the discussion of solutions, after I've either solved mine or become so hopelessly stuck that I'm looking for the insight needed to solve teh puzzle.
   * I do try to clean up my solutions, but not as much as I probably should.
-  * I do weird things like solve Day 23 using [Groebner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis).
+  * I do weird things like solve Day 24 using [Groebner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis).
 
 ## Language overviews
 
