@@ -126,9 +126,13 @@ Only major differences here. There's no way I'll touch on all of them.
   * The standard library's documentation is [separate](https://doc.rust-lang.org/std/index.html) from the language reference.
 * Ada programs tend to define types of the problem to be solved. The compiler then adapts the low-level type to match what is requested. Rust programs tend to rely on low-level types.
 
-  That may not be clear, so an example may help. Ada programmers prefer to specify integer types in terms of the ranges they of values and/or the precision of floating-point types in terms of digits. I ended up doing this at least once, where on Day 23 I specified a floating-point type in terms of the number of digits it should reproduce accurately: `Digits 18`. The compiler automatically chose the most appropriate machine type for that.
+  That may not be clear, so two examples may help:
   
-  By contrast, the Rust programs I've seen tend to specify types in terms of low-level, machine types. Thus, I tried to address the same problem using an `f64`. In this particular case, there were repercussions, but usually that works fine as long as you know what the machine types can do.
+  1. Ada programmers prefer to specify integer types in terms of the ranges of values they may take and/or the precision of floating-point types in terms of digits. I ended up doing this at least once, where on Day 23 I specified a floating-point type in terms of the number of digits it should reproduce accurately: `Digits 18`. The compiler automatically chose the most appropriate machine type for that.
+
+  2. Ada arrays don't have to start from 0, nor even do they have to be indexed by integers. An example of this appears below.
+  
+  By contrast, the Rust programs I've seen tend to specify types in terms of low-level, machine types. Thus, I tried to address the same problem using an `f64`. In this particular case, there were repercussions, but usually that works fine as long as you know what the machine types can do. You can index Rust types with non-integers, but it takes quite a bit more work than Ada.
 
 ### Feature comparison
 
