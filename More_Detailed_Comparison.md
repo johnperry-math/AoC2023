@@ -413,12 +413,12 @@ The several lines within the `.map` closure are imperative in style, rather than
 
 ### Error handling
 
-The Rust code above was unable to examine the `Line` or `Char` until it extracted it from the `Result` type via `.unwrap` or, preferably, `.expect`. This makes it a bit more verbose _on this task_ than Ada, and a common criticism of Ada is that it's verbose, but that's because it's forcing the programmer at least to *think about* the possibility of an error when opening the file. Rust code does routinely; its philosophy is that, when the program encounters an exceptional condition, the system either
+The Rust code above was unable to examine the `Line` or `Char` until it extracted it from the `Result` type via `.unwrap` or, preferably, `.expect`. This makes it a bit more verbose _on this task_ than Ada, and a common criticism of Ada is that it's verbose, but here Rust is forcing the programmer at least to *think about* the possibility of an error when opening the file. In Rust, when the program encounters an exceptional condition, the system either
 
-* `.panic!`s (a bad thing!), or
+* `.panic!`s (bad!), or
 * returns an `Option` or `Result`type, so the developer to handle them at an appropriate time.
 
-It often happens that handling an error would be inappropriate in a certain place; in this case, Rust forces the programmer to indicate this using a `?` operator. Thus, I could have done this:
+If handling an error would be inappropriate, Rust forces the programmer to indicate this using a `?` operator. Thus, I could have done this:
 
 ```rust
 fn read_input(filename: String) -> Result<Expected_Data_Type, std::io::Error> {
@@ -505,7 +505,7 @@ function Opposite (Left, Right : Direction) return Boolean is
 ```
 Otherwise, specifications are limited to declaring types, variables, and signatures of subprograms in the public interface.
 
-If you want a public `record` type, but don't want to expose its fields, you can delcare the type as `private`, then define the fields in the specification's `private` section.
+If you want a public `record` type, but don't want to expose its fields, you can declare the type as `private`, then define the fields in the specification's `private` section.
 
 Packages can have children, which you can think of as "sub-packages". They can appear in the same file or separate files. My `Common` package has four children, `Two_Dimensional_Motion`, `Two_Dimensional_Map`, `Two_Dimensional_IO`, and `Mathematics`.
 
@@ -528,6 +528,7 @@ end if;
 ```
 That can get a little hard to read, so there are two ways to make it easier.
 * The first is to `use` a package:
+
       ```ada
       with Ada.Text_IO; use Ada.Text_IO;
       with Common;
@@ -539,6 +540,7 @@ That can get a little hard to read, so there are two ways to make it easier.
       end if;
       ```
 * A second approach is to `rename` a package. It's also possible to `use` a type, and to combine the approaches.
+
       ```ada
       --  snip (omitting our with's)
 
