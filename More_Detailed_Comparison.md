@@ -124,11 +124,16 @@ Only major differences here. There's no way I'll touch on all of them.
     > Finally, this book is not normative. It may include details that are specific to `rustc` itself, and should not be taken as a specification for the Rust language. We intend to produce such a book someday, and until then, the reference is the closest thing we have to one.
     >
   * The standard library's documentation is [separate](https://doc.rust-lang.org/std/index.html) from the language reference.
+* Ada programs tend to define types of the problem to be solved. The compiler then adapts the low-level type to match what is requested. Rust programs tend to rely on low-level types.
+
+  That may not be clear, so an example may help. Ada programmers prefer to specify integer types in terms of the ranges they of values and/or the precision of floating-point types in terms of digits. I ended up doing this at least once, where on Day 23 I specified a floating-point type in terms of the number of digits it should reproduce accurately: `Digits 18`. The compiler automatically chose the most appropriate machine type for that.
+  
+  By contrast, the Rust programs I've seen tend to specify types in terms of low-level, machine types. Thus, I tried to address the same problem using an `f64`. In this particular case, there were repercussions, but usually that works fine as long as you know what the machine types can do.
 
 ### Feature comparison
 
 The following table indicates whether something is built into the language and available immediately. It also indicates whether you can find it in a library, regardless of how robust the library is. As examples of what I mean:
-* By "built into the language and available immediately", Rust's [tokio](https://tokio.rs/) and [GNAT extensions to Ada](https://docs.adacore.com/gnat_rm-docs/html/gnat_rm/gnat_rm/gnat_language_extensions.html).
+* "Built into the language and available immediately" excludes Rust's [tokio](https://tokio.rs/) and [GNAT extensions to Ada](https://docs.adacore.com/gnat_rm-docs/html/gnat_rm/gnat_rm/gnat_language_extensions.html).
 * However, you _can_ get concurrent programming in Rust by pulling in the widely used tokio library. For cases like that, I use the 📖 icon.
 * On the other hand, "nightly" or compiler-specific "extensions" to a language don't count, so they get an ❌, though I might remark on them in the notes if I'm aware of them.
 
