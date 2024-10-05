@@ -13,7 +13,7 @@ Otherwise, I'll avoid talking about personal preference.
 
 (Well after I began writing this, but a little before I finished, AdaCore published [a similarly-themed review](https://blog.adacore.com/should-i-choose-ada-spark-or-rust-over-c-c) that addresses quite a few different points.)
 
-## Table of Contents
+   ## Table of Contents
 
 * [Caveats and Disclaimers](#caveats-and-disclaimers)
   * [Which version of the language?](#which-version-of-the-language)
@@ -55,7 +55,13 @@ Ada and Rust have multiple specifications. The versions used for comparison here
 
 No, but I'm the one you're stuck with. 😁
 
-* I speak both Ada and Rust, but not natively. My background in 1980s-era C/C++, [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language)), and [Modula-2](https://en.wikipedia.org/wiki/Modula-2) will probably be apparent. (I didn't even start using the C++ STL until about 2014.) Code excerpts should accordingly be considered usable but not necessarily idiomatic.
+I don't consider myself an Ada expert by any means, [but](https://github.com/johnperry-math/PL-0-in-Ada) [I](https://github.com/johnperry-math/GtkAdaQuoter) [have](https://github.com/johnperry-math/RosettaCode) [written](https://github.com/johnperry-math/AoC2020) [some](https://github.com/johnperry-math/AoC2020) [non](https://github.com/johnperry-math/AoC2022)-[trivial](https://github.com/johnperry-math/AoC2022) [programs](https://github.com/johnperry-math/AoC2021) [in](https://github.com/johnperry-math/AoC2018) [it](https://github.com/johnperry-math/AoC2023). (Each word a different repository! 😁)
+
+I don't have any Rust code in public repositories, aside from the one you're reading right now, but I've used it on an almost daily basis at work for three years. I don't think my employer will allow me to share that, though, sorry.
+
+That said:
+
+* I speak both Ada and Rust, but not natively. My background in 1980s-era C/C++, [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language)), and [Modula-2](https://en.wikipedia.org/wiki/Modula-2) will probably be apparent. Code excerpts should accordingly be considered usable but not necessarily idiomatic.
 * My solutions may not be optimal, or even advisable.
   * I only look at other people's solutions, or even the discussion of solutions, after I've either solved mine or become so hopelessly stuck that I'm looking for the insight needed to solve teh puzzle.
   * I do try to clean up my solutions, but not as much as I probably should.
@@ -82,19 +88,15 @@ Ada's arguably the best language that you've either:
 
 (Qualifiers matter. I'm not necessarily saying Ada is the best language, full stop.)
 
-Ada is a general-purpose language with an emphasis on safe, secure programming. It has a well-established niche in [situations where correctness, reliability, and large-scale development are the primary concern](https://www.adacore.com/industries). Its initial, international development culminated in an 1983 ISO standard. Subsequent revisions to the language led to new standards in 1995, 2002, 2007, 20012, and 2022. Ada revisions tend to be backwards compatible; every now and then I'll read someone write with pleasure that he's taken an old Ada 83 codebase and successfuly recompiled it in Ada 2012 (say) with little to no effort. A dialect of Ada called Spark offers additional features and guarantees, subject to a number of restrictions on what you can do. Spark is a pretty big deal in the Ada world.
-
-I don't consider myself an Ada expert by any means, [but](https://github.com/johnperry-math/PL-0-in-Ada) [I](https://github.com/johnperry-math/GtkAdaQuoter) [have](https://github.com/johnperry-math/RosettaCode) [written](https://github.com/johnperry-math/AoC2020) [some](https://github.com/johnperry-math/AoC2020) [non](https://github.com/johnperry-math/AoC2022)-[trivial](https://github.com/johnperry-math/AoC2022) [programs](https://github.com/johnperry-math/AoC2021) [in](https://github.com/johnperry-math/AoC2018) [it](https://github.com/johnperry-math/AoC2023). (Each word a different repository! 😁)
+Ada is a general-purpose, high-level language with an emphasis on safe, secure programming that emphasizes ease of **reading** code over ease of **writing** it. It has a well-established niche in [situations where correctness, reliability, and large-scale development are the primary concern](https://www.adacore.com/industries). Its initial, international development culminated in an 1983 ANSI standard and a 1987 ISO standard. Subsequent [revisions to the language](https://www.adaic.org/ada-resources/standards/) led to Ada 95, Ada 2005, Ada 2012, and Ada 2022. Ada revisions tend to be backwards compatible; every now and then I'll read someone write with pleasure that he's taken an old Ada 83 codebase and successfuly recompiled it in Ada 2012 (say) with little to no effort. A dialect of Ada called Spark offers additional features and guarantees, subject to a number of restrictions on what you can do. Spark is a pretty big deal in the Ada world.
 
 An open-source, GPL'd Ada compiler stays on the language's cutting edge, but vendors have been around for decades.
 
 ### Rust
 
-I won't say that Rust is the best language you *have* heard of, but it is the language that StackOverflow users [keep](https://survey.stackoverflow.co/2024/technology#admired-and-desired) voting, [year](https://survey.stackoverflow.co/2023/#technology-admired-and-desired) after [year](https://survey.stackoverflow.co/2022/#technology-most-popular-technologies), as their most admired programming language.
+I won't say that Rust is the best language you *have* heard of, but it is the language that StackOverflow users keep voting, [year](https://survey.stackoverflow.co/2024/technology#admired-and-desired) after [year](https://survey.stackoverflow.co/2023/#technology-admired-and-desired) after [year](https://survey.stackoverflow.co/2022/#technology-most-popular-technologies), as their most admired programming language.
 
-Rust is a general-purpose language with an emphasis on safety, in particular memory safety. Rust began at Mozilla, who has used Rust in several projects, such as rewriting [Firefox's CSS engine](https://searchfox.org/mozilla-central/source/servo) in Rust. Mozilla subsequently release Rust "into the wild", placing it under the purview of the Rust Foundation. Rust 1.0 was released in 2015; since then, several somewhat-incompatible "editions" were released in 2018 and 2021, with a new edition due in late 2024.
-
-I don't have any Rust code in public repositories, aside from the one you're reading right now, but I've used it on an almost daily basis at work for three years. I don't think my employer will allow me to share that, though, sorry.
+Rust is a low-level, general-purpose language with an emphasis on safety, in particular memory safety. Rust began at Mozilla, who has used Rust in several projects, such as rewriting [Firefox's CSS engine](https://searchfox.org/mozilla-central/source/servo) in Rust. Mozilla subsequently release Rust "into the wild", placing it under the purview of the Rust Foundation. Rust 1.0 was released in 2015; since then, several somewhat-incompatible "editions" were released in 2018 and 2021, with a new edition due in late 2024.
 
 As far as I know, there is only one Rust compiler, based on the llvm toolchain. The Gnu Compiler Collection is working on its own version. Ferrous systems offers a version of the compiler [certified for safety- and mission-critical systems](https://ferrocene.dev/en/) that [they developed in partnership with AdaCore](https://ferrous-systems.com/blog/ferrocene-update/).
 
@@ -115,7 +117,7 @@ Both Ada and Rust are:
 Only major differences here. There's no way I'll touch on all of them.
 
 * Ada and Rust have somewhat different notions of safety. I won't comment further, because that's beyond scope and this is already long in the tooth.
-* Ada relies on a very detailed, carefully considered specification that is an ISO standard determined by a committee of academic and industry experts. The Ada Reference Manual is [freely available and downloadable online](http://www.ada-auth.org/standards/22rm/html/RM-TTL.html). Parts of it can be difficult to read, but I use it routinely as a reference and discussions of Ada frequently refer back to the ARM.
+* Ada relies on a very detailed, carefully considered specification that is an ISO standard determined by a committee of academic and industry experts. The Ada Reference Manual is [freely available and downloadable online](http://www.adaic.org/resources/add_content/standards/22rm/html/RM-TTL.html). Parts of it can be difficult to read, but I use it routinely as a reference and discussions of Ada frequently refer back to the ARM.
 * Rust's specification seems to be [The Rust Reference](https://doc.rust-lang.org/reference/index.html) and/or the compiler.
   * The website explicitly states that The Rust Reference "is not a formal spec".
 
@@ -198,7 +200,7 @@ Thus I switched to the `rust_decimal` crate, and made Day 24 work that way.
 So, Ada has a bit of an unfair advantage: it's using a machine-native type, while Rust is stuck using library code.
 On the other hand, Ada's advantage here comes from its higher-level programming approach.
 
-(How did I come up with `digits 18`? Some time ago I tried to see how far I could crank up the digits before the compiler declined, and 18 was gnat's limit.)
+(How did I come up with `digits 18`? Some time ago I tried to see how far I could crank up the digits before the compiler declined, and 18 was gnat's limit. A professional Ada user pointed out to me that I could simply use [System.Max_Digits](http://www.adaic.org/resources/add_content/standards/22rm/html/RM-13-7.html#I5674).)
 
 **Compiler switches for column headings**
 
