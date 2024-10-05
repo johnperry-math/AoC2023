@@ -529,30 +529,29 @@ end if;
 That can get a little hard to read, so there are two ways to make it easier.
 * The first is to `use` a package:
 
-      ```ada
-      with Ada.Text_IO; use Ada.Text_IO;
-      with Common;
-      with Common.Two_Dimensional_Motion; use Common.Two_Dimensional_Motion;
-      --  snip
+   ```ada
+   with Ada.Text_IO; use Ada.Text_IO;
+   with Common;
+   with Common.Two_Dimensional_Motion; use Common.Two_Dimensional_Motion;
+   --  snip
 
-      if not Opposite (North, South) then
-         Put_Line ("I broke the world!");
-      end if;
-      ```
+   if not Opposite (North, South) then
+      Put_Line ("I broke the world!");
+   end if;
+   ```
 * A second approach is to `rename` a package. It's also possible to `use` a type, and to combine the approaches.
 
-      ```ada
-      --  snip (omitting our with's)
+   ```ada
+   --  snip (omitting our with's)
 
-      package Motion_2D renames Common.Two_Dimensional_Motion;
-      use all type Motion_2D.Direction;
-      --  snip
+   package Motion_2D renames Common.Two_Dimensional_Motion;
+   use all type Motion_2D.Direction;
+   --  snip
 
-      if not Motion_2D.Opposite (North, South) then
-         IO.Put_Line ("I broke the world!");
-      end if;
-
-      ```
+   if not Motion_2D.Opposite (North, South) then
+      IO.Put_Line ("I broke the world!");
+   end if;
+   ```
 
 My impression is that most Ada programmers adopt the `use` approach. I prefer to `rename` when possible.
 
