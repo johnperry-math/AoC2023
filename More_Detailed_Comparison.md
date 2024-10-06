@@ -42,6 +42,7 @@ Ada and Rust have multiple specifications. The versions used for comparison here
   * This includes an occasional reference to Ada SPARK 2014 on account of its more stringent rules,
     but otherwise I didn't use SPARK this year.
 * Rust 2021
+  * One Rustacean [points out](https://users.rust-lang.org/t/irenic-comparison-of-ada-and-rust-based-on-the-advent-of-code/119249/3?u=johnperry-math) that I "should probably put both the edition and version here", since "[l]ots of changes happen within a single edition." I've worked on this for a lot of months, which involved several versions, but at the time of this writeup I'm using 1.81.0. 
 
 ### Why didn't you discuss Feature X? It's the language's "killer app"!
 
@@ -157,14 +158,15 @@ The following table indicates whether something is built into the language and a
 | array bounds checking                                     | ✔️ | ✔️  | ✔️ | all terminate, um, "gracefully", by which I mean a useful error message on a bounds violation, rather than a segmentation fault or some other monstrosity |
 | array indexing by any discrete type                             | ✔️ | ✔️  | ❌   | e.g., `type Direction is (Up, Dn, Lt, Rt); type Destinations is array (Direction) of Location;`                                                                                                                               |
 | automatic detection and collection of unused heap objects | ❌   | ✔️ | ✔️ | I'd call this "built-in garbage collection", but these days everyone thinks that means a tracing garbage collector running in the background, and neither Spark nor Rust uses those.                                                                                                                                |
-| concurrent programming / tasking                          | ✔️ | ✔️  | 📖   | Rust's `async` requires a non-standard library                                                                                                                                                                                |
+| concurrent programming / tasking                          | ✔️ | ✔️  | 📖   | Rust's `async` requires a non-standard library, but [see this reply](https://users.rust-lang.org/t/irenic-comparison-of-ada-and-rust-based-on-the-advent-of-code/119249/2?u=johnperry-math)                                                                                                                                                                                |
 | containers with generics                                               | ✔️ | ✔️  | ✔️ |  included if only because implementing Day 10 in Modula-2 reminded me how glad I am that we have generics these days                                                                                                                                                                                     |
 | design by contract (DBC)                                  | ✔️ | ✔️  | 📖   | Rustaceans can try [the contracts crate](https://gitlab.com/karroffel/contracts) and [mirai](https://github.com/endorlabs/MIRAI)                                                                                                                                                                 |
 | DBC compile-time verification                             | ❌   | ✔️  | ❌   | Rust has the [MIRAI](https://github.com/facebookexperimental/MIRAI) crate, but it's nowhere near as functional as Spark, so it doesn't get the 📖 icon                                                                                                  |
 | error handling via exceptions and exception types | ✔️ | ✔️  | ❌   | for Rust, see "error handling via return types"  below                                                                                                                                                                           |
 | error handling via return types | ❌   | ❌    | ✔️ | for Ada, see "error handling via exceptions and exception types"; see also [Case Study 1](#case-study-1-file-iteration-and-processing-with-error-handling)'s discussion for why the ability to roll your own without too much trouble doesn't rise to the same level |                                                                                                                        | functional chaining                                       | 📖   | 📖    | ✔️ | only recently learned about [this iterators crate for Ada](https://github.com/mosteo/iterators), so I haven't compared                                                                                                                                                                  |
 | functional purity                                         | ❌   | ✔️  | ✔️ | whether you can specify a function has side effects *only* via an opt-in mechanism                                                                                                                            |
-| global variables                                          | ✔️ | ✔️  | ❌   | i may catch grief for this, but at least in safe Rust, *all* variables must be local to a function, while Ada allows global variables in a compilation unit, such as a package, and Rust doesn't allow even module-level globals                                                                        |
+| labeled loops | ✔️ | ✔️ | ✔️ | labels have a number of useful properties, such as breaking out of nested loops |
+| mutable global variables                                  | ✔️ | ✔️  | ❌   | in safe Rust, all **mutable** variables must be local to a function, while Ada allows mutable global variables in a compilation unit; Rust does allow immutable / constant static values                                         |
 | integer overflow checking                                         | ✔️ | ✔️  | 📝   |                                                                                                                                                                                                                              |
 | memory safety                                             | ❌   | ✔️  | ✔️ | i can't possibly go into the details of this here, but: in Ada it is possible to reference a`null` pointer at run-time; in both Spark and Rust this violates the language specification (or you're engaged in `unsafe` Rust) |
 | macro programming                                                    | ❌   | ❌    | ✔️ |  Ada has generics, but it's not clear to me (nor to some much more knowledgeable Ada users) that this suffices for the job                                                                                                                                                                                                                            |
@@ -460,7 +462,7 @@ A lot of that code is reusable. Rather than copy and paste all the time, we can 
 ### Terminology
 
 * Ada has historically called this unit of organization a `package`.
-* Rust calls them `mod`ules, but these are so often distributed via the `cargo` tool, which calls its packages "crates", that in my experience the term "crate" is used instead.
+* Rust calls them `mod`ules, which are collected into "crates". A project typically has a "workspace" of many crates.
 * The Ada community has deveoped its own package manager, [alire](https://alire.ada.dev/), which also calls its packages "crates".
 
 ### General structure
@@ -752,10 +754,10 @@ Rust has enumerations, as well, so I can declare directions:
     }
 
 ```
-Unlike Ada's enumerations, you *do not* get a linear ordering, an iteration, or array indexing for free. You don't get the ability to print them out for free. You don't get the ability to copy the value of one enumeration to another for free (i.e., `let enum2 = enum1`). You don't even get the ability to test for equality! You have to implement those features via traits, though Rust's annotation system lets you get some of it *almost* for free. The following declaration gives me a `Direction` type that I can print in debug format, test for equality, and copy from one value to another.
+Unlike Ada's enumerations, you *do not* get a linear ordering, an iteration, or array indexing for free. You don't get the ability to print them out for free. You don't get the ability to copy the value of one enumeration to another for free (i.e., `let enum2 = enum1`). You don't even get the ability to test for equality! You have to implement those features via traits, though Rust's annotation system lets you get some of it *almost* for free. The following declaration gives me a `Direction` type that I can print in debug format, test for equality, order, and copy from one value to another.
 
 ```rust
-    #[derive(Debug, PartialEq, Eq, Clone, Copy)]
+    #[derive(Debug, PartialEq, Eq, Clone, Copy, PartialOrd, Ord)]
     pub enum Direction {
         North,
         South,
