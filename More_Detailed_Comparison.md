@@ -64,7 +64,7 @@ That said:
 
 * I speak both Ada and Rust, but not natively. My background in 1980s-era C/C++, [Pascal](https://en.wikipedia.org/wiki/Pascal_(programming_language)), and [Modula-2](https://en.wikipedia.org/wiki/Modula-2) will probably be apparent. Code excerpts should accordingly be considered usable but not necessarily idiomatic.
 * My solutions may not be optimal, or even advisable.
-  * I only look at other people's solutions, or even the discussion of solutions, after I've either solved mine or become so hopelessly stuck that I'm looking for the insight needed to solve teh puzzle.
+  * I only look at other people's solutions, or even the discussion of solutions, after I've either solved mine or become so hopelessly stuck that I'm looking for the insight needed to solve the puzzle.
   * I do try to clean up my solutions, but not as much as I probably should.
   * I do weird things like solve Day 24 using [Groebner bases](https://en.wikipedia.org/wiki/Gr%C3%B6bner_basis).
 
@@ -174,11 +174,15 @@ The following table indicates whether something is built into the language and a
 | ranges and subranges as types                             | ✔️ | ✔️  | ❌   | e.g.,`type Digit is new Positive range 0..9`                                                                                                                                                                                 |
 ### Speed and reliability
 
-* Rust has a well-deserved reputation for fast execution times. It has a less well-deserved reputation for slow compilation times. We've noticed at work that C++ projects always, *always* takes disproportionately longer to compile than Rust.
+* Rust has a well-deserved reputation for fast execution times. It has a less well-deserved reputation for slow compilation times.
+  Pruning unused dependencies and enabling incremental compilation both help improve Rust compile times.
+  Also helpful is eliminating any dependencies with a C++ backend, as C++ seems particularly bad.
+  (`#include` is such a terrible way to implement "modularity" that [even the C++ committee has finally come around](https://en.cppreference.com/w/cpp/language/modules).)
+  We've observed at work that C++ projects always, *always* take disproportionately longer to compile than Rust.
 * With Ada the situation is less clear. It compiles quickly enough (though `alire` boots up much slower than `cargo`), but it has a reputation for slow execution. This is due primarily to the amount of run-time checks. Rust also performs some run-time checks; see "array bounds checking" above. I've read that when other languages include the same run-time checks Ada does, differences in speed typically disappear.
 * In both languages, the compiler can detect at compile-time many circumstances where it can remove run-time checks.
 
-Almost all my solutions run quickly on my machine, even in "debug" mode, but one or two take quite a few seconds, and perhaps even a few minutes. I've seen Ada programs run faster than Rust programs and vice-versa. For what it's worth, here are a few samples plucked at random from the latter few days, when things tend to get more complicated. Times are an average of 3 runs, measured in seconds, except for day 23, which is just one run.
+Almost all my solutions run quickly on my computer, even in "debug" mode, but one or two take quite a few seconds, and perhaps even a few minutes. I've seen Ada programs run faster than Rust programs and vice-versa. For what it's worth, here are a few samples plucked at random from the latter few days, when things tend to get more complicated. Times are an average of 3 runs, measured in seconds, except for day 23, which is just one run.
 
 An listing of the compiler switches used for each column heading appears at the end of this section.
 
@@ -207,8 +211,9 @@ In principle I could use `f128`, and if memory serves I managed to make that wor
 and I'm trying to use only **safe**, **stable**, **standard** features of each language.
 Thus I switched to the `rust_decimal` crate, and made Day 24 work that way.
 
-So, Ada has a bit of an unfair advantage: it's using a machine-native type, while Rust is stuck using library code.
-On the other hand, Ada's advantage here comes from its higher-level programming approach.
+So, Ada has an inherent advantage due to its higher-level approach: Rust is stuck using library code.
+By specifying the type in terms of the problem, the Ada programmer delegates the choice of machine-native type to the compiler,
+which knows better.
 
 (How did I come up with `digits 18`? Some time ago I tried to see how far I could crank up the digits before the compiler declined, and 18 was gnat's limit. A professional Ada user pointed out to me that I could simply use [System.Max_Digits](http://www.adaic.org/resources/add_content/standards/22rm/html/RM-13-7.html#I5674).)
 
@@ -417,9 +422,9 @@ The several lines within the `.map` closure are imperative in style, rather than
 The Rust code above was unable to examine the `Line` or `Char` until it extracted it from the `Result` type via `.unwrap` or, preferably, `.expect`. This makes it a bit more verbose _on this task_ than Ada, and a common criticism of Ada is that it's verbose, but here Rust is forcing the programmer at least to *think about* the possibility of an error when opening the file. In Rust, when the program encounters an exceptional condition, the system either
 
 * `.panic!`s (bad!), or
-* returns an `Option` or `Result`type, so the developer to handle them at an appropriate time.
+* returns an `Option` or `Result`type, compelling the developer to handle them at an appropriate time.
 
-If handling an error would be inappropriate, Rust forces the programmer to indicate this using a `?` operator. Thus, I could have done this:
+If handling an error would be inappropriate, the programmer can propragate it up the stack using a `?` operator. In this case, the function's return type has to reflect this. Thus, I could have done this:
 
 ```rust
 fn read_input(filename: String) -> Result<Expected_Data_Type, std::io::Error> {
@@ -456,7 +461,7 @@ Advent of Code puzzles frequently involve:
 * reading and navigating a map, and
 * very large numbers, where one must often compute a least common multiple.
 
-A lot of that code is reusable. Rather than copy and paste all the time, we can organize that into a dedicated module. I've seen quite a few others do things like this.
+A lot of that code is reusable. Rather than copy and paste all the time, we can organize that into a dedicated module. Some Advent of Code participants do this.
 
 ### Terminology
 
@@ -687,8 +692,7 @@ enum Object {
 const SIDE_LENGTH: usize = 131;
 type Map = common::two_dimensional_map::Map<SIDE_LENGTH, SIDE_LENGTH, Object>;
 ```
-Unlike Ada, `SIDE_LENGTH` does not become a proper field for the `Map` type. That doesn't mean you can't know what the map's dimensions are; if you don't already have `SIDE_LENGTH` handy then you can add a function to return the value; for example,
-
+Unlike Ada, `SIDE_LENGTH` does not become a proper field for the `Map` type. That doesn't mean you can't know what the map's dimensions are; if the client may need to know `SIDE_LENGTH`, then you can add a function to return the value; for example,
 ```rust
 impl<const ROW_LENGTH: usize, const COL_LENGTH: usize, Object> Map<ROW_LENGTH, COL_LENGTH, Object> {
     pub const fn row_dimension(&self) -> usize {
