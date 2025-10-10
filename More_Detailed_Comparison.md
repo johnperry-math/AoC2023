@@ -305,7 +305,7 @@ end;
 A `String` is an `array of Character`, the traditional 8-bit byte, so the processing can loop through the line if needed:
 
 ```ada
-         for Letter of String loop
+         for Letter of Line loop
             --  do something with Letter
          end loop;
 ```
