@@ -117,7 +117,7 @@ Both Ada and Rust are:
 
 Only major differences here. There's no way I'll touch on all of them.
 
-* Ada and Rust have somewhat different notions of safety. I won't comment further, because that's beyond scope and this is already long in the tooth.
+* Ada and Rust have somewhat different notions of safety. I won't comment further, because that's beyond scope and this is already long.
 * Ada relies on a very detailed, carefully considered specification that is an ISO standard determined by a committee of academic and industry experts. The Ada Reference Manual is [freely available and downloadable online](http://www.adaic.org/resources/add_content/standards/22rm/html/RM-TTL.html). Parts of it can be difficult to read, but I use it routinely as a reference and discussions of Ada frequently refer back to the ARM.
 * Rust's specification seems to be [The Rust Reference](https://doc.rust-lang.org/reference/index.html) and/or the compiler.
   * The website explicitly states that The Rust Reference "is not a formal spec".
